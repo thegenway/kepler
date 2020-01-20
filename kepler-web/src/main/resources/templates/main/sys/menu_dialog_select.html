@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul id="tree_menu_select" class="ztree"></ul>
+    </div>
+</div>
+
+</body>
+
+<script th:inline="javascript">
+    var treeObj;
+    var zNodes = /*[[${menuTree}]]*/;
+
+    $(function(){
+        init_tree_menu();
+    });
+
+    function init_tree_menu(){
+        var setting = {
+            data : {
+                key : {
+                    url : "xUrl"
+                }
+            },
+            check : {
+                enable : true,
+                autoCheckTrigger : true,
+                chkStyle : "radio",
+                radioType : "all"
+            }
+        };
+        treeObj = $.fn.zTree.init($('#tree_menu_select'), setting, zNodes);
+    }
+
+    function fn_menu_select(callback){
+        var nodes = treeObj.getCheckedNodes(true);
+        if(nodes.length > 0){
+            callback(nodes[0]);
+        }else{
+            __toastr_error("请选择一个菜单");
+            callback();
+        }
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,14 @@
+.mui-table h4 {
+    line-height: 21px;
+    font-weight: 500;
+}
+.btn-load-more{
+    font-size: 14px;
+    padding: 3px 0;
+}
+.mui-page {
+    display: none;
+}
+.mui-pages .mui-page {
+    display: block;
+}

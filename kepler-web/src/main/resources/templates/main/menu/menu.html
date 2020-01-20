@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">菜单管理</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <btn id="btn_add_menu" class="btn btn-primary btn-sm" ${isCreate}>
+                    <i class="ti-plus"> </i> 新建菜单
+                </btn>
+            </div>
+
+            <div class="table-jqgrid">
+                <table id="menu_table"></table>
+                <div id="menu_page"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script th:inline="javascript">
+
+    $(function(){
+        init_grid_menu();
+    });
+
+    function init_grid_menu(){
+        __init_jqgrid('menu_table', 'menu_page', '/main/menu/list',
+            ["菜单名称","类型","图标","连接地址","状态","操作","id"],
+            [
+                {name:'name', index:'name', width:100, search:true, sortable:false, searchoptions: {sopt: ['cn']}},
+                {name:'menuType', index:'menuType', width:100, search:true, sortable:false, searchoptions: {sopt: ['cn']}},
+                {name:'iconCode', index:'iconCode', width:30, search:true, sortable:false, searchoptions: {sopt: ['cn']}, formatter : menuIconFormat},
+                {name:'url', index:'url', width:100, search:true, sortable:false, searchoptions: {sopt: ['cn']}},
+                {name:'visible', index:'visible', width:100, search:true, sortable:false, formatter : menuVisibleFormat},
+                {name:'act', width:100, sortable:false, formatter : menuActFormat},
+                {name:'id',index:'id',search:false,hidden:true}
+            ],
+            false,
+            {
+                loadonce : false,
+                rowNum : "-1",
+                treeGrid : true,
+                treeGridModel : "adjacency",
+                ExpandColumn : "name",
+                ExpandColClick : true,
+                pager : false,
+                rownumbers : false,
+                treeReader : {
+                    level_field: "level",
+                    parent_id_field: "parent",
+                    leaf_field: "isLeaf",
+                    expanded_field: "expanded"
+                }
+            }
+        );
+    }
+
+    function menuActFormat(cellvalue, options, rowObject){
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-primary btn-sm" onclick="fn_menu_addOrUpdate(\'\',\'' + id + '\');"> 添加</button> ';
+        cellvalue += '<button class="btn btn-primary btn-sm" onclick="fn_menu_addOrUpdate(\'' + id + '\',\'\');"> 编辑</button> ';
+        cellvalue += '<button class="btn btn-danger btn-sm" onclick="fn_menu_delete(\'' + id + '\');"> 删除</button> ';
+        return cellvalue;
+    }
+
+    function menuIconFormat(cellvalue, options, rowObject){
+        var iconCode = rowObject.iconCode;
+        cellvalue = '<i class="'+iconCode+'"></i> ';
+        return cellvalue;
+    }
+
+    function menuVisibleFormat(cellvalue, options, rowObject){
+        var visible = rowObject.visible == "1" ? "" : "checked";
+        var id = rowObject.id;
+        var sw = '<input id="switch-'+id+'" class="toggle-switch" type="checkbox" '+visible+'><label for="switch-'+id+'" onclick="fn_menu_visible_change(\''+id+'\')"></label>';
+        return sw;
+    }
+
+    function fn_menu_addOrUpdate(keyId, parentId){
+        __open_dialog_form("添加菜单", "/main/menu/input?keyId="+keyId+"&parentId="+parentId, function(dialogRef){
+            var callback = function(data){
+                dialogRef.enableButtons();
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    $("#menu_table").setGridParam({datatype:'json', postData: {}}).trigger('reloadGrid');
+                }
+            };
+            fn_menu_save(callback);
+        });
+    }
+
+    //添加菜单
+    $("#btn_add_menu").on("click", function(){
+        fn_menu_addOrUpdate("","");
+    });
+
+    function fn_menu_delete(id){
+        __confirm_dialog("","确定要删除吗？",function(){
+            __ajax_post("/main/menu/delete", {keyId : id}, function(data){
+                __toastr(data);
+                if(data && data.state === 1){
+                    $("#menu_table").setGridParam({datatype:'json', postData: {}}).trigger('reloadGrid');
+                }
+            })
+        })
+    }
+
+    function fn_menu_visible_change(id){
+        var visible = 0;
+        if($("#switch-"+id).get(0).checked){
+            //关闭
+            visible = 1;
+        }else{
+            //打开
+        }
+        __ajax_post("/main/menu/visibleChange", {keyId : id, visible : visible}, function(data){
+            __toastr(data);
+        })
+    }
+
+</script>
+
+</html>

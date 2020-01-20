@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{common/head :: header}"></header>
+<link th:href="@{../static/css/nifty-demo.min.css}" rel="stylesheet" type="text/css">
+
+
+<body>
+<div id="container" class="effect aside-float aside-bright mainnav-lg">
+
+    <!--NAVBAR-->
+    <!--===================================================-->
+    <header id="navbar">
+        <div id="navbar-container" class="boxed">
+
+            <!--Brand logo & name-->
+            <!--================================-->
+            <div class="navbar-header">
+                <a href="index.html" class="navbar-brand">
+                    <img src="../static/img/logo.png" alt="Kepler Logo" class="brand-icon">
+                    <div class="brand-title">
+                        <span class="brand-text">Kepler</span>
+                    </div>
+                </a>
+            </div>
+            <!--================================-->
+            <!--End brand logo & name-->
+
+
+            <!--Navbar Dropdown-->
+            <!--================================-->
+            <div class="navbar-content clearfix">
+                <ul class="nav navbar-top-links pull-left">
+
+                    <!--Navigation toogle button-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="tgl-menu-btn">
+                        <a class="mainnav-toggle" href="#">
+                            <span class="fa fa-reorder fa-lg"></span>
+                        </a>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End Navigation toogle button-->
+
+
+
+                    <!--Notification dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                            <span class="fa fa-pie-chart fa-lg"  style="color: #ef5350"></span>
+                        </a>
+
+                        <!--Notification dropdown menu-->
+                        <div class="dropdown-menu dropdown-menu-md">
+                            <div class="pad-all bord-btm">
+                                <p class="text-semibold text-main mar-no">You have 9999 notifications.</p>
+                            </div>
+                            <div class="nano scrollable">
+                                <div class="nano-content">
+                                    <ul class="head-list">
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a href="#">
+                                                <div class="clearfix">
+                                                    <p class="pull-left">Database Repair</p>
+                                                    <p class="pull-right">70%</p>
+                                                </div>
+                                                <div class="progress progress-sm">
+                                                    <div style="width: 70%;" class="progress-bar">
+                                                        <span class="sr-only">70% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a href="#">
+                                                <div class="clearfix">
+                                                    <p class="pull-left">Upgrade Progress</p>
+                                                    <p class="pull-right">10%</p>
+                                                </div>
+                                                <div class="progress progress-sm">
+                                                    <div style="width: 10%;" class="progress-bar progress-bar-warning">
+                                                        <span class="sr-only">10% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a class="media" href="#">
+                                                <span class="badge badge-success pull-right">90%</span>
+                                                <div class="media-left">
+                                                    <i class="pli-data-settings icon-2x"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">HDD is full</div>
+                                                    <small class="text-muted">5000 minutes ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a class="media" href="#">
+                                                <div class="media-left">
+                                                    <i class="pli-file-edit icon-2x"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">Write a news article</div>
+                                                    <small class="text-muted">Last Update 8 hours ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a class="media" href="#">
+                                                <span class="label label-danger pull-right">New</span>
+                                                <div class="media-left">
+                                                    <i class="pli-speech-bubble-7 icon-2x"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">Comment Sorting</div>
+                                                    <small class="text-muted">Last Update 8 hours ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li>
+                                            <a class="media" href="#">
+                                                <div class="media-left">
+                                                    <i class="pli-add-user-plus-star icon-2x"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">New User Registered</div>
+                                                    <small class="text-muted">4 minutes ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li class="bg-gray">
+                                            <a class="media" href="#">
+                                                <div class="media-left">
+                                                    <img class="img-circle img-sm" alt="Profile Picture" src="../static/img/profile-photos/1.png">
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">Lucy sent you a message</div>
+                                                    <small class="text-muted">30 minutes ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dropdown list-->
+                                        <li class="bg-gray">
+                                            <a class="media" href="#">
+                                                <div class="media-left">
+                                                    <img class="img-circle img-sm" alt="Profile Picture" src="../static/img/profile-photos/2.png">
+                                                </div>
+                                                <div class="media-body">
+                                                    <div class="text-nowrap">Jackson sent you a message</div>
+                                                    <small class="text-muted">40 minutes ago</small>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!--Dropdown footer-->
+                            <div class="pad-all bord-top">
+                                <a href="#" class="btn-link text-dark box-block">
+                                    <i class="fa fa-angle-right fa-lg pull-right"></i>Show All Notifications
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End notifications dropdown-->
+
+
+
+                    <!--Mega dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li class="mega-dropdown">
+                        <a href="#" class="mega-dropdown-toggle">
+                            <span class="fa fa fa-smile-o fa-lg"></span>
+                        </a>
+                        <div class="dropdown-menu mega-dropdown-menu">
+                            <div class="row">
+                                <div class="col-sm-4 col-md-3">
+
+                                    <!--Mega menu list-->
+                                    <ul class="list-unstyled">
+                                        <li class="dropdown-header"><i class="fas fa-fingerprint"></i> Pages</li>
+                                        <li><a href="#">Profile</a></li>
+                                        <li><a href="#">Search Result</a></li>
+                                        <li><a href="#">FAQ</a></li>
+                                        <li><a href="#">Sreen Lock</a></li>
+                                        <li><a href="#" class="disabled">Disabled</a></li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End mega dropdown-->
+
+                </ul>
+                <ul class="nav navbar-top-links pull-right">
+
+                    <!--User dropdown-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <li id="dropdown-user" class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+                                <span class="pull-right">
+                                    <img class="img-circle img-user media-object" src="../static/img/profile-photos/1.png" alt="Profile Picture">
+                                    <i class="pli-male ic-user"></i>
+                                </span>
+                            <div class="username hidden-xs">Aaron Chavez</div>
+                        </a>
+
+
+                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
+
+                            <!-- Dropdown heading  -->
+                            <div class="pad-all bord-btm">
+                                <p class="text-main mar-btm"><span class="text-bold">750GB</span> of 1,000GB Used</p>
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar" style="width: 70%;">
+                                        <span class="sr-only">70%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- User dropdown menu -->
+                            <ul class="head-list">
+                                <li>
+                                    <a href="#">
+                                        <i class="fas fa-gift"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="badge badge-danger pull-right">9</span>
+                                        <i class="pli-mail icon-lg icon-fw"></i> Messages
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="label label-success pull-right">New</span>
+                                        <i class="pli-gear icon-lg icon-fw"></i> Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="pli-information icon-lg icon-fw"></i> Help
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="pli-computer-secure icon-lg icon-fw"></i> Lock screen
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- Dropdown footer -->
+                            <div class="pad-all text-right">
+                                <a href="pages-login.html" class="btn btn-primary">
+                                    <i class="pli-unlock"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End user dropdown-->
+
+                    <li>
+                        <a href="#" class="aside-toggle navbar-aside-icon">
+                            <i class="pci-ver-dots"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--================================-->
+            <!--End Navbar Dropdown-->
+
+        </div>
+    </header>
+    <!--===================================================-->
+    <!--END NAVBAR-->
+
+    <div class="boxed">
+
+        <!--CONTENT CONTAINER-->
+        <!--===================================================-->
+        <div id="content-container">
+
+
+        </div>
+        <!--===================================================-->
+        <!--END CONTENT CONTAINER-->
+
+
+
+        <!--ASIDE-->
+        <!--===================================================-->
+        <aside id="aside-container">
+            <div id="aside">
+                <div class="nano">
+                    <div class="nano-content">
+
+                        <!--Nav tabs-->
+                        <!--================================-->
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="active">
+                                <a href="#asd-tab-1" data-toggle="tab">
+                                    <i class="far fa-lg fa-smile"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#asd-tab-2" data-toggle="tab">
+                                    <i class="far fa-lg fa-meh-rolling-eyes"></i> Report
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#asd-tab-3" data-toggle="tab">
+                                    <i class="far fa-lg fa-meh"></i> 主题
+                                </a>
+                            </li>
+                        </ul>
+                        <!--================================-->
+                        <!--End nav tabs-->
+
+
+
+                        <!-- Tabs Content -->
+                        <!--================================-->
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade in active" id="asd-tab-1">1</div>
+
+                            <div class="tab-pane fade" id="asd-tab-2">2</div>
+
+                            <div class="tab-pane fade" id="asd-tab-3">
+                                <div id="theme-set" class="demo-justify-theme pad-all">
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-light add-tooltip" data-theme="theme-light" data-type="a" data-title="(A). Light">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-navy add-tooltip" data-theme="theme-navy" data-type="a" data-title="(A). Navy Blue">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-ocean add-tooltip" data-theme="theme-ocean" data-type="a" data-title="(A). Ocean">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-lime add-tooltip" data-theme="theme-lime" data-type="a" data-title="(A). Lime">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-purple add-tooltip" data-theme="theme-purple" data-type="a" data-title="(A). Purple">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-dust add-tooltip" data-theme="theme-dust" data-type="a" data-title="(A). Dust">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-mint add-tooltip" data-theme="theme-mint" data-type="a" data-title="(A). Mint">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-yellow add-tooltip" data-theme="theme-yellow" data-type="a" data-title="(A). Yellow">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-well-red add-tooltip" data-theme="theme-well-red" data-type="a" data-title="(A). Well Red">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-coffee add-tooltip" data-theme="theme-coffee" data-type="a" data-title="(A). Coffee">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-prickly-pear add-tooltip" data-theme="theme-prickly-pear" data-type="a" data-title="(A). Prickly pear">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-a-dark add-tooltip" data-theme="theme-dark" data-type="a" data-title="(A). Dark">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-light add-tooltip" data-theme="theme-light" data-type="b" data-title="(B). Light">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-navy add-tooltip" data-theme="theme-navy" data-type="b" data-title="(B). Navy Blue">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-ocean add-tooltip" data-theme="theme-ocean" data-type="b" data-title="(B). Ocean">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-lime add-tooltip" data-theme="theme-lime" data-type="b" data-title="(B). Lime">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-purple add-tooltip" data-theme="theme-purple" data-type="b" data-title="(B). Purple">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-dust add-tooltip" data-theme="theme-dust" data-type="b" data-title="(B). Dust">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-mint add-tooltip" data-theme="theme-mint" data-type="b" data-title="(B). Mint">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-yellow add-tooltip" data-theme="theme-yellow" data-type="b" data-title="(B). Yellow">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-well-red add-tooltip" data-theme="theme-well-red" data-type="b" data-title="(B). Well red">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-coffee add-tooltip" data-theme="theme-coffee" data-type="b" data-title="(B). Coofee">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-prickly-pear add-tooltip" data-theme="theme-prickly-pear" data-type="b" data-title="(B). Prickly pear">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-b-dark add-tooltip" data-theme="theme-dark" data-type="b" data-title="(B). Dark">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-light add-tooltip" data-theme="theme-light" data-type="c" data-title="(C). Light">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-navy add-tooltip" data-theme="theme-navy" data-type="c" data-title="(C). Navy Blue">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-ocean add-tooltip" data-theme="theme-ocean" data-type="c" data-title="(C). Ocean">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-lime add-tooltip" data-theme="theme-lime" data-type="c" data-title="(C). Lime">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-purple add-tooltip" data-theme="theme-purple" data-type="c" data-title="(C). Purple">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-dust add-tooltip" data-theme="theme-dust" data-type="c" data-title="(C). Dust">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-mint add-tooltip" data-theme="theme-mint" data-type="c" data-title="(C). Mint">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-yellow add-tooltip" data-theme="theme-yellow" data-type="c" data-title="(C). Yellow">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-well-red add-tooltip" data-theme="theme-well-red" data-type="c" data-title="(C). Well Red">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-coffee add-tooltip" data-theme="theme-coffee" data-type="c" data-title="(C). Coffee">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-prickly-pear add-tooltip" data-theme="theme-prickly-pear" data-type="c" data-title="(C). Prickly pear">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+                                    <a href="javascript:void(0)" class="demo-theme demo-c-dark add-tooltip" data-theme="theme-dark" data-type="c" data-title="(C). Dark">
+                                        <div class="demo-theme-brand"></div>
+                                        <div class="demo-theme-head"></div>
+                                        <div class="demo-theme-nav"></div>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!--===================================================-->
+        <!--END ASIDE-->
+
+
+        <!--MAIN NAVIGATION-->
+        <!--===================================================-->
+        <nav id="mainnav-container">
+            <div id="mainnav">
+
+                <!--Menu-->
+                <!--================================-->
+                <div id="mainnav-menu-wrap">
+                    <div class="nano">
+                        <div class="nano-content">
+
+                            <!--Profile Widget-->
+                            <!--================================-->
+                            <div id="mainnav-profile" class="mainnav-profile">
+                                <div class="profile-wrap">
+                                    <div class="pad-btm">
+                                        <span class="label label-success pull-right">New</span>
+                                        <img class="img-circle img-sm img-border" src="../static/img/profile-photos/1.png" alt="Profile Picture">
+                                    </div>
+                                    <a href="#profile-nav" class="box-block" data-toggle="collapse" aria-expanded="false">
+                                            <span class="pull-right dropdown-toggle">
+                                                <i class="dropdown-caret"></i>
+                                            </span>
+                                        <p class="mnp-name" th:text="${user?.name}">欢迎</p>
+                                        <span class="mnp-desc" th:text="${user?.phone}"></span>
+                                    </a>
+                                </div>
+                                <div id="profile-nav" class="collapse list-group bg-trans">
+                                    <a href="#" class="list-group-item">
+                                        <i class="pli-male icon-lg icon-fw"></i> View Profile
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <i class="pli-gear icon-lg icon-fw"></i> Settings
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <i class="pli-information icon-lg icon-fw"></i> Help
+                                    </a>
+                                    <a href="/logout" class="list-group-item">
+                                        <i class="pli-unlock icon-lg icon-fw"></i> Logout
+                                    </a>
+                                </div>
+                            </div>
+
+
+                            <!--Shortcut buttons-->
+                            <!--================================-->
+                            <div id="mainnav-shortcut">
+                                <ul class="list-unstyled">
+                                    <li class="col-xs-3" data-content="My Profile">
+                                        <a class="shortcut-grid" href="#">
+                                            <i class="fa fa-wheelchair fa-lg"></i>
+                                        </a>
+                                    </li>
+                                    <li class="col-xs-3" data-content="Messages">
+                                        <a class="shortcut-grid" href="#">
+                                            <i class="fa fa-thumbs-o-up fa-lg"></i>
+                                        </a>
+                                    </li>
+                                    <li class="col-xs-3" data-content="Activity">
+                                        <a class="shortcut-grid" href="#">
+                                            <i class="fa fa-chain-broken fa-lg"></i>
+                                        </a>
+                                    </li>
+                                    <li class="col-xs-3" data-content="Lock Screen">
+                                        <a class="shortcut-grid" href="#">
+                                            <i class="fa fa-expeditedssl fa-lg"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--================================-->
+                            <!--End shortcut buttons-->
+
+
+                            <ul id="mainnav-menu" class="list-group">
+
+                                <li id="home">
+                                    <a href="menu/dashboard">
+                                        <i class="fas fa-grip-horizontal"></i>
+                                        <span class="menu-title">
+                                                <strong>工作台</strong>
+											</span>
+                                    </a>
+                                </li>
+
+                                <!--菜单递归-->
+                                <th:block th:include="this::tree(${menuTree}, 0)"></th:block>
+                                <th:block th:fragment="tree(childs, level)">
+                                    <li  th:each="menu:${childs}" th:id="${menu.id}" th:class="${menu.visible=='1' ? 'hidden' : ''}" th:data-level="${level}">
+                                        <a th:href="${menu.url}" th:target="${menu.target}">
+                                            <i th:class="${menu.iconCode}"></i>
+                                            <span class="menu-title" th:text="${menu.name}"></span>
+                                            <i class="arrow" th:hidden="${#lists.isEmpty(menu.children)}"></i>
+                                        </a>
+                                        <ul class="collapse" th:unless="${#lists.isEmpty(menu.children)}" th:include="this::tree(${menu.children}, ${level+1})"></ul>
+                                    </li>
+                                </th:block>
+
+
+                                <!--Menu list item-->
+                                <li>
+                                    <a href="#">
+                                        <i class="psi-tactic"></i>
+                                        <span class="menu-title">Menu Level</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li><a href="#">Second Level Item</a></li>
+                                        <li><a href="#">Second Level Item</a></li>
+                                        <li><a href="#">Second Level Item</a></li>
+                                        <li class="list-divider"></li>
+                                        <li>
+                                            <a href="#">Third Level<i class="arrow"></i></a>
+
+                                            <!--Submenu-->
+                                            <ul class="collapse">
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level<i class="arrow"></i></a>
+
+                                            <!--Submenu-->
+                                            <ul class="collapse">
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li class="list-divider"></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                                <li><a href="#">Third Level Item</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="list-divider"></li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <!--================================-->
+                <!--End menu-->
+
+            </div>
+        </nav>
+        <!--===================================================-->
+        <!--END MAIN NAVIGATION-->
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+    <!--===================================================-->
+    <footer id="footer">
+
+        <!-- Visible when footer positions are fixed -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <div class="show-fixed pull-right">
+            You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending action.</a>
+        </div>
+
+
+        <div class="hide-fixed pull-right pad-rgt">14GB of <strong>512GB</strong> Free.</div>
+        <p class="pad-lft">&#0169; 2020 Your Company</p>
+
+    </footer>
+    <!--===================================================-->
+    <!-- END FOOTER -->
+
+
+    <!-- SCROLL PAGE BUTTON -->
+    <!--===================================================-->
+    <button class="scroll-top btn">
+        <i class="pci-chevron chevron-up"></i>
+    </button>
+    <!--===================================================-->
+
+
+
+</div>
+<!--===================================================-->
+<!-- END OF CONTAINER -->
+
+
+</body>
+
+
+<!--===================================================-->
+<!-- END OF CONTAINER -->
+
+
+
+<!--jQuery [ REQUIRED ]-->
+<script th:src="@{../static/js/jquery-2.2.4.min.js}"></script>
+
+<!--BootstrapJS [ RECOMMENDED ]-->
+<script th:src="@{../static/js/bootstrap.min.js}"></script>
+
+<!--Nifty Admin [ RECOMMENDED ]-->
+<script th:src="@{../static/js/nifty.min.js}"></script>
+<script th:src="@{../static/js/nifty-demo.min.js}"></script>
+
+<!--Page Load Progress Bar [ OPTIONAL ]-->
+<script th:src="@{../static/plugins/pace/js/pace.min.js}"></script>
+
+<!--Bootstrap Select [ OPTIONAL ]-->
+<script th:src="@{../static/plugins/bootstrap-select/1.10.0/js/bootstrap-select.min.js}"></script>
+<script th:src="@{../static/plugins/bootstrap-select/1.10.0/js/i18n/defaults-zh_CN.min.js}"></script>
+
+<!-- jsrender -->
+<script th:src="@{../static/plugins/jsview/0.9.8/jsrender.min.js}"></script>
+
+<!-- dialog -->
+<script th:src="@{../static/plugins/bootstrap-dialog/1.35.2/js/bootstrap-dialog.min.js}"></script>
+<script th:src="@{../static/plugins/bootstrap-dialog/1.35.2/js/i18n/defaults-zh_CN.js}"></script>
+
+<!-- jqGrid -->
+<script th:src="@{../static/plugins/jqGrid/5.1.1/js/jquery.jqGrid.min.js}"></script>
+<script th:src="@{../static/plugins/jqGrid/5.1.1/js/i18n/grid.locale-cn.js}"></script>
+
+<!-- validation -->
+<script th:src="@{../static/plugins/jquery-validation/1.15.0/jquery.validate.min.js}"></script>
+<script th:src="@{../static/plugins/jquery-validation/1.15.0/i18n/messages_zh.min.js}"></script>
+
+<!-- ztree -->
+<script th:src="@{../static/plugins/ztree/3.5.24/js/jquery.ztree.all.min.js}"></script>
+
+<!--wizard-->
+<script th:src="@{../static/plugins/bootstrap-wizard/1.4.2/jquery.bootstrap.wizard.min.js}"></script>
+
+<!--Select2 [ OPTIONAL ]-->
+<script th:src="@{../static/plugins/select2/js/select2.min.js}"></script>
+
+<!--Full Calendar [ OPTIONAL ]-->
+<script th:src="@{../static/plugins/fullcalendar/lib/moment.min.js}"></script>
+<script th:src="@{../static/plugins/fullcalendar/lib/jquery-ui.custom.min.js}"></script>
+<script th:src="@{../static/plugins/fullcalendar/fullcalendar.js}"></script>
+
+<!--Summernote [ OPTIONAL ]-->
+<script th:src="@{../static/plugins/summernote/summernote.min.js}"></script>
+<script th:src="@{../static/plugins/summernote/lang/summernote-zh-CN.js}"></script>
+
+<!-- easy-pie-chart -->
+<script th:src="@{../static/plugins/easy-pie-chart/jquery.easypiechart.min.js}"></script>
+
+<!--math-->
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/math/math.min.js}"> </script>
+
+<!--地区选择-->
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/city-picker/js/city-picker.data.min.js}"></script>
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/city-picker/js/city-picker.min.js}"></script>
+
+<!--附件上传-->
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/dropzone/js/dropzone.js}"></script>
+
+<!--tip工具-->
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/minimalTips/jquery.minimalTips.js?v=0.0.3}"></script>
+
+<!--app core-->
+<script th:src="@{../static/js/core/app-core.js?v=0.1.0}"></script>
+<script th:src="@{../static/js/core/app-config.js}"></script>
+<script th:src="@{../static/js/core/app-common.js?v=1.4.9}"></script>
+
+</html>
+
+<script>
+
+    //主题设置
+    $("#theme-set").on("click", "a", function(){
+
+        $("head").find("link[href^='../static/css/themes/']").remove();
+
+        var $theme = $(this);
+        var href = "../static/css/themes/type-"+$theme.attr("data-type")+"/"+$theme.attr("data-theme")+".min.css";
+        var newCss = '<link href="'+href+'" rel="stylesheet">';
+        $("head").append(newCss);
+    });
+
+</script>

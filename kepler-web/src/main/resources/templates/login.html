@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{common/head :: header}"></header>
+
+<script th:src="@{../static/plugins/pace/js/pace.min.js}"></script>
+<script th:src="@{../static/js/jquery-2.2.4.min.js}"></script>
+<script th:src="@{../static/js/bootstrap.min.js}"></script>
+<script th:src="@{../static/js/nifty.min.js}"></script>
+<script th:src="@{../static/js/core/app-common.js?v=0.0.1}"></script>
+
+<body>
+
+<div id="container" class="cls-container">
+
+    <!-- BACKGROUND IMAGE -->
+    <!--===================================================-->
+    <div id="bg-overlay" class="bg-img login-bg"></div>
+
+
+    <!-- LOGIN FORM -->
+    <!--===================================================-->
+    <div class="cls-content">
+        <div class="cls-content-sm panel-group accordion" id="accordion" style="margin: 7% 0 0 70%">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-parent="#accordion" data-toggle="collapse" href="#collapseOne">帐号登录</a>
+                    </h4>
+                </div>
+
+                <div class="panel-collapse collapse in" id="collapseOne">
+                    <div class="panel-body">
+                        <form autocomplete="off">
+                            <div class="form-group">
+                                <input type="text" name="username" class="form-control" placeholder="用户名" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control" placeholder="密码">
+                            </div>
+                            <div class="checkbox pad-btm text-left">
+                                <input id="demo-form-checkbox" class="magic-checkbox" type="checkbox" name="remember-me">
+                                <label for="demo-form-checkbox">记住我</label>
+                            </div>
+                            <button class="btn btn-primary btn-lg btn-block" type="button" id="form_login">登录</button>
+                        </form>
+                    </div>
+
+                    <div class="pad-all">
+                        <div class="media pad-top bord-top">
+                            <div class="pull-right">
+                                <a href="/security/oauth/login/qq" class="pad-rgt"><i class="fa fa-qq fa-lg" style="color: #42a5f5"></i></a>
+                                <a href="/security/oauth/login/weixin" class="pad-rgt"><i class="fa fa-weixin fa-lg" style="color: #00B83F"></i></a>
+                            </div>
+                            <div class="media-body text-left">社交登录</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo">手机验证码登录</a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" id="collapseTwo">
+                    <div class="panel-body">
+                        <form autocomplete="off">
+
+                            <div class="form-group">
+                                <input type="text" name="phone" class="form-control" placeholder="手机号" value="13949688581">
+                            </div>
+
+                            <div class="input-group mar-btm">
+                                <input type="text" name="smsCode" placeholder="验证码" class="form-control" value="">
+                                <span class="input-group-btn"><button class="btn btn-primary" type="button" id="send-smsCode-button">发送验证码</button></span>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="button" id="sms_login">登录</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<!--===================================================-->
+<!-- END OF CONTAINER -->
+
+
+</body>
+
+</html>
+
+<script>
+
+    $("#form_login").on("click", function(){
+        doLogin();
+    });
+
+    document.onkeydown = function(e){
+        if(!e) e = window.event;
+        if((e.keyCode || e.which) === 13){
+            doLogin();
+        }
+    };
+
+    //表单登录
+    function doLogin(){
+        var username = $("input[name='username']").val();
+        var password = $("input[name='password']").val();
+        var rememberMe = $("input[name='remember-me']").is(':checked');
+        if(username && password){
+            __ajax_post("/authentication/form", {username : username, password : password, "remember-me" : rememberMe}, function(data){
+                if(data.code === 200){
+                    location.href = "/main/index";
+                }else{
+                    __toastr_error(data.msg==='Bad credentials' ? '密码错误' : data.msg);
+                    $("input[name='password']").val("");
+                }
+            })
+        }
+    }
+
+    //发送验证码
+    $("#send-smsCode-button").on("click", function(){
+        var phone = $("input[name='phone']").val();
+        var reg = /^1(3[0-9]|4[5,7]|5[0,1,2,3,5,6,7,8,9]|6[2,5,6,7]|7[0,1,7,8]|8[0-9]|9[1,8,9])\d{8}$/;
+        if(!reg.test(phone)){
+            __toastr_error("请输入正确的手机号");
+            return false;
+        }
+
+        __ajax_post("/security/sms/createSms", {phone : phone}, function(data){
+            if(data && data.state === 1){
+                __toastr_success(data.msg);
+                var $btn = $("#send-smsCode-button");
+                $btn.attr("disabled", true);
+                var wait = 60;
+                var time = setInterval(function(){
+                    wait -= 1;
+                    $btn.text("再次发送("+wait+")");
+                    if(wait === 0){
+                        clearInterval(time);
+                        $btn.attr("disabled", false); $btn.text("发送验证码");
+                    }
+                }, 1000);
+            }else{
+                __toastr(data);
+            }
+        });
+    });
+
+    //手机验证码登录
+    $("#sms_login").on("click", function(){
+        var phone = $("input[name='phone']").val();
+        var smsCode = $("input[name='smsCode']").val();
+        if(phone && smsCode){
+            __ajax_post("/authentication/mobile", {mobile : phone, smsCode : smsCode}, function(data){
+                if(data.state === 1){
+                    location.href = "/main/index";
+                }else{
+                    __toastr_error(data.msg);
+                }
+            })
+        }
+    });
+
+</script>

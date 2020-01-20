@@ -1,0 +1,29 @@
+.header{font-weight: 500;color:#758697;border-bottom: 1px dashed rgba(0, 0, 0, .2);padding:0px;margin: 0 0 20px}
+div.flow{
+    /*width:726px;*/
+    margin:15px;
+}
+
+div.flow .f_title{
+    font-size:16px;
+    margin-top:10px
+}
+
+div.flow .f_content{
+    border:1px solid #CCC;
+    margin-top:5px
+}
+
+div.flow .f_title i.right{
+    display: inline-block;
+    width:14px;
+    height:14px;
+    background: url('../img/right.png');
+}
+
+div.flow .f_title i.down{
+    display: inline-block;
+    width:14px;
+    height:14px;
+    background: url('../img/down.png');
+}

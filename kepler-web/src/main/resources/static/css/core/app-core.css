@@ -1,0 +1,438 @@
+/* fix */
+/*======================================*/
+.btn-row{
+    margin-bottom: 15px !important;
+}
+
+.demo-justify-theme > a{
+    margin-bottom: 10px;
+}
+
+/* dialog 样式 */
+.bootstrap-dialog.modal-example .modal-header {
+    background-color: transparent
+}
+.bootstrap-dialog.modal-example .bootstrap-dialog-title {
+    color: #2b425b;
+}
+.bootstrap-dialog.modal-example .modal-header .close {
+    top: 50%;
+    margin-top: -0.5em;
+    right: 10px;
+    left: auto;
+    position: absolute;
+    background-color: transparent !important;
+}
+
+/* jqgrid 样式 */
+#container .ui-jqgrid table.table.table-bordered td {
+    border-top: 0px none;
+}
+.ui-jqgrid .ui-jqgrid-bdiv{
+    overflow: hidden;
+}
+.ui-jqgrid .table > tbody > tr.jqgrow > td {
+    vertical-align: inherit;
+    color: #0068b7;
+}
+.ui-jqgrid .ui-jqgrid-pager .ui-pg-input,
+.ui-jqgrid .ui-jqgrid-pager .ui-pg-selbox{
+    border: 1px solid #e9e9e9;
+}
+/*表格×隐藏*/
+.ui-jqgrid .ui-search-clear{
+    display: none;
+}
+/*列标题上下箭头隐藏*/
+.ui-jqgrid .s-ico{
+    display: none !important;
+}
+/*jqgrid横向滚动条*/
+.ui-jqgrid .ui-jqgrid-bdiv {
+    overflow-x: hidden;
+}
+
+
+
+/* checkbox */
+.checkbox {
+    font-size: 13px;
+}
+
+/* select */
+select.form-control {
+    height: 34px;
+}
+
+/* selectpicker */
+.bootstrap-select {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+}
+
+/* validate error */
+.form-control.error {
+    border: 1px solid  #a94442;
+}
+em.error{
+    display: inline-block;
+    margin-top: 5px;
+    padding: 0 1px;
+    font-style: normal;
+    font-size: 11px;
+    line-height: 15px;
+    color: #a94442;
+}
+
+/* floating noty */
+#floating-top-right {
+    z-index: 1100;
+}
+#floating-top-right .alert-wrap {
+    min-width: 300px;
+}
+
+/*======================================*/
+
+/* spiner */
+/*======================================*/
+.spiner-example {
+    height: 200px;
+    padding-top: 70px;
+}
+/*
+ *  Usage:
+ *
+ *    <div class="sk-spinner sk-spinner-three-bounce">
+ *      <div class="sk-bounce1"></div>
+ *      <div class="sk-bounce2"></div>
+ *      <div class="sk-bounce3"></div>
+ *    </div>
+ *
+ */
+.sk-spinner-three-bounce.sk-spinner {
+    margin: 0 auto;
+    width: 70px;
+    text-align: center;
+}
+.sk-spinner-three-bounce div {
+    width: 18px;
+    height: 18px;
+    background-color: #42a5f5;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-threeBounceDelay 1.4s infinite ease-in-out;
+    animation: sk-threeBounceDelay 1.4s infinite ease-in-out;
+    /* Prevent first frame from flickering when animation starts */
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+.sk-spinner-three-bounce .sk-bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+.sk-spinner-three-bounce .sk-bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+@-webkit-keyframes sk-threeBounceDelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+    40% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+@keyframes sk-threeBounceDelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+    40% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+/*======================================*/
+
+/* SWITCHES */
+/*======================================*/
+.onoffswitch {
+    position: relative;
+    width: 54px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #42a5f5;
+    border-radius: 3px;
+}
+.onoffswitch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s;
+    -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before,
+.onoffswitch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 16px;
+    padding: 0;
+    line-height: 16px;
+    font-size: 10px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    /*font-weight: bold;*/
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 7px;
+    background-color: #42a5f5;
+    color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 7px;
+    background-color: #FFFFFF;
+    color: #758697;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block;
+    width: 18px;
+    margin: 0px;
+    background: #FFFFFF;
+    border: 1px solid #42a5f5;
+    border-radius: 3px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 36px;
+    -moz-transition: all 0.3s ease-in 0s;
+    -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+/*======================================*/
+
+/* 下拉树 */
+/*======================================*/
+.tree-select>input {
+    position: absolute!important;
+    bottom: 0;
+    left: 50%;
+    display: block!important;
+    width: .5px!important;
+    height: 100%!important;
+    padding: 0!important;
+    opacity: 0!important;
+    border: none;
+}
+.tree-select.form-control {
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+}
+.tree-select>.dropdown-toggle {
+    width: 100%;
+    padding-right: 25px;
+    z-index: 1;
+}
+.tree-select .dropdown-toggle:focus {
+    outline: thin dotted #333!important;
+    outline: 5px auto -webkit-focus-ring-color!important;
+    outline-offset: -2px;
+}
+.tree-select.btn-group .dropdown-toggle .filter-option {
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+}
+.tree-select.btn-group .dropdown-toggle .caret {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+}
+.tree-select.btn-group .dropdown-menu {
+    min-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/*======================================*/
+
+/* 自定义样式 */
+/*======================================*/
+/* 表单必填项 */
+.txt-color-red {
+    color: #a90329 !important
+}
+/* 登录页背景 */
+.login-bg{
+    background-image : url("../../img/bg-img/3.jpg");
+}
+/*======================================*/
+
+/* 上传附件列表 */
+.dd-list {
+    display:block;
+    position:relative;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+.dd-list .dd-list {
+    padding-left:30px;
+}
+.dd-collapsed .dd-list {
+    display:none;
+}
+.dd-item,.dd-empty,.dd-placeholder {
+    display:block;
+    position:relative;
+    margin:0;
+    padding:0;
+    min-height:20px;
+    font-size:13px;
+    line-height:20px;
+}
+.dd-handle-list {
+    position:absolute;
+    width:30px;
+    height:30px;
+    background:#E1E1E1;
+    top:0;
+    left:0;
+    z-index:1;
+    font-size:1em;
+    color:#000000;
+    text-align:center;
+    border:1px solid #E1E1E1;
+    padding-top:4px;
+}
+.dd-handle {
+    background:none repeat scroll 0 0 #F6F6F8;
+    border:2px solid #e1e1e1;
+    border-radius:0;
+    background-clip:padding-box;
+    color:#000000;
+    display:block;
+    font-size:0.875em;
+    font-weight:700;
+    height:36px;
+    /*margin:5px 0;*/
+    padding:5px 10px;
+    text-decoration:none;
+    box-sizing:border-box;
+}
+.dd-handle:hover {
+    color:#03a9f4;
+    background:#fff;
+}
+.dd-handle .nested-links {
+    float:right;
+}
+.dd-handle .nested-links .nested-link {
+    margin:0 2px;
+}
+.dd-handle .nested-links .nested-link:last-child {
+    margin-right:0;
+}
+.dd-handle .nested-links .nested-link i {
+    font-size:1.25em;
+}
+.dd-item-list .dd-handle {
+    padding-left:40px;
+}
+div.pull-right > .btn{
+    padding: 5px 12px;
+}
+a.pull-right{
+    margin-right:5px;
+}
+
+form i[class='fa fa-asterisk txt-color-red']{
+    font-size: 12px;
+    position: absolute;
+    top: 4px;
+    -webkit-transform: scale(0.8,0.8);
+    -moz-transform: scale(0.8,0.8);
+    -o-transform: scale(0.8,0.8);
+    transform: scale(0.8,0.8)
+}
+
+/*read表单中，流程操作记录和表单内容分隔开，使看上去像是两个card*/
+.form-card-separate-div{
+    width: 100%;
+    height: 15px;
+    margin-bottom: 20px;
+    border-top: 1px solid #d1d9de;
+    border-bottom: 1px solid #d1d9de;
+    background-color: #ecf0f5;
+}
+
+form .img-responsive{
+    width: 40px;
+    height: 40px;
+}
+
+/*消除 浏览器input自动填充后背景色会变成黄色*/
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    background-color: #FFF !important;
+}
+
+/*导航栏的图标宽度统一*/
+#mainnav-menu li i.fa{
+    width: 20px;
+}
+.panel-heading{
+    height: auto;
+    min-height: 50px;
+}
+
+/*dialog中的read页面隐藏返回按钮和流程信息*/
+.modal-dialog .flow,
+.modal-dialog .panel-footer,
+.modal-dialog .form-card-separate-div,
+.modal-dialog #comment{
+    display: none;
+}
+
+/*表单中调整距离边框太挤*/
+.form-horizontal .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}

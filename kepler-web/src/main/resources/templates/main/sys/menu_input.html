@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<form id="form_menu_input" class="form-horizontal" autocomplete="off">
+    <input type="hidden" name="keyId" id="keyId" th:value="${menu?.id}"/>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">管理员菜单<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-8">
+            <div class="radio">
+                <input type="radio" name="isManageMenu" id="isManageMenu1" value="0" class="magic-radio" th:checked="${menu==null || menu?.isManageMenu==0}" >
+                <label for="isManageMenu1">否</label>
+                <input type="radio" name="isManageMenu" id="isManageMenu2" value="1" class="magic-radio" th:checked="${menu?.isManageMenu==1}" >
+                <label for="isManageMenu2">是</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">父及</label>
+        <div class="col-md-8">
+            <input type="text" name="parentName" id="parentName" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.name : parentMenu?.name}" class="form-control">
+            <input type="hidden" name="parentId" id="parentId" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.id : parentMenu?.id}" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">类型<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-8">
+            <div class="radio">
+                <input type="radio" name="menuType" id="menuType1" value="目录" class="magic-radio" th:checked="${menu?.menuType} eq '目录'" >
+                <label for="menuType1">目录</label>
+                <input type="radio" name="menuType" id="menuType2" value="菜单" class="magic-radio" th:checked="${menu?.menuType} eq '菜单'" >
+                <label for="menuType2">菜单</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">名称<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-8">
+            <input type="text" name="name" id="name" placeholder="请输入名称"   th:value="${menu?.name}" class="form-control">
+        </div>
+    </div>
+
+    <div id="div-url" class="form-group" th:hidden="${menu?.menuType=='目录'}">
+        <label class="col-md-2 control-label">连接地址<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-8">
+            <input type="text" name="url" id="url" placeholder="连接地址"   th:value="${menu?.url}" class="form-control">
+        </div>
+    </div>
+
+    <div id="div-target" class="form-group" th:hidden="${menu?.menuType=='目录'}">
+        <label class="col-md-2 control-label">打开方式<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-8">
+            <div class="radio">
+                <input type="radio" name="target" id="target1" value="_self" class="magic-radio" th:checked="${menu?.target==null || menu?.target=='_self'}" >
+                <label for="target1">_self</label>
+                <input type="radio" name="target" id="target2" value="_blank" class="magic-radio" th:checked="${menu?.target=='_blank'}" >
+                <label for="target2">_blank</label>
+                <input type="radio" name="target" id="target3" value="_top" class="magic-radio" th:checked="${menu?.target=='_top'}" >
+                <label for="target3">_top</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">图标代码</label>
+        <div class="col-md-8">
+            <div class="input-group mar-btm">
+                <input type="text" name="iconCode" id="iconCode" placeholder="图标代码"   th:value="${menu?.iconCode}" class="form-control">
+                <span class="input-group-btn"><a href="menu/file/icons-font-awesome" target="_blank" class="btn btn-success">查看代码</a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">自定义排序</label>
+        <div class="col-md-8">
+            <input type="number" name="orderNum" id="orderNum" placeholder="请输入自定义排序"   th:value="${menu?.orderNum}" class="form-control">
+        </div>
+    </div>
+
+</form>
+
+</body>
+
+<script th:inline="javascript">
+    $(function(){
+        fn_menu_input_validate();
+    });
+
+    //运送人员显示隐藏
+    $(":radio[name='menuType']").click(function(){
+        if($(this).val()=='目录'){
+            $("#div-url").hide();
+            $("#div-target").hide();
+        }else{
+            $("#div-url").show();
+            $("#div-target").show();
+        }
+    });
+
+    $("#form_menu_input #parentName").on("focus", function(){
+        __open_dialog_form("选择", "/main/menu/dialog_select", function(dialogRef){
+            var callback = function(data){
+                dialogRef.enableButtons();
+                if(data && data.id){
+                    $("#form_menu_input #parentName").val(data.name);
+                    $("#form_menu_input #parentId").val(data.id);
+                    dialogRef.close();
+                }
+            };
+            fn_menu_select(callback);
+        },{size : BootstrapDialog.SIZE_NORMAL})
+    });
+
+    function fn_menu_input_validate(){
+        __init_validate("form_menu_input", {
+            rules : {
+                menuType : {
+                    required : true
+                },
+                name : {
+                    required : true
+                },
+                url : {
+                    required : function(){
+                        return $(":radio[name='menuType']:checked").val() == "菜单";
+                    }
+                }
+            }
+        })
+    }
+
+    //保存
+    function fn_menu_save(callback){
+        if($("#form_menu_input").valid()){
+            __form_save("form_menu_input", "/main/menu/save", function(data){
+                callback(data);
+            })
+        }else{
+            callback();
+        }
+    }
+</script>
+
+</html>
