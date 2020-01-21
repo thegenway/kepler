@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<form id="form_member_create" class="form-horizontal">
+
+    <input type="hidden" name="keyId" id="keyId" value=""/>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">成员姓名</label>
+        <div class="col-md-7">
+            <input type="text" name="name" id="name" class="form-control" placeholder="请输入成员姓名">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">登录账号</label>
+        <div class="col-md-7">
+            <input type="text" name="account" id="account" class="form-control" placeholder="请输入成员手机号/邮箱账号">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">登录密码</label>
+        <div class="col-md-7">
+            <input type="password" name="password" id="password" class="form-control" placeholder="请输入登录密码" value="password">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">密码确认</label>
+        <div class="col-md-7">
+            <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control" placeholder="再次输入登录密码" value="password">
+        </div>
+    </div>
+
+</form>
+
+</body>
+
+
+<script th:inline="javascript">
+
+    $(function(){
+        fn_member_create_validate();
+    });
+
+    // 表单数据校验
+    function fn_member_create_validate() {
+        __init_validate('form_member_create', {
+            rules : {
+                account : {
+                    required : true,
+                    remote : {
+                        type: 'post',
+                        url: '/main/member/validate/account',
+                        data: {
+                            account: function() {return $('#form_member_create').find('#account').val()}
+                        }
+                    }
+                },
+                name : {
+                    required : true
+                },
+                password : {
+                    required : true
+                },
+                passwordConfirm : {
+                    required : true,
+                    equalTo : '#password'
+                }
+            },
+            messages : {
+                account : {
+                    required : '请输入成员手机号/邮箱账号',
+                    remote : '请输入有效的手机号/邮箱账号, 或已被使用'
+                },
+                name : {
+                    required : '请输入成员姓名'
+                },
+                password : {
+                    required : '请输入登录密码'
+                },
+                passwordConfirm : {
+                    required : '请输入确认密码',
+                    equalTo : '请确保两次输入密码一致'
+                }
+            }
+        });
+    }
+
+    function fn_member_create_save(callback) {
+        if (!$('#form_member_create').valid()) {
+            return false;
+        }
+        __confirm_dialog(null, '确定提交么?',
+            function () {
+                __form_save('form_member_create', '/main/member/create', function(data){
+                    callback(data);
+                });
+            },
+            function () {
+                callback();
+            }
+        );
+    }
+
+</script>
+
+</html>

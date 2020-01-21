@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.sys;
 
+import com.hanqian.kepler.common.entity.result.AjaxResult;
 import com.hanqian.kepler.common.service.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.User;
 
@@ -26,5 +27,10 @@ public interface UserService extends BaseService<User, String> {
 	 * 判断用户是否是系统管理员
 	 */
 	boolean isManager(User user);
+
+	/**
+	 * 创建用户
+	 */
+	AjaxResult createMember(String account, String password, String name);
 
 }

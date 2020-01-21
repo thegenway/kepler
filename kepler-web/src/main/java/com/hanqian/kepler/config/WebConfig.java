@@ -1,18 +1,14 @@
 package com.hanqian.kepler.config;
 
 import com.hanqian.kepler.security.annotation.CurrUserMethodArgumentResolver;
+import com.hanqian.kepler.web.annotation.RequestJsonParamMethodArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import java.util.List;
 
@@ -45,6 +41,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 	@Override
 	protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(currUserMethodArgumentResolver());
+		argumentResolvers.add(requestJsonParamMethodArgumentResolver());
 		super.addArgumentResolvers(argumentResolvers);
 	}
 
@@ -59,6 +56,14 @@ public class WebConfig extends WebMvcConfigurationSupport {
 	@Bean
 	public CurrUserMethodArgumentResolver currUserMethodArgumentResolver() {
 		return new CurrUserMethodArgumentResolver();
+	}
+
+	/**
+//	 * 参数json转实体类
+//	 */
+	@Bean
+	public RequestJsonParamMethodArgumentResolver requestJsonParamMethodArgumentResolver(){
+		return new RequestJsonParamMethodArgumentResolver();
 	}
 
 }

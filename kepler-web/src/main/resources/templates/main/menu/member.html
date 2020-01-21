@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div id="page-content">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">成员信息</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <div class="row">
+                            <div class="col-sm-12 table-toolbar-left">
+                                <btn id="btn_add_member" class="btn btn-primary btn-sm">
+                                    <i class="ti-plus"> </i> 新增成员
+                                </btn>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-jqgrid">
+                        <table id="member_table"></table>
+                        <div id="member_page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+<script th:inline="javascript">
+    $(function () {
+
+        init_grid_member();
+
+    });
+
+    //分配部门岗位
+    function fn_users_actions_config(id) {
+        __open_dialog_form('分配职权【左部门右岗位】', '/main/member/configView/' + id, function (dialogRef) {
+            fn_member_configView();
+            dialogRef.close();
+        });
+
+    };
+
+    //查看职责信息
+    function fn_users_actions_query(id) {
+        __open_dialog_form('查看职责【可以设置主要职责】', '/main/member/dutyView/' + id, function (dialogRef) {
+            fn_member_dutyView();
+            dialogRef.close();
+        });
+
+    };
+
+    function init_grid_member() {
+
+        __init_jqgrid('member_table', 'member_page', '/main/member/list',
+            ['用户名称', '用户名', '邮箱', '手机号', '微信', "职责信息", "职权信息", '操作', 'id'],
+            [
+                {name: 'name', index: 'name', width: 250, sortable: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'username', index: 'username', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'email', index: 'email', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'phone', index: 'phone', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'wxName', index: 'wxName', width: 120, sortable: false, search: false},
+                {name: 'roleBtn', index: 'roleBtn', width: 120, sortable: false, search: false, formatter: btnDutyInfo},
+                {name: 'setBtn', index: 'setBtn', width: 120, sortable: false, search: false, formatter: btnSetDutyInfo},
+                {name: 'act', index: 'act', width: 120, fixed: true, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true, hidedlg: true}
+            ],
+            true, true
+        );
+
+    }
+
+    function btnDutyInfo(cellvalue, options, cell) {
+        if (cellvalue != "") {
+            var cl = cell["ifMain"];
+            var id = cell["id"];
+            if (cl != "" && typeof(cl) != "undefined") {
+                var btn = "<button class='btn btn-warning btn-sm' data-original-title='职责信息'  onclick=\"fn_users_actions_query('" + id + "');\"><i class='fa fa-eye'></i> 职责信息</button>";
+            }
+            else {
+                var btn = "<button class='btn btn-default btn-sm' data-original-title='职责信息'  onclick=\"fn_users_actions_query('" + id + "');\"><i class='fa fa-eye'></i> 职责信息</button>";
+            }
+            return btn;
+        }
+        return false;
+    }
+
+    function btnSetDutyInfo(cellvalue, options, cell) {
+        if (cellvalue != "") {
+            var cl = cell["dutyId"];
+            var id = cell["id"];
+            if (cl != "" && typeof(cl) != "undefined") {
+                var btn = "<button class='btn btn-warning btn-sm' data-original-title='分配职权'  onclick=\"fn_users_actions_config('" + id + "');\"><i class='fa fa-gear'></i>分配职权</button>";
+            } else {
+                var btn = "<button class='btn btn-default btn-sm' data-original-title='分配职权'  onclick=\"fn_users_actions_config('" + id + "');\"><i class='fa fa-gear'></i>分配职权</button>";
+            }
+            return btn;
+        }
+        return false;
+    }
+
+    function roleFormat(cellvalue, options, rowObject) {
+        if (cellvalue != null && cellvalue != '') {
+            cellvalue = cellvalue.replace('企', '<span class="label label-primary">企</span> ');
+            cellvalue = cellvalue.replace('管', '<span class="label label-info">管</span>');
+        }
+        return cellvalue;
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" data-original-title="编辑" onclick="fn_member_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+
+        return cellvalue;
+    }
+
+    $('#btn_add_member').click(function () {
+        __open_dialog_form('新增成员', '/main/member/create', function (dialogRef) {
+            var callback = function (data) {
+                if (data && data.state === 1) {
+                    dialogRef.close();
+                    __reflash_jqgrid("member_table");
+                } else {
+                    dialogRef.enableButtons();
+                }
+            };
+            if (fn_member_create_save(callback) === false) {
+                dialogRef.enableButtons();
+            }
+        });
+        return false;
+    });
+
+    function fn_member_edit(id) {
+        __open_dialog_form('编辑成员信息', '/main/member/update/' + id, function (dialogRef) {
+            var callback = function (data) {
+                if (data && data.state === 1) {
+                    dialogRef.close();
+                    __reflash_jqgrid("member_table");
+                } else {
+                    dialogRef.enableButtons();
+                }
+            };
+            if (fn_member_update_save(callback) === false) {
+                dialogRef.enableButtons();
+            }
+        });
+    }
+</script>
+
+</html>

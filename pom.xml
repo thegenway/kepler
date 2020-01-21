@@ -86,7 +86,6 @@
 
 
 
-
 			<dependency>
 				<groupId>com.hanqian</groupId>
 				<artifactId>kepler-common</artifactId>
