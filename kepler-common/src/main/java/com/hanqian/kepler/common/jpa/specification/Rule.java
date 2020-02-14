@@ -28,7 +28,7 @@ public class Rule<T> {
 	}
 
 	public static <T> Rule<T> like(String name, T value) {
-		return new Builder().operator(OP.LIKE).name(name).value(value).build();
+		return new Builder().operator(OP.LIKE).name(name).value("%"+value+"%").build();
 	}
 
 	public static <T> Rule<T> ne(String name, T value) {
@@ -45,6 +45,10 @@ public class Rule<T> {
 
 	public static <T> Rule<T> lt(String name, T value) {
 		return new Builder().operator(OP.LT).name(name).value(value).build();
+	}
+
+	public static <T> Rule<T> le(String name, T value) {
+		return new Builder().operator(OP.LE).name(name).value(value).build();
 	}
 
 	public static <T> Rule<T> isNull(String name) {

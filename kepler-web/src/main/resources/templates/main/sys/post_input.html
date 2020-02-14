@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<form id="form_post_input" class="form-horizontal">
+    <input type="hidden" id="keyId" name="keyId" th:value="${post?.id}"/>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">岗位名称<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-7">
+            <input type="text" name="name" id="name" th:value="${post?.name}" class="form-control" placeholder="请输入岗位名称">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">岗位描述</label>
+        <div class="col-md-7">
+            <input type="text" name="description" id="description" th:value="${post?.description}" class="form-control" placeholder="请输入岗位描述">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">序号</label>
+        <div class="col-md-7">
+            <input type="number" name="sortNo" id="sortNo" th:value="${post?.sortNo}" class="form-control" placeholder="请输入序号">
+        </div>
+    </div>
+
+</form>
+
+<script th:inline="javascript">
+
+    $(function(){
+        fn_post_input_validate();
+    });
+
+    // 表单数据校验
+    function fn_post_input_validate() {
+        __init_validate('form_post_input', {
+            rules : {
+                name : {
+                    required : true
+                }
+            }
+        });
+    }
+
+    function fn_post_input_save(callback) {
+        if (!$("#form_post_input").valid()) {
+            return false;
+        }
+        __confirm_dialog(null, '确定提交么?', function () {
+            __form_save("form_post_input", "/main/post/save", function(data) {
+                callback(data);
+            })},
+            function () {
+                callback();
+            }
+        );
+    }
+</script>
+
+</html>

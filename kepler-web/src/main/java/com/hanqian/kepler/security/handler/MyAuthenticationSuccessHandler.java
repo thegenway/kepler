@@ -38,7 +38,7 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		//将当前登录人放到session中，为@CurrentUser注解
 		if(authentication.getPrincipal() instanceof UserPrincipal){
 			String userId = ((UserPrincipal)authentication.getPrincipal()).getId();
-			request.getSession().setAttribute(Constants.CURRENT_USER, userService.getOne(userId));
+			request.getSession().setAttribute(Constants.CURRENT_USER, userService.get(userId));
 		}
 
 		if (ServletUtils.isAjaxRequest(request)) {

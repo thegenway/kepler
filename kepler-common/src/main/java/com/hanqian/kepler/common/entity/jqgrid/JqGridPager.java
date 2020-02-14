@@ -1,5 +1,9 @@
 package com.hanqian.kepler.common.entity.jqgrid;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * jqGrid 请求参数
  * ============================================================================
@@ -9,52 +13,38 @@ package com.hanqian.kepler.common.entity.jqgrid;
  * @version 1.0 2016-08-08 。
  * ============================================================================
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JqGridPager {
 
-    private int page;
+    /**
+     * 是否需要进行分页
+     */
+    private boolean ifPage;
+
+    /**
+     * 当前第几页
+     */
+    private Integer page;
+
+    /**
+     * 每页显示几行
+     */
     private int rows;
+
+    /**
+     * 排序字段名
+     */
     private String sidx;
+
+    /**
+     * asc || desc
+     */
     private String sord;
+
+    /**
+     * 是否是jqGrid的搜索查询
+     */
     private boolean search;
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public String getSidx() {
-        return sidx;
-    }
-
-    public void setSidx(String sidx) {
-        this.sidx = sidx;
-    }
-
-    public String getSord() {
-        return sord;
-    }
-
-    public void setSord(String sord) {
-        this.sord = sord;
-    }
-
-    public boolean getSearch() {
-        return search;
-    }
-
-    public void setSearch(boolean search) {
-        this.search = search;
-    }
-
 }

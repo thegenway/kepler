@@ -1,6 +1,6 @@
 package com.hanqian.kepler.core.service.sys;
 
-import com.hanqian.kepler.common.service.BaseService;
+import com.hanqian.kepler.core.service.base.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
 import com.hanqian.kepler.core.entity.primary.sys.User;
 

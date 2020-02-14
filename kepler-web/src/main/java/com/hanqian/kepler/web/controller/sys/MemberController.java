@@ -1,6 +1,9 @@
 package com.hanqian.kepler.web.controller.sys;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.hanqian.kepler.common.entity.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.entity.jqgrid.JqGridFilter;
 import com.hanqian.kepler.common.entity.jqgrid.JqGridPager;
 import com.hanqian.kepler.common.entity.result.AjaxResult;
@@ -40,46 +43,30 @@ public class MemberController extends BaseController {
 	private static final long serialVersionUID = -8379342963915056755L;
 
 	@Autowired
-
 	private UserService userService;
 
 	@GetMapping("list")
 	@ResponseBody
 	public Object list(@CurrentUser User user, JqGridPager pager,@RequestJsonParam("filters")  JqGridFilter filters){
-
-		System.out.println(pager);
-		System.out.println(filters);
-		//TODO jqgrid公共搜索参数封装
-
-		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-		Pageable pageable = PageRequest.of(pager.getPage()-1, pager.getRows(), sort);
-
-		List<Rule> rules = new ArrayList<>();
-		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
-
-		Page<User> userPage = userService.findAll(SpecificationFactory.where(rules), pageable);
-		List<User> userList = userPage.getContent();
+		Pageable pageable = getJqGridPageable(pager);
+		List<Rule> rules = getJqGridSearch(filters);
+		JqGridContent<User> userJqGridContent = userService.getJqGridContent(rules, pageable);
 
 		Map<String, Object> data = new HashMap<>();
 		List<Map<String, Object>> dataRows = new ArrayList<>();
 		Map<String, Object> map;
-		for(User member : userList){
+		for(User member : userJqGridContent.getList()){
 			map = new HashMap<>();
 			map.put("id", member.getId());
 			map.put("name", member.getName());
 			map.put("username", member.getUsername());
 			map.put("phone", member.getPhone());
 			map.put("email", member.getEmail());
+			map.put("createTime", DateUtil.formatDateTime(member.getCreateTime()));
 			dataRows.add(map);
 		}
 
-		data.put("dataRows", dataRows);
-		data.put("page", userPage.getNumber()+1);
-		data.put("rows", userPage.getNumberOfElements());
-		data.put("records", userPage.getTotalElements());
-		data.put("total", userPage.getTotalPages());
-
-		return data;
+		return getJqGridReturn(dataRows, userJqGridContent.getPage());
 	}
 
 	/**
@@ -114,7 +101,7 @@ public class MemberController extends BaseController {
 	 */
 	@GetMapping(value = "update/{keyId}", produces = MediaType.TEXT_HTML_VALUE)
 	public String update(Model model, @PathVariable String keyId) {
-		User user = userService.getOne(keyId);
+		User user = userService.get(keyId);
 		model.addAttribute("user", user);
 		return "main/sys/member_update";
 	}
@@ -125,7 +112,7 @@ public class MemberController extends BaseController {
 	@PostMapping(value = "update")
 	@ResponseBody
 	public Object update(String keyId, String name, String username, String phone, String email) {
-		User user = userService.getOne(keyId);
+		User user = userService.get(keyId);
 		if(user == null){
 			return AjaxResult.error("找不到当前人员");
 		}

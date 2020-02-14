@@ -1,12 +1,17 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
-import com.hanqian.kepler.common.dao.BaseDao;
-import com.hanqian.kepler.common.service.BaseServiceImpl;
+import cn.hutool.core.util.StrUtil;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
+import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.core.service.base.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.PostDao;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.service.sys.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * newFile
@@ -26,4 +31,13 @@ public class PostServiceImpl extends BaseServiceImpl<Post, String> implements Po
 		return postDao;
 	}
 
+	@Override
+	public List<Post> findAllEnable() {
+		return postDao.findByStateEquals(BaseEnumManager.StateEnum.Enable);
+	}
+
+	@Override
+	public List<Post> findPostsByDepartmentNoPower(String departmentId) {
+		return StrUtil.isNotBlank(departmentId) ? postDao.findPostsByDepartmentNoPower(departmentId) : new ArrayList<>();
+	}
 }

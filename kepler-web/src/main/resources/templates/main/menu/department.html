@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div id="page-content">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">部门管理</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul id="tree_department" class="ztree"></ul>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-inline">
+                            <div class="row">
+                                <div class="col-sm-12 table-toolbar-left">
+                                    <btn id="btn_add_duty" class="btn btn-primary btn-sm">
+                                        <i class="ti-plus"> </i> 添加成员
+                                    </btn>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="jqGrid_wrapper">
+                            <table id="duty_table"></table>
+                            <div id="duty_page"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+
+            init_tree_department();
+
+        });
+
+        function init_tree_department() {
+
+            var setting = {
+                async: {
+                    enable: true,
+                    url: '/main/department/tree',
+                    autoParam: ['id'],
+                    type: 'get',
+                    dataType: 'json'
+                },
+                callback: {
+                    onAsyncSuccess: zTreeOnAsyncSuccess,
+                    beforeEditName: zTreeBeforeEditName,
+                    beforeRemove: zTreeBeforeRemove,
+                    onClick: zTreeOnClick,
+                    onCheck: zTreeOnCheck
+                },
+                //            check: {
+                //                enable: true,
+                //                chkStyle: 'checkbox',
+                //                chkboxType:  { 'Y' : '', 'N' : '' }
+                //            },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: 'id',
+                        pIdKey: 'pId',
+                        rootPId: ''
+                    }
+                },
+                edit: {
+                    enable: true,
+                    removeTitle: '删除',
+                    renameTitle: '编辑',
+                    showRemoveBtn: setRemoveBtn,
+                    showRenameBtn: setRenameBtn
+                },
+                view: {
+                    addHoverDom: addHoverDom,
+                    removeHoverDom: removeHoverDom,
+                    autoCancelSelected: false,
+                    dblClickExpand: false,
+                    selectedMulti: false
+                }
+            };
+
+            $.fn.zTree.init($('#tree_department'), setting);
+
+        }
+
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $('#' + treeNode.tId + '_span');
+            if (treeNode.editNameFlag || $('#addBtn_' + treeNode.id).length > 0) return;
+            var addStr = '<span class="button add" id="addBtn_' + treeNode.id + '" title="新增" onfocus="this.blur();"></span>';
+            sObj.after(addStr);
+            var btn = $('#addBtn_' + treeNode.id);
+            if (btn) btn.bind('click', function () {
+                add_department(treeNode.id);
+                return false;
+            });
+        }
+
+        function removeHoverDom(treeId, treeNode) {
+            $('#addBtn_' + treeNode.id).unbind().remove();
+        }
+
+        function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+            var zTree = $.fn.zTree.getZTreeObj('tree_department');
+            if (treeNode) {
+                if (treeNode.id === '0') {
+                    var nodes = treeNode.children;
+                    zTree.selectNode(nodes[0]);
+                    init_grid_duty(nodes[0].id);
+                }
+            } else {
+                var rootNode = zTree.getNodes()[0];
+                if (rootNode.isParent) {
+                    zTree.expandNode(rootNode, true, true, true);
+                }
+            }
+        }
+
+        function setRenameBtn(treeId, treeNode) {
+            return (treeNode.id !== '0');
+        }
+
+        function zTreeBeforeEditName(treeId, treeNode) {
+            edit_department(treeNode.id);
+            return false;
+        }
+
+        function setRemoveBtn(treeId, treeNode) {
+            return (treeNode.id !== '0');
+        }
+
+        function zTreeBeforeRemove(treeId, treeNode) {
+            delete_department(treeNode.id);
+            return false;
+        }
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            var id = treeNode.id;
+            if (id && id != "0") {
+                $('#duty_table').jqGrid().setGridParam({
+                    datatype: 'json',
+                    postData: {departmentId: id},
+                    page: 1
+                }).trigger('reloadGrid');
+            }
+        }
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+
+        }
+
+        $('#btn_add_department').click(function () {
+            add_department();
+            return false;
+        });
+
+        $('#btn_add_child_department').click(function () {
+            var zTree = $.fn.zTree.getZTreeObj('tree_department');
+            var selectedNodes = zTree.getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                add_department(selectedNodes[0].id);
+            } else {
+                __toastr_warning('请选择一个部门');
+            }
+            return false;
+        });
+
+        function add_department(departmentId) {
+            var url = '/main/department/create';
+            if (departmentId) {
+                url = '/main/department/input?parentId=' + departmentId;
+            }
+            __open_dialog_form('新增部门', url, function (dialogRef) {
+                var callback = function (data) {
+                    if (data && data.state === 1) {
+                        dialogRef.close();
+                        refresh_department(data.parentId);
+                    } else {
+                        dialogRef.enableButtons();
+                    }
+                };
+                if (fn_department_input_save(callback) === false) {
+                    dialogRef.enableButtons();
+                }
+            });
+        }
+
+        function edit_department(departmentId) {
+            if (departmentId) {
+                var url = '/main/department/input?keyId=' + departmentId;
+                __open_dialog_form('编辑部门信息', url, function (dialogRef) {
+                    var callback = function (data) {
+                        if (data) {
+                            dialogRef.close();
+                            refresh_department(data.parentId);
+                        } else {
+                            dialogRef.enableButtons();
+                        }
+                    };
+                    if (fn_department_input_save(callback) === false) {
+                        dialogRef.enableButtons();
+                    }
+                });
+            } else {
+                __toastr_warning('请选择一个部门');
+            }
+        }
+
+        function delete_department(departmentId) {
+            if (departmentId) {
+                fn_depart_delete(departmentId);
+            } else {
+                __toastr_warning('请选择一个部门');
+            }
+        }
+
+        function refresh_department(departmentId) {
+            var zTree = $.fn.zTree.getZTreeObj('tree_department');
+            if (departmentId) {
+                var node = zTree.getNodeByParam('id', departmentId, null);
+                // parentNode.isParent = false 时，不进行异步加载
+                if (!node.isParent) {
+                    node.isParent = true;
+                    zTree.updateNode(node);
+                }
+                zTree.reAsyncChildNodes(node, 'refresh');
+            } else {
+                zTree.reAsyncChildNodes(null, 'refresh');
+            }
+        }
+
+        function init_grid_duty(departmentId) {
+
+            __init_jqgrid('duty_table', 'duty_page', '/main/duty/list_department',
+                ['成员', '岗位名称', '操作', 'id'],
+                [
+                    {name: 'user.name', index: 'user.name', width: 300, sortable: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'power.post.name', index: 'power.post.name', width: 300, sortable: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 230, fixed: true, sortable: false, search: false, formatter: actFormat},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true, hidedlg: true}
+                ],
+                false,
+                {
+                    postData: {departmentId: departmentId, ifPage : false}
+                }
+            );
+
+        }
+
+        function actFormat(cellvalue, options, rowObject) {
+            var id = rowObject.id;
+            var departId = rowObject.departmentId;
+            if(rowObject.isChargeUser){
+                cellvalue = '<button class="btn btn-success btn-xs" disabled>部门负责人</button> ';
+            }else{
+                cellvalue = '<button class="btn btn-primary btn-xs" onclick="fn_depart_lead(\'' + id + '\', \'' + departId + '\');"><i class="fa fa-pencil-square-o"> </i> 设为部门负责人</button> ';
+            }
+            cellvalue += '<button class="btn btn-danger btn-xs" data-original-title="删除" onclick="fn_duty_delete(\'' + id + '\');"><i class="fa fa-trash-o"> </i> 删除</button>';
+
+            return cellvalue;
+        }
+
+        function fn_depart_lead(dutyId, departmentId) {
+            __ajax_post("/main/department/lead", {dutyId: dutyId, departmentId: departmentId}, function (data) {
+                __toastr(data);
+                __reflash_jqgrid("duty_table");
+            });
+        }
+
+        //删除部门
+        function fn_depart_delete(keyId) {
+            __confirm_dialog("", "确定删除此部门吗？", function(){
+                __ajax_post("/main/department/delete", {keyId: keyId}, function (data) {
+                    __toastr(data);
+                    refresh_department(0);
+                });
+            });
+        }
+
+        //删除职责
+        function fn_duty_delete(dutyId){
+            __confirm_dialog("", "确定删除此职权吗？", function(){
+                __ajax_post("/main/duty/dutyDeleteByDuty", {keyId: dutyId}, function (data) {
+                    __toastr(data);
+                    __reflash_jqgrid("duty_table");
+                });
+            });
+        }
+
+    </script>
+
+</html>

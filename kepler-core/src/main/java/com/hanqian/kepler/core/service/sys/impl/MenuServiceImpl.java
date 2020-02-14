@@ -1,11 +1,11 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.dao.BaseDao;
+import com.hanqian.kepler.core.dao.primary.base.BaseDao;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
-import com.hanqian.kepler.common.service.BaseServiceImpl;
+import com.hanqian.kepler.core.service.base.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.MenuDao;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
 import com.hanqian.kepler.core.entity.primary.sys.User;

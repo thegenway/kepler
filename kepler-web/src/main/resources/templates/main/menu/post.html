@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div id="page-content">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">岗位信息</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-inline">
+                    <div class="row">
+                        <div class="col-sm-12 table-toolbar-left">
+                            <btn id="btn_add_post" class="btn btn-primary btn-sm">
+                                <i class="ti-plus"> </i> 新增岗位
+                            </btn>
+                        </div>
+                    </div>
+                </div>
+                <div class="jqGrid_wrapper">
+                    <table id="post_table"></table>
+                    <div id="post_page"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+
+            init_grid_post();
+
+        });
+
+        function init_grid_post() {
+            __init_jqgrid('post_table', 'post_page', '/main/post/list',
+                ['岗位名称', '岗位描述', '操作', 'id'],
+                [
+                    {name: 'name', index: 'name', width: 300, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'description', index: 'description', width: 500, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+                ]
+            );
+        }
+
+        function actFormat(cellvalue, options, rowObject) {
+            var id = rowObject.id;
+            cellvalue = '<button class="btn btn-default btn-xs" data-original-title="编辑" onclick="fn_post_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+            return cellvalue;
+        }
+
+        $('#btn_add_post').click(function () {
+            __open_dialog_form('新增岗位', '/main/post/input', function (dialogRef) {
+                var callback = function (data) {
+                    if (data && data.state === 1) {
+                        dialogRef.close();
+                        __reflash_jqgrid("post_table");
+                    } else {
+                        dialogRef.enableButtons();
+                    }
+                };
+                if (fn_post_input_save(callback) === false) {
+                    dialogRef.enableButtons();
+                }
+            });
+            return false;
+        });
+
+        function fn_post_edit(id) {
+            __open_dialog_form('编辑岗位信息', '/main/post/input?keyId=' + id, function (dialogRef) {
+                var callback = function (data) {
+                    if (data && data.state === 1) {
+                        dialogRef.close();
+                        __reflash_jqgrid("post_table");
+                    } else {
+                        dialogRef.enableButtons();
+                    }
+                };
+                if (fn_post_input_save(callback) === false) {
+                    dialogRef.enableButtons();
+                }
+            });
+        }
+
+    </script>
+
+</html>

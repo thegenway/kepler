@@ -33,7 +33,6 @@ public class LoginController extends BaseController {
 
 	@RequestMapping("index")
 	public String index(@CurrentUser User user,  Model model){
-		model.addAttribute("user", user);
 		model.addAttribute("menuTree",menuService.getMenuTree(null, user));
 		return "index";
 	}

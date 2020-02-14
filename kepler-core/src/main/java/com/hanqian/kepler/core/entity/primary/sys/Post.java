@@ -1,6 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +26,10 @@ public class Post extends BaseEntity {
 	 * 岗位描述
 	 */
 	private String description;
+
+	/**
+	 * 排序
+	 */
+	private Integer sortNo;
 
 }

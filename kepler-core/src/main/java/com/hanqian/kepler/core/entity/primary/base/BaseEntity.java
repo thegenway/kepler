@@ -1,7 +1,7 @@
-package com.hanqian.kepler.common.entity.base;
+package com.hanqian.kepler.core.entity.primary.base;
 
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.common.jpa.MyJpaEntityListener;
+import com.hanqian.kepler.core.entity.primary.sys.User;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -53,5 +53,11 @@ public abstract class BaseEntity implements Serializable {
 	 */
 	@Enumerated(EnumType.STRING)
 	protected BaseEnumManager.StateEnum state;
+
+	/**
+	 * 创建人
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	protected User creator;
 
 }

@@ -1,11 +1,13 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -93,6 +95,7 @@ public class User extends BaseEntity {
 	/**
 	 * 账户类型
 	 */
+	@Enumerated(EnumType.STRING)
 	private BaseEnumManager.AccountTypeEnum accountType;
 
 	/**

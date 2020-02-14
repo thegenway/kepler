@@ -43,7 +43,3 @@ $.jgrid.defaults.width = 780;
 $.jgrid.defaults.responsive = true;
 $.jgrid.defaults.styleUI = 'Bootstrap';
 $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
-
-/*======================================*/
-/* ueditor */
-window.UEDITOR_HOME_URL =  '../resource/core/plugins/ueditor/';

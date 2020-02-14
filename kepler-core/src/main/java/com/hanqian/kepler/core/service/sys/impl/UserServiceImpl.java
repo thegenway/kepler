@@ -3,10 +3,12 @@ package com.hanqian.kepler.core.service.sys.impl;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.dao.BaseDao;
+import com.hanqian.kepler.core.dao.primary.base.BaseDao;
 import com.hanqian.kepler.common.entity.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.common.service.BaseServiceImpl;
+import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.core.service.base.BaseServiceImpl;
 import com.hanqian.kepler.core.entity.primary.sys.User;
 import com.hanqian.kepler.core.dao.primary.sys.UserDao;
 import com.hanqian.kepler.core.service.sys.UserService;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,5 +78,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 		save(user);
 
 		return AjaxResult.success();
+	}
+
+	@Override
+	public List<User> findManagers() {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		rules.add(Rule.eq("accountType", BaseEnumManager.AccountTypeEnum.SystemManager));
+		return findAll(SpecificationFactory.where(rules));
 	}
 }

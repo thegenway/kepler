@@ -436,3 +436,12 @@ select:-webkit-autofill {
     margin-left: 0;
     margin-right: 0;
 }
+
+/*jqGrid*/
+.ui-search-toolbar th{
+    padding: 1px !important;
+}
+
+li .fa{
+    min-width: 19px;
+}

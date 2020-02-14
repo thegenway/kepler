@@ -837,17 +837,17 @@ function __dictItem_dialog_select_simple(title, dictValue, selectedIds, nameFile
 /* jqGrid 封装 */
 /*======================================*/
 
-function __init_jqgrid(table_id, page_id, url, colNames, colModel, search, opt) {
+function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) {
     var defaults = {
         url: url,
-        loadonce:false,
+        loadonce:ifPage!=null ? !ifPage : false,
         datatype: 'json',
         height: 'auto',
         autowidth:true,
         colNames: colNames,
         colModel: colModel,
         pager: '#'+page_id,
-        rowList: [10, 30, 50,100],
+        rowList: [10, 30, 50, 100],
         rowNum: 10,
         rownumbers: true,
         jsonReader: {
@@ -856,6 +856,9 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, search, opt) 
         },
         prmNames: {
             search:'search'
+        },
+        postData : {
+            ifPage : ifPage!=null ? ifPage : true
         },
         gridview: true,
         viewrecords: true,
@@ -877,12 +880,75 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, search, opt) 
         search: false
     });
 
-    if (search) {
-        $('#'+table_id).jqGrid('filterToolbar', {searchOperators:false, stringResult:true});
-    }
+    $('#'+table_id).jqGrid('filterToolbar', {searchOperators:false, stringResult:true});
+    $(".ui-search-table").find("input").attr("autocomplete", "off");
 }
 
 //表格刷新
 function __reflash_jqgrid(tableId, param){
     $('#'+tableId).jqGrid().setGridParam({datatype:'json',postData: param}).trigger('reloadGrid');
+}
+
+
+/* __select2 */
+/*======================================*/
+function __select2(selectId, placeholder, opt){
+    var $select = $("#"+selectId);
+    var defaults = {
+        placeholder : placeholder ? placeholder : "请选择",
+        allowClear: true,
+        width: "100%"
+    };
+    var options = $.extend({}, defaults, opt);
+    $select.select2(options);
+    $select.on("change", function(){
+        if($select.attr("aria-required")){
+            $select.valid();
+        }
+    });
+    $(".bootstrap-dialog").removeAttr("tabindex");
+}
+
+
+/* selectpicker */
+/*======================================*/
+function __selectpicker(selectId, opt){
+    var $select = $("#"+selectId);
+    var defaults = {
+        style: 'btn-white'
+    };
+    var options = $.extend({}, defaults, opt);
+    $select.selectpicker(options);
+}
+
+
+/* treepicker */
+/*======================================*/
+function __treepicker(selectId, opt){
+    var $select = $("#"+selectId);
+    var defaults = {
+        style: 'btn-white'
+    };
+    var options = $.extend({}, defaults, opt);
+    $select.treepicker(options);
+}
+
+
+/* panelOverlay */
+/*======================================*/
+function __panelOverlay(eleId, opt){
+    var $ele = $("#" + eleId);
+    var defaults = {
+        title: '请稍后...'
+    };
+    var options = $.extend({}, defaults, opt);
+    $ele.panelOverlay(options);
+}
+
+function __panelOverlay_show(eleId){
+    $("#" + eleId).panelOverlay('show');
+}
+
+function __panelOverlay_hide(eleId){
+    $("#" + eleId).panelOverlay('hide');
 }

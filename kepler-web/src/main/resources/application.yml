@@ -1,6 +1,5 @@
 server:
   port: 8064
-#  port: 6000
   servlet:
     context-path: /
     session:
@@ -57,6 +56,9 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
+
+logging:
+  path: /kepler/log
 
 kepler:
   formAuthUrl: /authentication/form

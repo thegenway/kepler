@@ -113,7 +113,8 @@ public class SpecificationFactory {
 		Predicate predicate;
 		switch (p.getOperator()) {
 			case LIKE:
-				predicate = cb.like(path, p.getValue().toString());
+				Expression<String> timeStr = cb.function("str", String.class, path);
+				predicate = cb.like(timeStr, p.getValue().toString());
 				break;
 			case EQ:
 				predicate = cb.equal(path, p.getValue());

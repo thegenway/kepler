@@ -104,9 +104,9 @@ public class MenuController extends BaseController {
 	public String input(Model model, String keyId, String parentId){
 
 		if(StrUtil.isNotBlank(keyId)){
-			model.addAttribute("menu", menuService.getOne(keyId));
+			model.addAttribute("menu", menuService.get(keyId));
 		}else if(StrUtil.isNotBlank(parentId)){
-			model.addAttribute("parentMenu", menuService.getOne(parentId));
+			model.addAttribute("parentMenu", menuService.get(parentId));
 		}
 
 		return "main/sys/menu_input";
@@ -118,12 +118,13 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	@ResponseBody
 	public Object save(@CurrentUser User user, String keyId, String parentId, String menuType, String name, String url, String target, String iconCode, Integer orderNum, Integer isManageMenu){
-		Menu menu = menuService.getOne(keyId);
+		Menu menu = menuService.get(keyId);
 		if(menu == null){
 			menu = new Menu();
+			menu.setCreator(user);
 		}
 
-		Menu parent = menuService.getOne(parentId);
+		Menu parent = menuService.get(parentId);
 		menu.setParent(parent);
 		menu.setMenuType(menuType);
 		menu.setName(name);
@@ -145,7 +146,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Object delete(@CurrentUser User user, String keyId){
-		Menu menu = menuService.getOne(keyId);
+		Menu menu = menuService.get(keyId);
 		if(menu==null){
 			return AjaxResult.error("找不到此菜单");
 		}
@@ -184,7 +185,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "visibleChange", method = RequestMethod.POST)
 	@ResponseBody
 	public Object visibleChange(@CurrentUser User user, String keyId, String visible){
-		Menu menu = menuService.getOne(keyId);
+		Menu menu = menuService.get(keyId);
 		if(menu==null){
 			return AjaxResult.error("找不到此菜单");
 		}

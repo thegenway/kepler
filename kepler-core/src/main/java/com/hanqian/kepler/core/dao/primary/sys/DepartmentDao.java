@@ -1,6 +1,7 @@
 package com.hanqian.kepler.core.dao.primary.sys;
 
-import com.hanqian.kepler.common.dao.BaseDao;
+import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 
 import java.util.List;
@@ -15,5 +16,25 @@ import java.util.List;
 public interface DepartmentDao extends BaseDao<Department, String> {
 
 	List<Department> findByNameLike(String name);
+
+	/**
+	 * 获取顶级部门的数量
+	 */
+	int countByStateEqualsAndParentIsNull(BaseEnumManager.StateEnum stateEnum);
+
+	/**
+	 * 根据部门获取子部门的数量
+	 */
+	int countByStateEqualsAndParentIs(BaseEnumManager.StateEnum stateEnum, Department parent);
+
+	/**
+	 * 获取顶级部门List
+	 */
+	List<Department> findDepartmentsByStateEqualsAndParentIsNull(BaseEnumManager.StateEnum stateEnum);
+
+	/**
+	 * 根据部门获取子部门List
+	 */
+	List<Department> findDepartmentsByStateEqualsAndParentIs(BaseEnumManager.StateEnum stateEnum, Department parent);
 
 }

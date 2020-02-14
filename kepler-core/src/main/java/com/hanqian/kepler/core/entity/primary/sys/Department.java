@@ -1,6 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +44,7 @@ public class Department extends BaseEntity {
 	/**
 	 * 层级
 	 */
-	private int grade;
+	private Integer grade;
 
 	/**
 	 * 路径
@@ -55,5 +55,10 @@ public class Department extends BaseEntity {
 	 * 部门描述
 	 */
 	private String description;
+
+	/**
+	 * 排序
+	 */
+	private Integer sortNo;
 
 }

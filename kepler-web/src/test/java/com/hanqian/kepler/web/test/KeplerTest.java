@@ -12,6 +12,8 @@ import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,14 +45,19 @@ public class KeplerTest {
 	@Autowired
 	private RedisUtil redisUtil;
 
+	Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Test
 	public void myTest1(){
 //		User user = userService.getUserByUsernameOrPhoneOrEmailEquals("xiaoming");
 //		System.out.println(user.getName());
 
-		User user = userService.getOne("8a8a8aa56f7eefb4016f7eefc2e40000");
-		System.out.println("---------------------");
-		System.out.println(user);
+//		User user = userService.getOne("8a8a8aa56f7eefb4016f7eefc2e40000");
+//		System.out.println("---------------------");
+//		System.out.println(user);
+
+		System.out.println("00000000000000000000");
+		System.out.println(departmentService.isParentDepartment(null));
 
 	}
 
@@ -103,8 +110,16 @@ public class KeplerTest {
 //		post.setDescription("隔阂和");
 //		post.setName("保安");
 //		System.out.println(redisUtil.set("post",post,100));
+	}
 
-
+	@Test
+	public void logTest(){
+		System.out.println("sout........");
+		logger.trace("trace...");
+		logger.debug("debug...");
+		logger.info("info...");
+		logger.warn("warn...");
+		logger.error("error...");
 	}
 
 }

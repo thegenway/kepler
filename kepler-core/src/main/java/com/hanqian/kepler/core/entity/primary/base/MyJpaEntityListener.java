@@ -1,12 +1,9 @@
-package com.hanqian.kepler.common.jpa;
+package com.hanqian.kepler.core.entity.primary.base;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.transaction.Transactional;

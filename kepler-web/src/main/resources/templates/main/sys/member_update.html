@@ -97,7 +97,9 @@
                 },
             },
             messages : {
-
+                phone : {
+                    remote : "已经存在又此手机号了"
+                }
             }
         });
     }
@@ -106,7 +108,7 @@
         if (!$('#form_member_update').valid()) {
             return false;
         }
-        __confirm_dialog('确定提交么?', null,
+        __confirm_dialog('提示', "确定提交么?",
             function () {
                 __form_save('form_member_update', '/main/member/update', function(data) {
                     callback(data);

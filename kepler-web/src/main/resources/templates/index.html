@@ -224,50 +224,39 @@
                                     <img class="img-circle img-user media-object" src="../static/img/profile-photos/1.png" alt="Profile Picture">
                                     <i class="pli-male ic-user"></i>
                                 </span>
-                            <div class="username hidden-xs">Aaron Chavez</div>
+                            <div class="username hidden-xs" th:text="${session?.CURRENT_USER?.name}">登陆异常</div>
                         </a>
 
 
                         <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
 
-                            <!-- Dropdown heading  -->
-                            <div class="pad-all bord-btm">
-                                <p class="text-main mar-btm"><span class="text-bold">750GB</span> of 1,000GB Used</p>
-                                <div class="progress progress-sm">
-                                    <div class="progress-bar" style="width: 70%;">
-                                        <span class="sr-only">70%</span>
-                                    </div>
-                                </div>
-                            </div>
-
-
                             <!-- User dropdown menu -->
                             <ul class="head-list">
-                                <li>
+                                <li class="bord-btm pad-top">
                                     <a href="#">
-                                        <i class="fas fa-gift"></i> Profile
+                                        <i class="fa fa-smile-o fa-lg"></i> 个人中心
                                     </a>
                                 </li>
-                                <li>
+                                <li class="pad-top">
                                     <a href="#">
                                         <span class="badge badge-danger pull-right">9</span>
-                                        <i class="pli-mail icon-lg icon-fw"></i> Messages
+                                        <i class="fa fa-laptop fa-lg"></i> 代办事项
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
                                         <span class="label label-success pull-right">New</span>
-                                        <i class="pli-gear icon-lg icon-fw"></i> Settings
+                                        <i class="fa fa-file-text-o fa-lg"></i> 已办未结
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="pli-information icon-lg icon-fw"></i> Help
+                                        <i class="fa fa-file-text fa-lg"></i> 已办已结
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="pli-computer-secure icon-lg icon-fw"></i> Lock screen
+                                        <i class="fa fa-gamepad fa-lg"></i> 我的草稿
                                     </a>
                                 </li>
                             </ul>
@@ -357,46 +346,6 @@
                                         <div class="demo-theme-head"></div>
                                         <div class="demo-theme-nav"></div>
                                     </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-navy add-tooltip" data-theme="theme-navy" data-type="a" data-title="(A). Navy Blue">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-ocean add-tooltip" data-theme="theme-ocean" data-type="a" data-title="(A). Ocean">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-lime add-tooltip" data-theme="theme-lime" data-type="a" data-title="(A). Lime">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-purple add-tooltip" data-theme="theme-purple" data-type="a" data-title="(A). Purple">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-dust add-tooltip" data-theme="theme-dust" data-type="a" data-title="(A). Dust">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-mint add-tooltip" data-theme="theme-mint" data-type="a" data-title="(A). Mint">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-yellow add-tooltip" data-theme="theme-yellow" data-type="a" data-title="(A). Yellow">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-a-well-red add-tooltip" data-theme="theme-well-red" data-type="a" data-title="(A). Well Red">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
                                     <a href="javascript:void(0)" class="demo-theme demo-a-coffee add-tooltip" data-theme="theme-coffee" data-type="a" data-title="(A). Coffee">
                                         <div class="demo-theme-brand"></div>
                                         <div class="demo-theme-head"></div>
@@ -408,66 +357,6 @@
                                         <div class="demo-theme-nav"></div>
                                     </a>
                                     <a href="javascript:void(0)" class="demo-theme demo-a-dark add-tooltip" data-theme="theme-dark" data-type="a" data-title="(A). Dark">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-light add-tooltip" data-theme="theme-light" data-type="b" data-title="(B). Light">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-navy add-tooltip" data-theme="theme-navy" data-type="b" data-title="(B). Navy Blue">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-ocean add-tooltip" data-theme="theme-ocean" data-type="b" data-title="(B). Ocean">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-lime add-tooltip" data-theme="theme-lime" data-type="b" data-title="(B). Lime">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-purple add-tooltip" data-theme="theme-purple" data-type="b" data-title="(B). Purple">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-dust add-tooltip" data-theme="theme-dust" data-type="b" data-title="(B). Dust">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-mint add-tooltip" data-theme="theme-mint" data-type="b" data-title="(B). Mint">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-yellow add-tooltip" data-theme="theme-yellow" data-type="b" data-title="(B). Yellow">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-well-red add-tooltip" data-theme="theme-well-red" data-type="b" data-title="(B). Well red">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-coffee add-tooltip" data-theme="theme-coffee" data-type="b" data-title="(B). Coofee">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-prickly-pear add-tooltip" data-theme="theme-prickly-pear" data-type="b" data-title="(B). Prickly pear">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-b-dark add-tooltip" data-theme="theme-dark" data-type="b" data-title="(B). Dark">
                                         <div class="demo-theme-brand"></div>
                                         <div class="demo-theme-head"></div>
                                         <div class="demo-theme-nav"></div>
@@ -503,11 +392,6 @@
                                         <div class="demo-theme-nav"></div>
                                     </a>
                                     <a href="javascript:void(0)" class="demo-theme demo-c-mint add-tooltip" data-theme="theme-mint" data-type="c" data-title="(C). Mint">
-                                        <div class="demo-theme-brand"></div>
-                                        <div class="demo-theme-head"></div>
-                                        <div class="demo-theme-nav"></div>
-                                    </a>
-                                    <a href="javascript:void(0)" class="demo-theme demo-c-yellow add-tooltip" data-theme="theme-yellow" data-type="c" data-title="(C). Yellow">
                                         <div class="demo-theme-brand"></div>
                                         <div class="demo-theme-head"></div>
                                         <div class="demo-theme-nav"></div>
@@ -569,8 +453,8 @@
                                             <span class="pull-right dropdown-toggle">
                                                 <i class="dropdown-caret"></i>
                                             </span>
-                                        <p class="mnp-name" th:text="${user?.name}">欢迎</p>
-                                        <span class="mnp-desc" th:text="${user?.phone}"></span>
+                                        <p class="mnp-name" th:text="${session?.CURRENT_USER?.name}">欢迎</p>
+                                        <span class="mnp-desc" th:text="${session?.CURRENT_USER?.phone}"></span>
                                     </a>
                                 </div>
                                 <div id="profile-nav" class="collapse list-group bg-trans">
@@ -813,10 +697,13 @@
 <!--tip工具-->
 <script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/minimalTips/jquery.minimalTips.js?v=0.0.3}"></script>
 
+<!--jquery模板引擎-->
+<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/jquery-tmpl/jquery.tmpl.js}"></script>
+
 <!--app core-->
 <script th:src="@{../static/js/core/app-core.js?v=0.1.0}"></script>
 <script th:src="@{../static/js/core/app-config.js}"></script>
-<script th:src="@{../static/js/core/app-common.js?v=1.4.9}"></script>
+<script th:src="@{../static/js/core/app-common.js?v=1.7.5}"></script>
 
 </html>
 

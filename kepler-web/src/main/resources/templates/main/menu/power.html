@@ -1,0 +1,149 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div id="page-content">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">职权管理</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-md-3">
+                    <ul id="tree_department" class="ztree"></ul>
+                </div>
+
+                <div class="col-md-9">
+                    <div class="form-inline">
+                        <div class="row">
+                            <div class="col-sm-12 table-toolbar-left">
+                                <btn id="btn_add_power" class="btn btn-primary btn-sm">
+                                    <i class="ti-plus"> </i> 添加职权
+                                </btn>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jqGrid_wrapper">
+                        <table id="power_table"></table>
+                        <div id="power_page"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+
+            init_tree_department();
+
+        });
+
+        function init_tree_department() {
+            var setting = {
+                async: {
+                    enable: true,
+                    url: '/main/department/tree',
+                    autoParam: ['id'],
+                    type: 'get',
+                    dataType: 'json'
+                },
+                callback: {
+                    onAsyncSuccess: zTreeOnAsyncSuccess,
+                    onClick: zTreeOnClick
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: 'id',
+                        pIdKey: 'pId',
+                        rootPId: ''
+                    }
+                },
+                view: {
+                    autoCancelSelected: false,
+                    dblClickExpand: false,
+                    selectedMulti: false
+                }
+            };
+
+            $.fn.zTree.init($('#tree_department'), setting);
+
+        }
+
+        function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+            var zTree = $.fn.zTree.getZTreeObj('tree_department');
+            if (treeNode) {
+                if (treeNode.id === '0') {
+                    var nodes = treeNode.children;
+                    zTree.selectNode(nodes[0]);
+                    init_grid_power(nodes[0].id);
+                }
+            } else {
+                var rootNode = zTree.getNodes()[0];
+                if (rootNode.isParent) {
+                    zTree.expandNode(rootNode, true, true, true);
+                }
+            }
+        }
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            var id = treeNode.id;
+            if (id) {
+                $('#power_table').jqGrid('setGridParam', {
+                    datatype: 'json',
+                    postData: {departmentId: id},
+                    page: 1
+                }).trigger('reloadGrid');
+            }
+        }
+
+        function init_grid_power(departmentId) {
+            __init_jqgrid('power_table', 'power_page', '/main/power/list_department',
+                ['职权名称', '上级职权', '操作', 'id'],
+                [
+                    {name: 'name', index: 'name', width: 400, sortable: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'parent.name', index: 'parent.name', width: 400, sortable: true, search: true, searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 150, sortable: false, fixed: true, search: false, formatter: actFormat},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true, hidedlg: true}
+                ],
+                false,
+                {
+                    postData: {departmentId: departmentId, ifPage : false}
+                }
+            );
+
+        }
+
+        function actFormat(cellvalue, options, rowObject) {
+            var id = rowObject.id;
+            var cellvalue = '<button class="btn btn-danger btn-xs" data-original-title="删除" onclick="fn_power_method(\'Delete\',\'' + id + '\');"><i class="fa fa-trash-o"> </i> 删除</button>';
+            return cellvalue;
+        }
+
+        $('#btn_add_power').click(function () {
+            var zTree = $.fn.zTree.getZTreeObj('tree_department');
+            var selectedNodes = zTree.getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                var departmentId = selectedNodes[0].id;
+                __open_dialog_form('新增职权', '/main/power/input?departmentId=' + departmentId, function (dialogRef) {
+                    var callback = function (data) {
+                        if (data) {
+                            dialogRef.close();
+                            __reflash_jqgrid("power_table");
+                        } else {
+                            dialogRef.enableButtons();
+                        }
+                    };
+                    if (fn_power_input_save(callback) === false) {
+                        dialogRef.enableButtons();
+                    }
+                });
+            } else {
+                __toastr_warning('请选择一个部门');
+            }
+        });
+
+
+
+    </script>
+
+</html>

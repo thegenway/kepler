@@ -1,6 +1,6 @@
-package com.hanqian.kepler.common.dao;
+package com.hanqian.kepler.core.dao.primary.base;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -14,6 +14,5 @@ import java.io.Serializable;
  * ============================================================================
  */
 public interface BaseDao<T extends BaseEntity, PK extends Serializable> extends JpaRepository<T, PK>, JpaSpecificationExecutor<T> {
-
 
 }

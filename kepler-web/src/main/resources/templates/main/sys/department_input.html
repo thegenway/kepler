@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<form id="form_department_input" class="form-horizontal">
+
+    <input type="hidden" name="id" th:value="${department?.id}" />
+
+    <div class="form-group" th:if="${parent != null}" >
+        <label class="col-md-3 control-label">上级部门</label>
+        <div class="col-md-7">
+            <input type="text" name="parentName" id="parentName" th:value="${parent?.name}" class="form-control" disabled>
+            <input type="hidden" name="parentId" id="parentId" th:value="${parent?.id}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">部门名称<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-7">
+            <input type="text" name="name" id="name" th:value="${department?.name}" class="form-control" placeholder="请输入部门名称">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">部门描述</label>
+        <div class="col-md-7">
+            <input type="text" name="description" id="description" th:value="${department?.description}" class="form-control" placeholder="请输入部门描述">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">序号</label>
+        <div class="col-md-7">
+            <input type="number" name="sortNo" id="sortNo" th:value="${department?.sortNo}" class="form-control" placeholder="请输入序号">
+        </div>
+    </div>
+
+</form>
+
+<script th:inline="javascript">
+
+    $(function(){
+        fn_department_input_validate();
+    });
+
+    // 表单数据校验
+    function fn_department_input_validate() {
+        __init_validate('form_department_input', {
+            rules : {
+                name : {
+                    required : true
+                }
+            },
+            messages : {
+                name : {
+                    required : '请输入部门名称'
+                }
+            }
+        });
+    }
+
+    function fn_department_input_save(callback) {
+        if (!$('#form_department_input').valid()) {
+            return false;
+        }
+        __confirm_dialog("", '确定提交么?',
+            function () {
+                __form_save('form_department_input', '/main/department/save', function(data) {
+                    callback(data)
+                });
+            },
+            function () {
+                callback();
+            }
+        );
+    }
+
+</script>
+
+</html>

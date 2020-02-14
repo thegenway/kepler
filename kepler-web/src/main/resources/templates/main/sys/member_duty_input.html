@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="row" id="member-duty-div">
+
+    <div class="col-md-6" style="max-height: 500px;overflow: auto">
+        <ul id="tree_department" class="ztree"></ul>
+    </div>
+
+    <div class="col-md-6" style="max-height: 500px;overflow: auto">
+        <div id="power-group" class="list-group">
+<!--            <a class="list-group-item" href="javascript:void(0)">-->
+<!--                <input type="checkbox" class="magic-checkbox" id="powerid"/>-->
+<!--                <label for="powerid" style="width: 100%; height: 100%">Cras justo odio</label>-->
+<!--            </a>-->
+        </div>
+    </div>
+
+</div>
+
+<div id="all-duty-temp" class="hidden">
+    <div class="list-group">
+        <a th:each="duty : ${userDutyList}" th:id="${duty.id}" class="list-group-item" href="javascript:void(0)" th:text="${duty?.power?.department?.name} + '-' + ${duty?.power?.post?.name}">获取失败</a>
+    </div>
+</div>
+
+<script id="power-list-temp" type="text/x-jquery-tmpl">
+    <a class="list-group-item list-item-lg" href="javascript:void(0)">
+        <input type="checkbox" class="magic-checkbox" id="${id}" {{if isChecked}}checked{{/if}} />
+        <label for="${id}" style="width: 100%; height: 100%">
+            <span style="padding: 10px 0">${name}</span>
+        </label>
+    </a>
+</script>
+
+<script th:inline="javascript">
+    $(function(){
+        init_tree_department();
+        __panelOverlay("member-duty-div");
+    });
+
+    function init_tree_department() {
+        var setting = {
+            async: {
+                enable: true,
+                url: '/main/department/tree',
+                autoParam: ['id'],
+                type: 'get',
+                dataType: 'json'
+            },
+            callback: {
+                onAsyncSuccess: zTreeOnAsyncSuccess,
+                onClick: zTreeOnClick
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: 'id',
+                    pIdKey: 'pId',
+                    rootPId: ''
+                }
+            },
+            view: {
+                autoCancelSelected: false,
+                dblClickExpand: false,
+                selectedMulti: false
+            }
+        };
+
+        $.fn.zTree.init($('#tree_department'), setting);
+
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        var zTree = $.fn.zTree.getZTreeObj('tree_department');
+        if (treeNode) {
+            if (treeNode.id === '0') {
+                var nodes = treeNode.children;
+                // zTree.selectNode(nodes[0]);
+            }
+        } else {
+            var rootNode = zTree.getNodes()[0];
+            if (rootNode.isParent) {
+                zTree.expandNode(rootNode, true, true, true);
+            }
+        }
+    }
+
+    //点击一个部门 加载此部门下的职权
+    function zTreeOnClick(event, treeId, treeNode) {
+        var id = treeNode.id;
+        if (id) {
+            __panelOverlay_show("member-duty-div");
+            __ajax_get("/main/power/list_department", {departmentId : id, checkUserId : [[${user.id}]]}, function(data){
+                __panelOverlay_hide("member-duty-div");
+                var list = data.dataRows;
+                $("#power-group").empty();
+                for(var i=0;i<list.length;i++){
+                    $("#power-list-temp").tmpl(list[i]).appendTo("#power-group");
+                }
+            })
+        }
+    }
+
+    //点击一个职权执行增加删除职权操作
+    $("#power-group").on("change", "input:checkbox", function(){
+        var powerId = $(this).attr("id");
+        var userId = [[${user.id}]];
+        var url = $(this).is(":checked") ? "/main/duty/dutyAdd" : "/main/duty/dutyDelete";
+        __panelOverlay_show("member-duty-div");
+        __ajax_post(url, {powerId : powerId, userId : userId}, function(data){
+            __panelOverlay_hide("member-duty-div");
+            __toastr(data);
+        });
+    });
+
+    //查看用户拥有的所有职权
+    $("#all-user-duty").on("click", function(){
+        var dialogRef = __alert_dialog(BootstrapDialog.TYPE_INFO, BootstrapDialog.SIZE_NORMAL, [[${user.name}]], $("#all-duty-temp").html(),
+            [{
+                icon: 'ti-close',
+                label: '关闭',
+                cssClass: 'btn-default',
+                action: function () {
+                    dialogRef.close();
+                }
+            }])
+    });
+
+</script>
+
+</html>

@@ -1,0 +1,99 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<form id="form_power_input" class="form-horizontal">
+    <input type="hidden" name="keyId" id="keyId" th:value="${power?.id}"/>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">部门</label>
+        <div class="col-md-7">
+            <input type="text" name="departmentName" id="departmentName" th:value="${power!=null ? power.department?.name : department?.name}" class="form-control" disabled>
+            <input type="hidden" name="departmentId" id="departmentId" th:value="${power!=null ? power.department?.id : department?.id}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">岗位</label>
+        <div class="col-md-7">
+            <select name="postId" id="postId" data-live-search="true" class="selectpicker form-control" title="请选择岗位" th:if="${power == null}" >
+                <option value="">请选择</option>
+                <option th:each="post : ${postList}" th:value="${post.id}" th:text="${post.name}" ></option>
+            </select>
+            <input th:if="${power!=null}" type="text" th:value="${power?.post?.name}" class="form-control" disabled>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">上级职权</label>
+        <div class="col-md-7">
+            <input type="text" name="parentId" id="parentId" class="form-control" title="请选择上级职权"/>
+        </div>
+    </div>
+
+</form>
+
+<script th:inline="javascript">
+
+    $(function(){
+        fn_power_input_validate();
+        __select2("postId", "请选择岗位");
+        fn_power_parent_tree_load(function(){
+            var parentId = [[${power?.parent?.id}]];
+                if(parentId){
+                    $('#parentId').treepicker('val', parentId);
+                }
+        });
+    });
+
+    //父级职权
+    function fn_power_parent_tree_load(success){
+        __treepicker("parentId");
+        var keyId = $('#form_power_input #keyId').val();
+        var departmentId = $('#form_power_input #departmentId').val();
+        var data;
+        if (keyId) {
+            data = {powerId: keyId};
+        } else {
+            data = {departmentId: departmentId};
+        }
+        __ajax_get("/main/power/tree_level", data, function(data) {
+            if (data.state === 1) {
+                var list = data.data;
+                $('#parentId').treepicker('setTreeNodes', list);
+                success();
+            }
+        });
+    }
+
+    // 表单数据校验
+    function fn_power_input_validate() {
+        __init_validate('form_power_input', {
+            rules : {
+                postId : {
+                    required : true
+                }
+            },
+            messages : {
+                postId : {
+                    required : '请选择岗位'
+                }
+            }
+        });
+    }
+
+    function fn_power_input_save(callback) {
+        if (!$('#form_power_input').valid()) {
+            return false;
+        }
+        __confirm_dialog(null, '确定提交么?', function () {
+            __form_save('form_power_input', '/main/power/save', function(data) {
+                callback(data);
+            })},
+            function () {
+                callback();
+            }
+        );
+    }
+
+</script>
+
+</html>

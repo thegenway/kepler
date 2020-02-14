@@ -1,7 +1,10 @@
-package com.hanqian.kepler.common.service;
+package com.hanqian.kepler.core.service.base;
 
-import com.hanqian.kepler.common.dao.BaseDao;
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.common.entity.jqgrid.JqGridContent;
+import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,9 +75,11 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 	}
 
 	@Override
-	public T getOne(PK var1) {
+	public T get(PK var1) {
 		if(var1 == null || "".equals(var1)) return null;
-		return getBaseDao().getOne(var1);
+		Optional<T> optional =  getBaseDao().findById(var1);
+		return optional.orElse(null);
+//		return getOne(var1);  //此方法如果找不到对应的id的话会报异常
 	}
 
 	@Override
@@ -158,6 +163,12 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 	}
 
 	@Override
+	public T getFirstOne(Specification<T> var1) {
+		List<T> list = findAll(var1);
+		return list.size() > 0 ? list.get(0) : null;
+	}
+
+	@Override
 	public List<T> findAll(Specification<T> var1) {
 		return getBaseDao().findAll(var1);
 	}
@@ -175,5 +186,16 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 	@Override
 	public long count(Specification<T> var1) {
 		return getBaseDao().count(var1);
+	}
+
+	@Override
+	public JqGridContent<T> getJqGridContent(List<Rule> rules, Pageable pageable) {
+		if(pageable!=null){
+			Page<T> page = findAll(SpecificationFactory.where(rules), pageable);
+			return new JqGridContent<T>(true, page, page.getContent());
+		}else{
+			List<T> list = findAll(SpecificationFactory.where(rules));
+			return new JqGridContent<T>(false, null, list);
+		}
 	}
 }

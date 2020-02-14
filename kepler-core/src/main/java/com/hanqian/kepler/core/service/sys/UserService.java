@@ -1,8 +1,10 @@
 package com.hanqian.kepler.core.service.sys;
 
 import com.hanqian.kepler.common.entity.result.AjaxResult;
-import com.hanqian.kepler.common.service.BaseService;
+import com.hanqian.kepler.core.service.base.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.User;
+
+import java.util.List;
 
 /**
  * newFile
@@ -32,5 +34,10 @@ public interface UserService extends BaseService<User, String> {
 	 * 创建用户
 	 */
 	AjaxResult createMember(String account, String password, String name);
+
+	/**
+	 * 获取所有系统管理员
+	 */
+	List<User> findManagers();
 
 }

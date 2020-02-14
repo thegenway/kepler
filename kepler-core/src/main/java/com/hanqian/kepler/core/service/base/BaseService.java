@@ -1,6 +1,8 @@
-package com.hanqian.kepler.common.service;
+package com.hanqian.kepler.core.service.base;
 
-import com.hanqian.kepler.common.entity.base.BaseEntity;
+import com.hanqian.kepler.common.entity.jqgrid.JqGridContent;
+import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +46,7 @@ public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 
 	void deleteAllInBatch();
 
-	T getOne(PK var1);
+	T get(PK var1);
 
 	<S extends T> S save(S var1);
 
@@ -78,6 +80,8 @@ public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 
 	Optional<T> findOne(@Nullable Specification<T> var1);
 
+	T getFirstOne(@Nullable Specification<T> var1);
+
 	List<T> findAll(@Nullable Specification<T> var1);
 
 	Page<T> findAll(@Nullable Specification<T> var1, Pageable var2);
@@ -85,5 +89,7 @@ public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 	List<T> findAll(@Nullable Specification<T> var1, Sort var2);
 
 	long count(@Nullable Specification<T> var1);
+
+	JqGridContent<T> getJqGridContent(List<Rule> rules, Pageable pageable);
 
 }
