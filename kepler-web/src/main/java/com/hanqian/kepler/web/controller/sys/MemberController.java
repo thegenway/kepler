@@ -62,7 +62,7 @@ public class MemberController extends BaseController {
 			map.put("username", member.getUsername());
 			map.put("phone", member.getPhone());
 			map.put("email", member.getEmail());
-			map.put("createTime", DateUtil.formatDateTime(member.getCreateTime()));
+			map.put("loginTime", DateUtil.formatDateTime(member.getLoginTime()));
 			dataRows.add(map);
 		}
 

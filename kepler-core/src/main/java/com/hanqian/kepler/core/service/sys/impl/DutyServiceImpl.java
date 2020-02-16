@@ -48,6 +48,7 @@ public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements Du
                 return AjaxResult.error(StrUtil.format("当前用户【{}】已经存在此职权【{}】", user.getName(), power.getName()));
             }else{
                 duty.setState(BaseEnumManager.StateEnum.Enable);
+                duty.setIfMain(0);
                 save(duty);
                 return AjaxResult.success("恢复职责成功");
             }
@@ -80,5 +81,32 @@ public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements Du
     @Override
     public AjaxResult dutyDelete(Duty duty) {
         return duty!=null ? dutyDelete(duty.getPower(), duty.getUser()) : AjaxResult.error("职责为空");
+    }
+
+    @Override
+    public Duty getDefaultDuty(User user) {
+        if(user==null) return null;
+
+        List<Rule> rules = new ArrayList<>();
+        rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+        rules.add(Rule.eq("user", user));
+        rules.add(Rule.eq("ifMain", 1));
+        return getFirstOne(SpecificationFactory.where(rules));
+    }
+
+    @Override
+    public AjaxResult setDefaultDuty(User user, Duty duty) {
+        if(user==null) return AjaxResult.error("用户为空");
+        if(duty==null) return AjaxResult.error("职责为空");
+
+        Duty oldDefaultDuty = getDefaultDuty(user);
+        if(oldDefaultDuty!=null){
+            oldDefaultDuty.setIfMain(0);
+            save(oldDefaultDuty);
+        }
+
+        duty.setIfMain(1);
+        save(duty);
+        return AjaxResult.success();
     }
 }

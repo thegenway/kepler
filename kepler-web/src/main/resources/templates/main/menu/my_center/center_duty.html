@@ -1,0 +1,47 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="panel-body">
+    <h1 class="page-header text-overflow pad-btm bord-btm mar-btm">我的职责</h1>
+    <table id="user-center-duty-table" class="table table-hover text-center">
+        <thead>
+        <tr>
+            <th class="text-center">序号</th>
+            <th class="text-center">部门</th>
+            <th class="text-center">岗位</th>
+            <th class="text-center">设置时间</th>
+            <th class="text-center">是否主要职责</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="duty : ${userDutyList}" th:id="${duty.id}">
+            <td th:text="${dutyStat.index + 1}"></td>
+            <td th:text="${duty?.power?.department?.name}"></td>
+            <td th:text="${duty?.power?.post?.name}"></td>
+            <td><i class="demo-pli-clock"></i><span th:text="${#dates.format(duty?.createTime, 'yyyy-MM-dd HH:mm')}"></span></td>
+            <td>
+                <label th:if="${duty?.ifMain == 0}" th:data-content="${duty.id}" class="label label-table label-primary mintip duty-label" title="点击设置为默认职责" style="cursor: pointer">否</label>
+                <div th:if="${duty?.ifMain > 0}" class="label label-table label-success">是</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        $.minimalTips();
+        __panelOverlay("user-center-duty-table");
+    });
+
+    $("#user-center-duty-table").on("click", ".duty-label", function(){
+        __panelOverlay_show("user-center-duty-table");
+        __ajax_post("/main/userCenter/setDefaultDuty", {dutyId : $(this).attr("data-content")}, function(data){
+            __panelOverlay_hide("user-center-duty-table");
+            __toastr(data);
+            loadURL("/main/userCenter/loadUrl/center_duty", $("#user-center-content"));
+        })
+    });
+
+</script>
+
+</html>

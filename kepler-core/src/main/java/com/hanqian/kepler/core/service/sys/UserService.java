@@ -16,6 +16,16 @@ import java.util.List;
 public interface UserService extends BaseService<User, String> {
 
 	/**
+	 * 密码校验
+	 */
+	boolean validPassword(User user, String password);
+
+	/**
+	 * 修改密码
+	 */
+	AjaxResult updatePasswordByPassword(User user, String oldPassword, String newPassword);
+
+	/**
 	 * 根据账号获取user
 	 */
 	User getUserByAccount(String account);
@@ -39,5 +49,6 @@ public interface UserService extends BaseService<User, String> {
 	 * 获取所有系统管理员
 	 */
 	List<User> findManagers();
+
 
 }

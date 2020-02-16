@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="fixed-fluid">
+        <div class="fixed-sm-200 fixed-md-250 pull-sm-left">
+            <div class="panel">
+                <div class="pad-all bord-btm">
+                    <a href="javascript:void(0)" class="btn btn-block btn-success" th:text="${session?.CURRENT_USER?.name}">个人中心</a>
+                </div>
+                <div class="list-group bg-trans pad-btm bord-btm" id="center-menu">
+                    <a href="javascript:void(0)" class="list-group-item" data-type="profile"><i class="fa fa-user fa-lg"></i> 个人资料</a>
+                    <a href="javascript:void(0)" class="list-group-item" data-type="avatar"><i class="fa fa-smile-o fa-lg"></i> 头像修改</a>
+                    <a href="javascript:void(0)" class="list-group-item" data-type="password"><i class="fa fa-lock fa-lg"></i> 修改密码</a>
+                    <a href="javascript:void(0)" class="list-group-item" data-type="duty"><i class="fa fa-puzzle-piece fa-lg"></i> 我的职责</a>
+                    <a href="javascript:void(0)" class="list-group-item" data-type="bind"><i class="fa fa-television fa-lg"></i> 账号绑定</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="fluid">
+            <div id="user-center-content" class="panel">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        load_url_center($("#center-menu a:first").attr("data-type"));
+    });
+
+    $("#center-menu").on("click", 'a', function(){
+        var type = $(this).attr("data-type");
+        load_url_center(type);
+    });
+
+    function load_url_center(type){
+        if(!type){
+            __toastr_error("未知跳转类型");
+            return false;
+        }
+        loadURL("/main/userCenter/loadUrl/center_"+type, $("#user-center-content"));
+    }
+
+</script>
+
+</html>

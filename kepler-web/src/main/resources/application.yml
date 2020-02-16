@@ -29,12 +29,15 @@ spring:
         hibernate:
           enable_lazy_load_no_trans: true
 
-
   redis:
     host: 127.0.0.1
     timeout: 10000ms
   cache:
     type: redis
+
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/kepler
 
   thymeleaf:
     mode: HTML

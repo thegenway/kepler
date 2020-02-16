@@ -51,13 +51,13 @@
     function init_grid_member() {
 
         __init_jqgrid('member_table', 'member_page', '/main/member/list',
-            ['用户名称', '用户名', '邮箱', '手机号','创建时间', '微信', "职责信息", '操作', 'id'],
+            ['用户名称', '用户名', '邮箱', '手机号','登陆时间', '微信', "职责信息", '操作', 'id'],
             [
                 {name: 'name', index: 'name', width: 250, sortable: true, stype: 'text', searchoptions: {sopt: ['cn']}},
                 {name: 'username', index: 'username', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
                 {name: 'email', index: 'email', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
                 {name: 'phone', index: 'phone', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'createTime', index: 'createTime', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'loginTime', index: 'loginTime', width: 250, sortable: true, search: true, stype: 'text', searchoptions: {sopt: ['cn']}},
                 {name: 'wxName', index: 'wxName', width: 120, sortable: false, search: false},
                 {name: 'roleBtn', index: 'roleBtn', width: 120, sortable: false, search: false, formatter: btnDutyInfo},
                 {name: 'act', index: 'act', width: 120, fixed: true, sortable: false, search: false, formatter: actFormat},

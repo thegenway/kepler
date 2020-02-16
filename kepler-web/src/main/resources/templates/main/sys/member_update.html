@@ -68,6 +68,7 @@
                     }
                 },
                 phone : {
+                    checkPhone : true,
                     remote : {
                         type: 'post',
                         url: '/main/member/validate/account',
@@ -82,6 +83,7 @@
                     }
                 },
                 email : {
+                    email : true,
                     remote : {
                         type: 'post',
                         url: '/main/member/validate/account',
@@ -103,6 +105,11 @@
             }
         });
     }
+
+    $.validator.addMethod("checkPhone", function(value, element, params){
+        var checkPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+        return this.optional(element) || (checkPhone.test(value));
+    },"请输入正确的手机号");
 
     function fn_member_update_save(callback) {
         if (!$('#form_member_update').valid()) {

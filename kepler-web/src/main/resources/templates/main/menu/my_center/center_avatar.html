@@ -1,0 +1,110 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{../static/plugins/cropper/cropper.min.css}">
+    <script th:src="@{../static/plugins/cropper/cropper.min.js}"></script>
+    <style>
+        #cropperContainer{
+            padding: 0;
+            height: 100%;
+        }
+        .img-preview{
+            overflow: hidden;
+            height: 100px;
+            width: 100px;
+            margin: 66px auto 0 auto;
+        }
+    </style>
+</head>
+<div id="user-center-avatar" class="panel-body" style="height: 300px">
+    <div id="cropperContainer" class="col-md-8 col-sm-6">
+        <img id="logoImg" th:src="${user?.avatarId}" style="height: 100%;width: auto">
+    </div>
+    <div class="col-md-2 col-sm-6 bord-btm bord-top" style="height: 100%">
+        <div class="img-preview img-circle"></div>
+    </div>
+    <div class="col-md-2 col-sm-6 bord-btm bord-top bord-rgt" style="height: 100%">
+        <div class="img-preview"></div>
+    </div>
+</div>
+
+<div class="panel-footer text-right">
+    <label id="uploadNewImgBtn" for="inputImage" class="btn btn-primary">选择新图片</label>
+    <input class="sr-only hidden" id="inputImage" name="file" type="file" accept="image/*">
+    <button type="button" id="save-center-avatar" class="btn btn-success">保存</button>
+</div>
+
+<script th:inline="javascript">
+    var cropper;
+
+    $(function(){
+
+        //参数文档
+        //https://blog.csdn.net/weixin_38023551/article/details/78792400
+        var image = document.getElementById('logoImg');
+        cropper = new Cropper(image, {
+            viewMode : 2, //cropper的视图模式
+            aspectRatio: 1, //设置剪裁容器的比例
+            preview : '.img-preview', //添加额外的元素（容器）的预览
+            autoCropArea : 1.0, //初始化时自动剪裁所占的比例
+            crop: function(data) { // 当改变剪裁容器或图片时的事件函数
+                console.log(data);
+            }
+        });
+
+        //选择新图片
+        var URL = window.URL || window.webkitURL, blobURL;
+        if (URL) {
+            $("#inputImage").change(function () {
+                var files = this.files, file;
+                if (files && files.length) {
+                    file = files[0];
+                    if (/^image\/\w+$/.test(file.type)) {
+                        blobURL = URL.createObjectURL(file);
+                        cropper.reset(true);
+                        cropper.replace(blobURL);
+                        $("#inputImage").val('');
+                    } else {
+                        __toastr_error('请选择一张图片');
+                    }
+                }
+            });
+        } else {
+            $("#inputImage").parent().remove();
+        }
+
+    });
+
+    $("#save-center-avatar").on("click", function(){
+        var cas=cropper.getCroppedCanvas();
+        cas.toBlob(function (blob) {
+            var formData = new FormData();
+            formData.append('file', blob);
+            formData.append('fileName', "avatar_"+[[${user?.id}]]+".jpg");
+
+            $.ajax({
+                type:'POST',
+                url : "/main/file/upload",
+                data : formData,
+                dataType : 'json',
+                processData : false,
+                contentType : false,
+                mimeType:"multipart/form-data",
+                success:function(data){
+                    if(data && data.state===1){
+                        __ajax_post("/main/userCenter/updateAvatar", {newAvatarId : data.data.id}, function(uData){
+                            __toastr(uData);
+                        })
+                    }else{
+                        __toastr_error("上传过程中出错....");
+                    }
+                },
+                error : function(data){
+                    __toastr_error("上传过程中出错...");
+                }
+            });
+        })
+    });
+
+</script>
+
+</html>

@@ -738,7 +738,8 @@ function __city_picker(elem, province, city, district, opt){
         province : province,
         city : city,
         district : district,
-        placeholder : "点击从下拉面板中选择省/市/区"
+        placeholder : "点击从下拉面板中选择省/市/区",
+        responsive : true
     };
     var option = $.extend({},defaults,opt);
     elem.citypicker("reset");
@@ -951,4 +952,66 @@ function __panelOverlay_show(eleId){
 
 function __panelOverlay_hide(eleId){
     $("#" + eleId).panelOverlay('hide');
+}
+
+/* laydate */
+/*======================================*/
+function __laydate(eleId, type, isRange, opt){
+    var defaults = {
+        elem : "#" + eleId,
+        type : type, //year,month,date,time,datetime
+        range : isRange ? '~' : false, //是否是时间范围选择
+        // value : new Date(), //初始值
+        isInitValue : false, //是否自动填充初始值
+        min : '1900-1-1', //min: -7，即代表最小日期在7天前，正数代表若干天后
+        max : '2099-12-31',
+        trigger : 'focus', //自定义弹出控件的事件
+        show : false, //默认显示, 如果设置: true，则控件默认显示在绑定元素的区域
+        position : 'absolute', //定位方式
+        zIndex : 66666666, //层叠顺序
+        showBottom : true, //是否显示底部栏
+        btns : ['clear', 'now', 'confirm'], //工具按钮，右下角显示的按钮，会按照数组顺序排列
+        lang : 'cn', //语言
+        calendar : false, //是否显示公历节日
+        mark : null, //标注重要日子，如： {'0-12-31': '跨年', '0-0-10': '工资', '2017-8-21': '发布'}
+        done : function(value, date, endDate){ //控件选择完毕后的回调, 三个参数，分别代表：生成的值、日期时间对象、结束的日期时间对象
+            if($("#"+eleId).attr("aria-required")){
+                $("#"+eleId).valid();
+            }
+        }
+    };
+    var options = $.extend({}, defaults, opt);
+    laydate.render(options);
+}
+
+function __laydate_year(eleId, opt){
+    __laydate(eleId, "year", false, opt);
+}
+function __laydate_month(eleId, opt){
+    __laydate(eleId, "month", false, opt);
+}
+function __laydate_date(eleId, opt){
+    __laydate(eleId, "date", false, opt);
+}
+function __laydate_time(eleId, opt){
+    __laydate(eleId, "time", false, opt);
+}
+function __laydate_datetime(eleId, opt){
+    __laydate(eleId, "datetime", false, opt);
+}
+
+function __laydate_year_range(eleId, opt){
+    __laydate(eleId, "year", true, opt);
+}
+function __laydate_month_range(eleId, opt){
+    __laydate(eleId, "month", true, opt);
+}
+function __laydate_date_range(eleId, opt){
+    __laydate(eleId, "date", true, opt);
+}
+function __laydate_time_range(eleId, opt){
+    __laydate(eleId, "time", true, opt);
+}
+function __laydate_datetime_range(eleId, opt){
+    __laydate(eleId, "datetime", true, opt);
 }

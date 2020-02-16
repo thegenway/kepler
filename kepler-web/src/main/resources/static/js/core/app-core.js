@@ -69,19 +69,16 @@
         }
 
         // side-menu 忽略链接
-        $(document).on('click', '#mainnav-menu a[href="#"]', function(e) {
+        // $(document).on('click', '#mainnav-menu a[href="#"]', function(e) {
+        $(document).on('click', 'ul[id^="mainnav-menu"] a[href="#"]', function(e) {
             e.preventDefault();
         });
 
         // side-menu 其他链接处理
-        $(document).on('click', '#mainnav-menu a[href!="#"]', function(e) {
+        // $(document).on('click', '#mainnav-menu a[href!="#"]', function(e) {
+        $(document).on('click', 'ul[id^="mainnav-menu"] a[href!="#"]', function(e) {
             e.preventDefault();
             var $this = $(e.currentTarget);
-
-            // 忽略已打开菜单
-            // if ($this.parent().hasClass('active-link')) {
-            //     return;
-            // }
 
             if ($this.parent().hasClass('active-link')) {
                 returnToHashUrl();

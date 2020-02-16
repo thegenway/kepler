@@ -38,6 +38,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 	}
 
 	@Override
+	public boolean validPassword(User user, String password) {
+		if(user!=null && StrUtil.isNotBlank(password)){
+			return new BCryptPasswordEncoder().matches(password, user.getPassword());
+		}
+		return false;
+	}
+
+	@Override
+	public AjaxResult updatePasswordByPassword(User user, String oldPassword, String newPassword) {
+		if(user == null) return AjaxResult.error("用户为空");
+		if(StrUtil.isBlank(oldPassword)) return AjaxResult.error("老密码为空");
+		if(StrUtil.isBlank(newPassword)) return AjaxResult.error("新密码为空");
+		if(StrUtil.equals(oldPassword, newPassword)) return AjaxResult.error("新密码不能与老密码相同");
+		if(!validPassword(user, oldPassword)) return AjaxResult.error("老密码不正确");
+
+		String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
+		user.setPassword(encodedPassword);
+		save(user);
+
+		return AjaxResult.success();
+	}
+
+	@Override
 	public User getUserByAccount(String account) {
 		List<User> userList = userDao.findUsersByUsernameOrEmailOrPhone(account, account, account);
 		return userList.size()>0 ? userList.get(0) : null;

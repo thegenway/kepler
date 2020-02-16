@@ -11,7 +11,7 @@ import java.util.List;
 public interface DutyService extends BaseService<Duty, String> {
 
     /**
-     * 获取一个人的职责列表
+     * 获取一个人的所有职责列表
      */
     List<Duty> findByUser(User user);
 
@@ -25,5 +25,15 @@ public interface DutyService extends BaseService<Duty, String> {
      */
     AjaxResult dutyDelete(Power power, User user);
     AjaxResult dutyDelete(Duty duty);
+
+    /**
+     * 获取一个用户的默认职责
+     */
+    Duty getDefaultDuty(User user);
+
+    /**
+     * 给一个用户设置默认职责
+     */
+    AjaxResult setDefaultDuty(User user, Duty duty);
 
 }

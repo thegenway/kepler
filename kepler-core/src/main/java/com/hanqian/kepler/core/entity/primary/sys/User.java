@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
+import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import lombok.*;
@@ -64,6 +65,7 @@ public class User extends BaseEntity {
 	/**
 	 * 性别
 	 */
+	@Enumerated(EnumType.STRING)
 	private BaseEnumManager.SexEnum gender;
 
 	/**
@@ -108,4 +110,12 @@ public class User extends BaseEntity {
 	 */
 	private String loginIp;
 
+	/**
+	 * 本次登陆使用浏览器
+	 */
+	private String loginBrowser;
+
+	public String getAvatarId() {
+		return StrUtil.isNotBlank(avatarId) ? "/main/file/"+avatarId : "/static/img/default_header.jpg";
+	}
 }

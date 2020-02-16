@@ -442,6 +442,7 @@ select:-webkit-autofill {
     padding: 1px !important;
 }
 
-li .fa{
+.fa-lg{
     min-width: 19px;
+    text-align: center;
 }
