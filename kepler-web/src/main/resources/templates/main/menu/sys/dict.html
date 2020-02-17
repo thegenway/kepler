@@ -1,0 +1,155 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="fixed-fluid">
+        <div class="fixed-sm-200 fixed-md-250 pull-sm-left">
+            <div class="panel">
+                <div class="pad-all bord-btm">
+                    <a disabled="" href="javascript:void(0)" class="btn btn-block btn-success">系统字典</a>
+                </div>
+                <div class="list-group bg-trans pad-btm bord-btm" id="dict-type-list">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="fluid">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <h1 id="title_dict_selected" class="page-header text-overflow pad-btm">正在加载...</h1>
+                    <div class="form-inline">
+                        <div class="row">
+                            <div class="col-sm-12 table-toolbar-left">
+                                <button id="btn_add_dict" class="btn btn-default"><i class="fa fa-edit fa-lg"></i> 添加字典项</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th class="text-center" width="16.66%">字典项名称</th>
+                            <th class="text-center" width="16.66%">关键字</th>
+                            <th class="text-center" width="16.66%">描述</th>
+                            <th class="text-center" width="16.66%">表单可选</th>
+                            <th class="text-center" width="16.66%">自定义排序</th>
+                            <th class="text-center" width="16.66%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="dict-table">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="dict-type-list-temp" type="text/x-jquery-tmpl">
+    <a href="javascript:void(0)" class="list-group-item" data-type="${name}">${value}</a>
+</script>
+
+<script id="dict-table-temp" type="text/x-jquery-tmpl">
+    <tr id="${id}">
+        <td>${name}</td>
+        <td>${value}</td>
+        <td>${description}</td>
+        <td>
+            {{if state=='Enable'}}<label class='label label-success'>可用</label>{{/if}}
+            {{if state=='Disenable'}}<label class='label label-warning'>停用</label>{{/if}}
+        </td>
+        <td>${sortNo}</td>
+        <td>
+            <button type="button" class="btn btn-primary btn-xs" data-method="edit" data-id="${id}">编辑</button>
+            {{if state=='Enable'}}<button type="button" class="btn btn-warning btn-xs" data-method="Disenable" data-id="${id}">停用</button>{{/if}}
+            {{if state=='Disenable'}}<button type="button" class="btn btn-success btn-xs" data-method="Enable" data-id="${id}">启用</button>{{/if}}
+            <button type="button" class="btn btn-danger btn-xs" data-method="Delete" data-id="${id}">删除</button>
+        </td>
+    </tr>
+</script>
+
+<script th:inline="javascript">
+
+    var dictType = {
+        name : null,
+        value : null
+    };
+
+    $(function(){
+        loadDictTypeList();
+    });
+
+    __panelOverlay("loadDictTypeList");
+    __panelOverlay("dict-table");
+
+    //加载左侧字典类列表
+    function loadDictTypeList(){
+        __panelOverlay_show("loadDictTypeList");
+        __ajax_get("/main/dict/findDictTypeList", {}, function(data){
+            __panelOverlay_hide("loadDictTypeList");
+            $("#dict-type-list-temp").tmpl(data).appendTo("#dict-type-list");
+            $("#dict-type-list a:first").trigger("click");
+        })
+    }
+
+    //点击左侧列表
+    $("#dict-type-list").on("click", "a", function(){
+        var $dictType = $(this);
+        $("#dict-type-list a").removeClass("active");
+        $dictType.addClass("active");
+        dictType.name = $dictType.attr("data-type");
+        dictType.value = $dictType.text();
+        $("#title_dict_selected").text(dictType.value);
+        loadDictTable();
+    });
+
+    //加载字典项表格
+    function loadDictTable(){
+        __panelOverlay_show("dict-table");
+        __ajax_get("/main/dict/findDictListByType", {dictType : dictType.name}, function(data){
+            __panelOverlay_hide("dict-table");
+            $("#dict-table").empty();
+            $("#dict-table-temp").tmpl(data).appendTo("#dict-table");
+        })
+    }
+
+    //添加字典项
+    $("#btn_add_dict").on("click", function(){
+        input();
+    });
+
+    function input(keyId){
+        __open_dialog_form(dictType.value, "/main/dict/input?dictType=" + dictType.name + "&keyId=" + keyId, function(dialogRef){
+            var callback = function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    loadDictTable();
+                }
+            };
+            dialogRef.enableButtons();
+            fn_dict_save(callback);
+        })
+    }
+
+    //操作方法
+    $("#dict-table").on("click", "button", function(){
+        var method = $(this).attr("data-method");
+        var keyId = $(this).attr("data-id");
+        if(method === "edit"){
+            input(keyId);
+        }else{
+            __confirm_dialog("", "确认执行此操作吗？", function(){
+                __ajax_post("/main/dict/"+method+"/"+keyId, {}, function(data){
+                    __toastr(data);
+                    if(data && data.state === 1){
+                        loadDictTable();
+                    }
+                })
+            })
+        }
+    })
+
+</script>
+
+</html>

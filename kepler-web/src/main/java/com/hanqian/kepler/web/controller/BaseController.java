@@ -52,6 +52,10 @@ public class BaseController implements Serializable {
 	@Autowired
 	protected PostService postService;
 
+	@Autowired
+	protected DictService dictService;
+
+
 	/**
 	 * 获取当前登录人
 	 */

@@ -1,6 +1,7 @@
 package com.hanqian.kepler.web.test;
 
 import cn.hutool.core.date.DateUtil;
+import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.common.jpa.specification.OP;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
@@ -120,6 +121,12 @@ public class KeplerTest {
 		logger.info("info...");
 		logger.warn("warn...");
 		logger.error("error...");
+	}
+
+	@Test
+	public void enumTest(){
+		System.out.println("*********************");
+		System.out.println(DictEnum.valueOf("SysDictDemo456"));
 	}
 
 }
