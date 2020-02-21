@@ -1,7 +1,7 @@
 package com.hanqian.kepler.web.spring;
 
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

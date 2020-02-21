@@ -1,6 +1,7 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
-import com.hanqian.kepler.core.entity.primary.base.BaseEntity;
+import com.hanqian.kepler.common.base.entity.BaseEntity;
+import com.hanqian.kepler.flow.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

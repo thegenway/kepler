@@ -2,10 +2,10 @@ package com.hanqian.kepler.web.controller.sys;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.MenuService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.controller.BaseController;
@@ -121,7 +121,6 @@ public class MenuController extends BaseController {
 		Menu menu = menuService.get(keyId);
 		if(menu == null){
 			menu = new Menu();
-			menu.setCreator(user);
 		}
 
 		Menu parent = menuService.get(parentId);

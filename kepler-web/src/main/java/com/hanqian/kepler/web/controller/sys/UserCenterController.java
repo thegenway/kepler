@@ -4,10 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.Constants;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.controller.BaseController;
@@ -37,7 +37,7 @@ public class UserCenterController extends BaseController {
             List<Duty> userDutyList  = dutyService.findByUser(user);
             model.addAttribute("userDutyList", userDutyList);
         }
-        return "main/menu/my_center/"+type;
+        return "main/menu/center/"+type;
     }
 
     /**

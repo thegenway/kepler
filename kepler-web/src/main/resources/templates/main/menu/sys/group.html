@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">群组信息</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12 table-toolbar-left">
+                    <button id="btn_add_group" class="btn btn-primary btn-sm" onclick="fn_group_save_dialog()">新增群组</button>
+                </div>
+            </div>
+            <div class="table-jqgrid">
+                <table id="group_table"></table>
+                <div id="group_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        init_grid_group();
+    });
+
+    function init_grid_group(){
+        __init_jqgrid("group_table", null, "/main/group/list",
+            ['群组名称', '描述', '成员人数', '组建时间','群成员', '操作', '群成员id', 'id'],
+            [
+                {name: 'name', index: 'name', width: 100, sortable: true, search: false, searchoptions: {sopt: ['cn']}},
+                {name: 'description', index: 'description', width: 100, sortable: true, search: false, searchoptions: {sopt: ['cn']}},
+                {name: 'count', index: 'count', width: 100, sortable: true, search: false, searchoptions: {sopt: ['eq']}},
+                {name: 'createTime', index: 'createTime', width: 100, sortable: true, search: false, searchoptions: {sopt: ['eq']}},
+                {name: 'memberBtn', index: 'memberBtn', width: 100, sortable: false, search: false, formatter: memberBtnFormat},
+                {name: 'act', index: 'act', width: 100, sortable: false, search: false, formatter: actFormat},
+                {name: 'userIds', index: 'userIds', width: 100, sortable: true, search: false, hidden: true},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ],false,{
+                subGrid : true,
+                subGridRowExpanded : init_grid_group_member
+            }
+        );
+    }
+
+    function init_grid_group_member(subgrid_id, row_id){
+        var subgrid_table_id = subgrid_id + "_t";
+        $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table></div>");
+        __init_jqgrid(subgrid_table_id, null,"/main/group/listMember?keyId="+row_id,
+            ["姓名","id"],
+            [
+                {name:'name', index:'name', width:100, search:false, sortable:false, searchoptions: {sopt: ['cn']}},
+                {name:'id',index:'id',search:false,hidden:true}
+            ], false
+        );
+    }
+
+    function memberBtnFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-primary btn-xs" onclick="fn_group_member(\'' + id + '\');">群成员管理</button> ';
+        return cellvalue;
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_group_save_dialog(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+        cellvalue += '<button class="btn btn-danger btn-xs" onclick="fn_group_delete(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 删除</button> ';
+        return cellvalue;
+    }
+
+    //群成员管理
+    function fn_group_member(id){
+        var dataRows = __jqGrid_data("group_table", id);
+        __user_dialog_selects("群成员管理", dataRows.userIds, function(memberData){
+            var userIds = memberData.ids;
+            __ajax_post("/main/group/setMembers", {keyId : id, userIds : userIds}, function(data){
+                __toastr(data);
+                __reflash_jqgrid("group_table");
+            })
+        })
+    }
+
+    //新建 编辑
+    function fn_group_save_dialog(id){
+        __open_dialog_form("群组", "/main/group/input?keyId="+id, function(dialogRef){
+            dialogRef.enableButtons();
+            var callback = function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __reflash_jqgrid("group_table");
+                }
+            };
+            fn_group_save(callback);
+        })
+    }
+
+    //删除
+    function fn_group_delete(id){
+        __confirm_dialog("", "确认删除吗？", function(){
+            __ajax_post("/main/group/delete", {keyId: id}, function(data){
+                __toastr(data);
+                if(data && data.state === 1){
+                    __reflash_jqgrid("group_table");
+                }
+            })
+        })
+    }
+
+</script>
+
+</html>

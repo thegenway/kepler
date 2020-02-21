@@ -13,6 +13,7 @@
 		<module>kepler-common</module>
 		<module>kepler-web</module>
 		<module>kepler-core</module>
+		<module>kepler-flow</module>
 	</modules>
 
 	<properties>
@@ -101,6 +102,12 @@
 			<dependency>
 				<groupId>com.hanqian</groupId>
 				<artifactId>kepler-core</artifactId>
+				<version>${kepler.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.hanqian</groupId>
+				<artifactId>kepler-flow</artifactId>
 				<version>${kepler.version}</version>
 			</dependency>
 

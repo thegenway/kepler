@@ -1,7 +1,7 @@
 package com.hanqian.kepler.core.dao.primary.sys;
 
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.common.base.dao.BaseDao;
+import com.hanqian.kepler.flow.entity.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

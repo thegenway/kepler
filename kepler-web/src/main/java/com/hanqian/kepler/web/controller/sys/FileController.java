@@ -1,7 +1,7 @@
 package com.hanqian.kepler.web.controller.sys;
 
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.entity.primary.sys.FileManage;
 import com.hanqian.kepler.core.service.sys.FileManageService;
 import com.hanqian.kepler.web.controller.BaseController;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;

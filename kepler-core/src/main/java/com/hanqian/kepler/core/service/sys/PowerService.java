@@ -3,8 +3,8 @@ package com.hanqian.kepler.core.service.sys;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
-import com.hanqian.kepler.core.entity.primary.sys.User;
-import com.hanqian.kepler.core.service.base.BaseService;
+import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.common.base.service.BaseService;
 
 import java.util.List;
 import java.util.Map;

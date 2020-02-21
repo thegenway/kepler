@@ -1,7 +1,7 @@
 package com.hanqian.kepler.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.utils.ServletUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;

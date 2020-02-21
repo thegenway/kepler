@@ -1,0 +1,60 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="jqGrid_wrapper">
+    <table id="dialog_common_selects_table"></table>
+    <div id="dialog_common_selects_page"></div>
+</div>
+
+<script th:inline="javascript">
+
+    var selectedIds = readCookie("jqGrid_common_selectIds");
+    var url = readCookie("jqGrid_common_url");
+    var colNames = readCookie("jqGrid_common_colNames");
+    var colModel = readCookie("jqGrid_common_colModel");
+    var width = readCookie("jqGrid_common_width");
+
+    $(function(){
+        __init_jqgrid("dialog_common_selects_table","dialog_common_selects_page", url,
+            JSON.parse(colNames),
+            JSON.parse(colModel),
+            true,{
+                autowidth : false,
+                width : width ? width : 565,
+                multiselect : true,
+                gridComplete : function(){
+                    if(selectedIds){
+                        var rowIds = selectedIds.split(",");
+                        for(var i=0;i<rowIds.length;i++){
+                            $("#dialog_common_selects_table").setSelection(rowIds[i], false);
+                        }
+                    }
+                }
+            }
+        );
+    });
+
+    function fn_common_dialogs_select(callback){
+        var ids = $("#dialog_common_selects_table").jqGrid("getGridParam", "selarrrow");
+        var data = {};
+        if (ids.length > 0) {
+            data.data = [];
+            var names = [];
+            for(var i=0;i<ids.length;i++){
+                var rowData = $('#dialog_common_selects_table').jqGrid('getRowData', ids[i]);
+                names.push(rowData.name);
+                data.data.push(rowData);
+            }
+
+            data.ids = ids.join(",");
+            data.names = names.join(",");
+            callback(data);
+        } else {
+            data.ids = "";
+            data.names = "";
+            callback(data);
+        }
+    }
+
+</script>
+
+</html>

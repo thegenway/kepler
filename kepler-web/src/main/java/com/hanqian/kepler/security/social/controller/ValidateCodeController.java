@@ -3,7 +3,7 @@ package com.hanqian.kepler.security.social.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.security.vo.ValidateCode;
 import com.hanqian.kepler.web.controller.BaseController;

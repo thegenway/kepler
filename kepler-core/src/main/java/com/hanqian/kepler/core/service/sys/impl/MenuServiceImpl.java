@@ -1,14 +1,14 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
-import com.hanqian.kepler.core.service.base.BaseServiceImpl;
+import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.MenuDao;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.MenuService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

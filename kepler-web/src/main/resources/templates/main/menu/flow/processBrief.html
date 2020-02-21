@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div id="new-process-panel" class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                目前还未配置的流程 <i id="new-process-tip" class="fa fa-exclamation-circle" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="添加后流程默认为一步归档，所有人可操作" style="color: #38a0f4"></i>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="jqGrid_wrapper">
+                <table id="new_processBrief_table"></table>
+                <div id="new_processBrief_page"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">流程简要</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+            </div>
+            <div class="jqGrid_wrapper">
+                <table id="processBrief_table"></table>
+                <div id="processBrief_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function(){
+        $("#new-process-tip").tooltip();
+        init_grid_processBrief();
+        init_grid_new_processBrief();
+    });
+
+    function init_grid_processBrief(){
+        __init_jqgrid('processBrief_table', 'processBrief_page', '/flow/processBrief/list',
+            ['实体路径', '名称', '所属模块', '操作表', '创建时间', '操作', 'id'],
+            [
+                {name: 'path', index: 'path', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'name', index: 'name', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'module', index: 'module', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'tableName', index: 'tableName', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'createTime', index: 'createTime', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ]
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" data-original-title="编辑" onclick="fn_processBrief_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+        return cellvalue;
+    }
+
+    //编辑
+    function fn_processBrief_edit(id){
+        __layX_html_save(id, "流程简要", "/flow/processBrief/input?keyId="+id, function(id, button, event){
+            var callback = function(data){
+                if(data && data.state === 1){
+                    __layX_close(id);
+                }
+            };
+            fn_processBrief_save(callback);
+        });
+    }
+
+
+    // ================================= 未配置简要表的流程 =================================
+
+
+    function init_grid_new_processBrief(){
+        __init_jqgrid('new_processBrief_table', null, '/flow/processBrief/getSurplusProcess',
+            ['实体路径', '名称', '操作'],
+            [
+                {name: 'path', index: 'path', width: 500, sortable: false, searchoptions: {sopt: ['cn']}, key: true},
+                {name: 'name', index: 'name', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: newActFormat},
+            ],false,{
+                loadComplete : function(data){
+                    console.log(data);
+                    if(data.dataRows.length <= 0){
+                        $("#new-process-panel").hide();
+                    }else{
+                        $.minimalTips(); //增加tip提示工具
+                    }
+                },
+            }
+        );
+    }
+
+    function newActFormat(cellvalue, options, rowObject) {
+        var path = rowObject.path;
+        cellvalue = '<button class="btn btn-default btn-xs" data-original-title="添加" onclick="fn_new_processBrief_add(\'' + path + '\');">添加</button> ';
+        return cellvalue;
+    }
+
+    //新流程信息添加操作
+    function fn_new_processBrief_add(path){
+        if(path){
+            __ajax_post("/flow/processBrief/createProcessBrief", {path : path}, function(data){
+                __toastr(data);
+                if(data && data.state === 1){
+                    __reflash_jqgrid("processBrief_table");
+                    __reflash_jqgrid("new_processBrief_table");
+                }
+            })
+        }else{
+            __toastr_error("没有path");
+        }
+    }
+
+</script>
+
+</html>

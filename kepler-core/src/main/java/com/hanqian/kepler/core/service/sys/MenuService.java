@@ -1,8 +1,8 @@
 package com.hanqian.kepler.core.service.sys;
 
-import com.hanqian.kepler.core.service.base.BaseService;
+import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 import java.util.Map;

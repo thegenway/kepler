@@ -36,14 +36,17 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         // repository包名
-        basePackages = PrimaryJpaConfig.REPOSITORY_PACKAGE,
+        basePackages = {PrimaryJpaConfig.REPOSITORY_PACKAGE, PrimaryJpaConfig.REPOSITORY_PACKAGE2},
         // 实体管理bean名称
         entityManagerFactoryRef = "primaryEntityManagerFactory",
         // 事务管理bean名称
         transactionManagerRef = "primaryTransactionManager")
 public class PrimaryJpaConfig {
     static final String REPOSITORY_PACKAGE = "com.hanqian.kepler.core.dao.primary";
+    static final String REPOSITORY_PACKAGE2 = "com.hanqian.kepler.flow.dao";
+
     private static final String ENTITY_PACKAGE = "com.hanqian.kepler.core.entity.primary";
+    private static final String ENTITY_PACKAGE2 = "com.hanqian.kepler.flow.entity";
 
 
     /**
@@ -75,7 +78,7 @@ public class PrimaryJpaConfig {
                 // 设置jpa配置
                 .properties(jpaProperties.getProperties())
                 // 设置实体包名
-                .packages(ENTITY_PACKAGE)
+                .packages(ENTITY_PACKAGE,ENTITY_PACKAGE2)
                 // 设置持久化单元名，用于@PersistenceContext注解获取EntityManager时指定数据源
                 .persistenceUnit("primaryPersistenceUnit").build();
     }

@@ -1,14 +1,13 @@
 package com.hanqian.kepler.security.handler;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanqian.kepler.common.Constants;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.utils.IpUtils;
 import com.hanqian.kepler.common.utils.ServletUtils;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.security.vo.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;

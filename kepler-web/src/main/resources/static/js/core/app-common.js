@@ -39,8 +39,8 @@ function loadURL(url, ajax_container) {
         beforeSend : function() {
             // loading
             var loadPage =
-                '<div class="page-content">'+
-                '<div class="cls-container">'+
+                '<div class="page-content" style="height: 100%">'+
+                '<div class="cls-container" style="height: 100%">'+
                 '<div class="cls-content">'+
                 '<div class="spiner-example">'+
                 '<div class="sk-spinner sk-spinner-three-bounce">'+
@@ -303,7 +303,7 @@ function __open_dialog(size, title, url, buttons, opt) {
         data: {
             'pageToLoad': url
         },
-        closable: false,
+        closable: true,
         buttons: buttons,
         draggable:true,
         resizable: true
@@ -403,32 +403,6 @@ function __open_dialog_select(title, url, confirm, opt) {
     return dialogRef;
 }
 
-// 选择框 宽dialog
-function __open_dialog_selectwide(title, url, confirm, opt) {
-    var dialogRef =  __open_dialog(BootstrapDialog.SIZE_WIDE, title, url,
-        [{
-            label: '确定',
-            cssClass: 'btn-primary',
-            action: function () {
-                // 禁用按钮
-                dialogRef.disenableButtons();
-                // 执行方法
-                if(typeof confirm === 'function'){
-                    confirm(dialogRef);
-                }
-            }
-        }, {
-            label: '取消',
-            action: function () {
-                // 关闭 dialog
-                dialogRef.close();
-            }
-        }],
-        opt
-    );
-    return dialogRef;
-}
-
 // 确认 提示框
 function __confirm_dialog(title, message, confirm, cancel, opt) {
     var dialogRef = __alert_dialog(BootstrapDialog.TYPE_PRIMARY, BootstrapDialog.SIZE_SMALL, title, message,
@@ -499,6 +473,66 @@ function __confirm_dialog_input(title, hint, value, confirm, cancel, opt) {
     );
     return dialogRef;
 }
+
+
+/**
+ * 通用数据单选选择框
+ * @param title 标题
+ * @param dataUrl 获取数据地址
+ * @param colNames jqgrid表头
+ * @param colModel jqgrid表体
+ * @param selectedId
+ * @param confirm
+ * @param opt
+ */
+function __common_dialog_select(title, dataUrl, colNames, colModel, selectedId, callback, opt){
+    setCookie("jqGrid_common_selectIds", selectedId);
+    setCookie("jqGrid_common_url", dataUrl);
+    setCookie("jqGrid_common_colNames", JSON.stringify(colNames));
+    setCookie("jqGrid_common_colModel", JSON.stringify(colModel));
+    __open_dialog_select(title, "../common/dialog/selectDialog", function(dialogRef){
+        dialogRef.enableButtons();
+        dialogRef.close();
+        fn_common_dialog_select(callback);
+    }, opt);
+}
+
+/**
+ * 通用数据多选选择框
+ * @param title 标题
+ * @param dataUrl 获取数据地址
+ * @param colNames jqgrid表头
+ * @param colModel jqgrid表体
+ * @param selectIds 默认选中的ids（英文逗号隔开）
+ * @param confirm callback
+ * @param opt
+ */
+function __common_dialog_selects(title, dataUrl, colNames, colModel, selectIds, callback, opt){
+    setCookie("jqGrid_common_selectIds", selectIds);
+    setCookie("jqGrid_common_url", dataUrl);
+    setCookie("jqGrid_common_colNames", JSON.stringify(colNames));
+    setCookie("jqGrid_common_colModel", JSON.stringify(colModel));
+    setCookie("jqGrid_common_width", "");
+    __open_dialog_select(title, "../common/dialog/selectDialogs", function(dialogRef){
+        dialogRef.enableButtons();
+        dialogRef.close();
+        fn_common_dialogs_select(callback);
+    }, opt);
+}
+
+/**
+ * 选择成员多选
+ */
+function __user_dialog_selects(title, selectedIds, callback, opt){
+    var dataUrl = "/main/member/list";
+    var colNames = ["姓名","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_selects(title, dataUrl, colNames, colModel, selectedIds, callback, opt);
+}
+
 
 /* validate 封装 */
 /*======================================*/
@@ -747,93 +781,6 @@ function __city_picker(elem, province, city, district, opt){
     elem.citypicker(option);
 }
 
-/**
- * 通用数据单选选择框
- * @param title 标题
- * @param dataUrl 获取数据地址
- * @param colNames jqgrid表头
- * @param colModel jqgrid表体
- * @param confirm
- * @param opt
- */
-function __common_dialog_select(title, dataUrl, colNames, colModel, selectedId, confirm, opt){
-    var url = "../common/dialog/selectDialog?dataUrl="+dataUrl.replace(new RegExp('&','g'), '%26')+"&colNames="+colNames.replace(/\s+/g,"")+"&colModel="+colModel.replace(/\s+/g,"")+"&selectedId="+selectedId;
-    __open_dialog_select(title, url, confirm, opt);
-}
-
-/**
- * 通用数据多选选择框
- * @param title 标题
- * @param dataUrl 获取数据地址
- * @param colNames jqgrid表头
- * @param colModel jqgrid表体
- * @param selectIds 默认选中的ids（英文逗号隔开）
- * @param confirm callback
- * @param opt
- */
-function __common_dialog_selects(title, dataUrl, colNames, colModel, selectIds, confirm, opt){
-    var url = "../common/dialog/selectDialogs?dataUrl="+dataUrl+"&colNames="+colNames+"&colModel="+colModel+"&selectIds="+selectIds;
-    __open_dialog_select(title, url, confirm, opt);
-}
-
-/**
- * 系统字典多选框
- * @param title 标题
- * @param dictValue 字典关键字
- * @param selectedIds 默认选中的id（英文逗号隔开）
- * @param confirm callback
- * @param opt
- */
-function __dictItem_dialog_selects(title, dictValue, selectedIds, confirm, opt){
-    var dataUrl = "../main/dictitem/selectlist?dictValue="+dictValue;
-    var colNames = '["名称","关键字","描述","id"]';
-    var colModel = "["+
-        "{name:'name',index:'name',width:100,search:true,sortable:false,searchoptions:{sopt:['cn']}},"+
-        "{name:'value',index:'value',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'description',index:'description',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'id',index:'id',search:false,hidden:true}"+
-        "]";
-    __common_dialog_selects(title, dataUrl, colNames, colModel, selectedIds, confirm, opt);
-}
-
-function __dictItem_dialog_select(title, dictValue, selectedIds, confirm, opt){
-    var dataUrl = "../main/dictitem/selectlist?dictValue="+dictValue;
-    var colNames = '["名称","关键字","描述","id"]';
-    var colModel = "["+
-        "{name:'name',index:'name',width:100,search:true,sortable:false,searchoptions:{sopt:['cn']}},"+
-        "{name:'value',index:'value',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'description',index:'description',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'id',index:'id',search:false,hidden:true}"+
-        "]";
-    __common_dialog_select(title, dataUrl, colNames, colModel, selectedIds, confirm, opt);
-}
-
-function __dictItem_dialog_select_simple(title, dictValue, selectedIds, nameFiledId, idFiledId, opt){
-    var dataUrl = "../main/dictitem/selectlist?dictValue="+dictValue;
-    var colNames = '["名称","关键字","描述","id"]';
-    var colModel = "["+
-        "{name:'name',index:'name',width:100,search:true,sortable:false,searchoptions:{sopt:['cn']}},"+
-        "{name:'value',index:'value',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'description',index:'description',width:100,search:true,sortable:false,hidden:true},"+
-        "{name:'id',index:'id',search:false,hidden:true}"+
-        "]";
-    __common_dialog_select(title, dataUrl, colNames, colModel, selectedIds, function(dialogRef){
-        var callback = function(data){
-            dialogRef.enableButtons();
-            if(data){
-                if(nameFiledId){
-                    $("#"+nameFiledId).val(data.name);
-                }
-                if(idFiledId){
-                    $("#"+idFiledId).val(data.id);
-                }
-                dialogRef.close();
-            }
-        };
-        fn_common_dialog_select(callback);
-    }, opt);
-}
-
 
 /* jqGrid 封装 */
 /*======================================*/
@@ -849,7 +796,7 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
         colModel: colModel,
         pager: '#'+page_id,
         rowList: [10, 30, 50, 100],
-        rowNum: 10,
+        rowNum: page_id!=null&&page_id!=='' ? 10 : -1,
         rownumbers: true,
         jsonReader: {
             root: 'dataRows',
@@ -864,6 +811,14 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
         gridview: true,
         viewrecords: true,
         viewsortcols: [true, 'vertical', true],
+        subGrid : false,
+        subGridOptions: {
+            plusicon : "ace-icon fa fa-plus center bigger-110 blue", //展开图标
+            minusicon : "ace-icon fa fa-minus center bigger-110 blue", //收缩图标
+            openicon : "ace-icon fa fa-chevron-right center orange", //打开时左侧图标
+            reloadOnExpand : false,
+            selectOnExpand : true
+        },
         loadComplete : function(){
             $.minimalTips(); //增加tip提示工具
         },
@@ -888,6 +843,11 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
 //表格刷新
 function __reflash_jqgrid(tableId, param){
     $('#'+tableId).jqGrid().setGridParam({datatype:'json',postData: param}).trigger('reloadGrid');
+}
+
+//通过id获取所有数据jqgrid
+function __jqGrid_data(tableId, id){
+    return jQuery("#"+tableId).jqGrid('getRowData', id)
 }
 
 
@@ -1014,4 +974,217 @@ function __laydate_time_range(eleId, opt){
 }
 function __laydate_datetime_range(eleId, opt){
     __laydate(eleId, "datetime", true, opt);
+}
+
+
+/* layX dialog */
+/*======================================*/
+function __layX(dialogId, title, type, content, buttons, onloadAfter, opt){
+    var defaults = {
+        //唯一ID
+        id : dialogId,
+
+        //图标 或 标题栏左边内容
+        icon : "<i class='fa fa-windows'></i>",
+
+        //标题
+        title : title,
+
+        //初始化宽度
+        width : "80%",
+
+        //初始化高度
+        height : "80%",
+
+        //最小宽度
+        minWidth : "600",
+
+        //最小高度
+        minHeight : "50",
+
+        //存储窗口位置、大小信息
+        storeStatus : false,
+
+        //控制窗口拖动到顶部自动最大化
+        dragInTopToMax : true,
+
+        //控制初始化窗口时超出可视区域自动最大化
+        isOverToMax : true,
+
+        //窗口位置（两个字母组合 t r b l c  ct代表正中间）
+        position : "ct",
+
+        //是否显示控制标题栏 设置 false 将不显示控制标题栏，同时窗口拖动功能失效，需手动调用关闭方法关闭窗口
+        control : true,
+
+        //是否启用esc按键关闭窗口
+        escKey : true,
+
+        //嵌入窗口样式 支持强大的CSS样式表、如需插入多行可用 layx.multiLine(function(){/* 多行样式 */})。通过修改此属性可以获得最大外观修改效果
+        style : "",
+
+        //控制标题栏样式 修改控制标题栏样式，如：background-color:#f00;color:#fff;
+        controlStyle : "",
+
+        //窗口背景颜色
+        bgColor : "#fff",
+
+        //窗口阴影
+        shadow : true,
+
+        //窗口边框 支持css边框设置属性
+        border : false,
+
+        //设置圆角 设置0px将不启用圆角，圆角必须带 px单位
+        borderRadius : "3px",
+
+        //窗口皮肤 【default/cloud/turquoise/river/asphalt】
+        skin : "default",
+
+        //设置窗口获取焦点前置,设置false后，窗口将不能前置
+        focusToReveal : true,
+
+        //窗口类型 【html：文本类型/url：页面类型/group：窗口组类型】
+        type : type,
+
+        //是否浮动窗口 设置为DOM对象时，窗口将吸附到按钮上
+        floatTarget : false,
+
+        //浮动方向
+        floatDirection : "ct",
+
+        //窗口存在闪烁 设置false后打开已存在的窗口将不会闪烁。
+        existFlicker : true,
+
+        //启用跨域点击切换窗口 设置false后将不支持非同源网站点击切换窗口，设置true有少许性能问题，如果没有涉及到第三方网页，建议设置为false。
+        enableDomainFocus : false,
+
+        //文本窗口内容 设置 type:html 有效，支持传入字符串、HTML代码以及DOM对象
+        content : content,
+
+        //设置文本窗口DOM对象拷贝模式 如果content传入的是DOM对象并且DOM对象包含触发事件，需设置false采用原对象填充content内容。设置为true拷贝一份填充content内容，但所有事件失效。
+        cloneElementContent : true,
+
+        //页面窗口地址 设置 type:url 有效，设置页面窗口URL地址，支持本地路径、互联网路径以及 'about:blank'
+        url : "",
+
+        //主窗口透明度 设置主窗口透明度、取值0~1 浮点值【0：完全透明，1：不透明，0.5：半透明】
+        opacity : 1,
+
+        //窗口阻隔、遮罩 设置true窗口以外的区域将不能操作，支持传入0-1浮点范围数值，用来设置阻隔透明度
+        shadable : false,
+
+        //设置true点击空白地方将关闭窗口
+        shadeDestroy : false,
+
+        //设置true窗口将为只读、窗口将禁止右键功能
+        readonly : false,
+
+        //窗口内容加载时显示文本
+        loadingText : "内容正在加载中，请稍后",
+
+        //置顶按钮
+        stickMenu : false,
+
+        //最小化按钮
+        minMenu : true,
+
+        //最大化按钮
+        maxMenu : true,
+
+        //调试按钮
+        debugMenu : true,
+
+        //关闭按钮
+        closeMenu : true,
+
+        //设置窗口关闭等待秒数，如5000毫秒。设置false需手动关闭窗口。
+        autodestroy : false,
+
+        //是否允许拖曳调整大小
+        resizable : true,
+
+        //设置false将不启用状态栏。支持传入HTML字符串、DOM对象
+        statusBar : buttons.length>0,
+
+        //设置 statusBar:true 有效，配置见 按钮参数 buttons
+        buttons : buttons,
+
+        //是否允许拖动窗口位置
+        movable : true,
+
+        event : {
+            onload : {
+                // 加载之前，return false 不执行
+                before : function(layxWindow, winform){
+
+                },
+                after : onloadAfter
+            }
+        }
+    };
+
+    var options = $.extend({}, defaults, opt);
+    layx.open(options);
+}
+
+//关闭layX dialog
+function __layX_close(id){
+    layx.destroy(id);
+}
+
+//调整dialog高度
+function __layX_adapt_height(id){
+    var $layXEle = $("#layx-"+id);
+    var $contentEle = $("#layx-"+id+"-html").children(":first");
+    if($layXEle && $contentEle){
+        if($layXEle.height() > $contentEle.height()){
+            layx.setSize(id, {height : $contentEle.height()+100});
+        }
+    }
+}
+
+//只读dialog 带一个关闭按钮
+function __layX_html_read(dialogId, title, content, opt){
+
+    var buttons = [{
+        id : 'close',
+        classes : ["btn", "btn-default"],
+        label : '关闭',
+        callback:function(id, button, event){
+            layx.destroy(id);
+        }
+    }];
+
+    __layX(dialogId, title, "html", "", buttons, function(ayxWindow, winform){
+        setTimeout(function(){
+            $(".layx-button-item").removeClass("layx-button-item");
+            loadURL(content, $("#layx-"+dialogId+"-html"));
+        }, 200)
+    },opt)
+}
+
+//一个保存按钮和一个关闭按钮
+function __layX_html_save(dialogId, title, content, saveFunction, opt){
+
+    var buttons = [{
+        id : 'save',
+        classes : ["btn", "btn-success"],
+        label : '保存',
+        callback : saveFunction
+    },{
+        id : 'close',
+        classes : ["btn", "btn-default"],
+        label : '关闭',
+        callback:function(id, button, event){
+            layx.destroy(id);
+        }
+    }];
+
+    __layX(dialogId, title, "html", "", buttons, function(ayxWindow, winform){
+        setTimeout(function(){
+            $(".layx-button-item").removeClass("layx-button-item");
+            loadURL(content, $("#layx-"+dialogId+"-html"));
+        }, 200)
+    },opt)
 }

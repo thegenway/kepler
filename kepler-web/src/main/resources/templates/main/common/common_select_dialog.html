@@ -1,0 +1,33 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="jqGrid_wrapper">
+    <table id="dialog_common_select_table"></table>
+    <div id="dialog_common_select_page"></div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        __init_jqgrid("dialog_common_select_table","dialog_common_select_page",
+            [[${dataUrl}]],
+            [[${colNames}]],
+            [[${colModel}]],
+            true,{
+                autowidth : false,
+            }
+        );
+    });
+
+    function fn_common_dialog_select(callback){
+        var rowId = $('#dialog_common_select_table').jqGrid('getGridParam', 'selrow');
+        if (rowId) {
+            callback($('#dialog_common_select_table').jqGrid('getRowData', rowId));
+        } else {
+            __toastr_error("请选择一条数据");
+            callback();
+        }
+    }
+
+</script>
+
+</html>

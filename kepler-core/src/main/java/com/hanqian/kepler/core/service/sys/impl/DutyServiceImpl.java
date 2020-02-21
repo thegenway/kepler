@@ -1,16 +1,16 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.core.dao.primary.sys.DutyDao;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
-import com.hanqian.kepler.core.entity.primary.sys.User;
-import com.hanqian.kepler.core.service.base.BaseServiceImpl;
+import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.service.sys.DutyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,13 +1,12 @@
 package com.hanqian.kepler.web.controller.sys;
 
-import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.dict.DictTypeVo;
-import com.hanqian.kepler.common.entity.dict.DictVo;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.dict.DictTypeVo;
+import com.hanqian.kepler.common.bean.dict.DictVo;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.core.entity.primary.sys.Dict;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
@@ -78,7 +77,6 @@ public class DictController extends BaseController {
         Dict dict = dictService.get(keyId);
         if(dict == null){
             dict = new Dict();
-            dict.setCreator(user);
         }
         dict.setDictType(dictEnum);
         dict.setName(name);

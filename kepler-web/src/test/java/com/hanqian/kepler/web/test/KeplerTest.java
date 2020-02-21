@@ -1,16 +1,14 @@
 package com.hanqian.kepler.web.test;
 
-import cn.hutool.core.date.DateUtil;
 import com.hanqian.kepler.common.enums.DictEnum;
-import com.hanqian.kepler.common.jpa.specification.OP;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.utils.RedisUtil;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
-import com.hanqian.kepler.core.entity.primary.sys.Post;
-import com.hanqian.kepler.core.entity.primary.sys.User;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.utils.FlowUtil;
+import com.hanqian.kepler.flow.vo.FlowTaskEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,13 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +118,8 @@ public class KeplerTest {
 
 	@Test
 	public void enumTest(){
-		System.out.println("*********************");
-		System.out.println(DictEnum.valueOf("SysDictDemo456"));
+		List<FlowTaskEntity> flowTaskEntityList = FlowUtil.getFlowTaskEntityList();
+		flowTaskEntityList.forEach(flow-> System.out.println(flow.toString()));
 	}
 
 }

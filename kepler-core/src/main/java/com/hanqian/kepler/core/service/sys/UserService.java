@@ -1,8 +1,8 @@
 package com.hanqian.kepler.core.service.sys;
 
-import com.hanqian.kepler.common.entity.result.AjaxResult;
-import com.hanqian.kepler.core.service.base.BaseService;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.base.service.BaseService;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 

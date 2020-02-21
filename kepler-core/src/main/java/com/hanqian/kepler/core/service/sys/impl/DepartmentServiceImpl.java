@@ -1,9 +1,9 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.base.dao.BaseDao;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.core.service.base.BaseServiceImpl;
+import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.DepartmentDao;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.service.sys.DepartmentService;

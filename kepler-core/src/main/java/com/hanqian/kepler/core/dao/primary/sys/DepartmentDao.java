@@ -1,6 +1,6 @@
 package com.hanqian.kepler.core.dao.primary.sys;
 
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 

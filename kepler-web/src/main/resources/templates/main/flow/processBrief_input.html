@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<div class="panel-body">-->
+
+<!--</div>-->
+
+
+<div class="panel">
+    <!--Panel heading-->
+    <div class="panel-heading bg-gray-light">
+        <div class="panel-control">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#processBrief-tab-1" data-toggle="tab">First Tab</a></li>
+                <li><a href="#processBrief-tab-2" data-toggle="tab">Second Tab</a></li>
+            </ul>
+        </div>
+        <h3 class="panel-title">流程简要</h3>
+    </div>
+
+    <!--Panel body-->
+    <div class="panel-body">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="processBrief-tab-1">
+                <form id="form_processBrief_input" class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">流程名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                        <div class="col-md-7">
+                            <input type="text" name="name" id="name" th:value="${processBrief?.name}" class="form-control" placeholder="请输入流程名称">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">所属模块<i class="fa fa-asterisk txt-color-red"></i></label>
+                        <div class="col-md-7">
+                            <input type="text" name="module" id="module" th:value="${processBrief?.module}" class="form-control" placeholder="请输入所属模块">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">操作表<i class="fa fa-asterisk txt-color-red"></i></label>
+                        <div class="col-md-7">
+                            <input type="text" name="tableName" id="tableName" th:value="${processBrief?.tableName}" class="form-control" placeholder="请输入操作表">
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="tab-pane fade" id="processBrief-tab-2">
+                <p class="text-main text-semibold">Second Tab Content</p>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        __layX_adapt_height([[${processBrief.id}]]);
+    });
+
+    function fn_processBrief_save(callback){
+        var data = {
+            state : 1
+        };
+        callback(data);
+    }
+</script>
+
+</html>

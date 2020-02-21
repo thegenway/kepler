@@ -1,17 +1,16 @@
 package com.hanqian.kepler.web.controller.sys;
 
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridContent;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridFilter;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridPager;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridReturn;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
-import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.PostService;
 import com.hanqian.kepler.core.service.sys.PowerService;
@@ -20,7 +19,6 @@ import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,7 +116,6 @@ public class PowerController extends BaseController {
             }
 
             power = new Power();
-            power.setCreator(user);
             power.setName(department.getName() + "-" + post.getName());
             power.setDepartment(department);
             power.setPost(post);

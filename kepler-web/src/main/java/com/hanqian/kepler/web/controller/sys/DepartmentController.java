@@ -1,23 +1,15 @@
 package com.hanqian.kepler.web.controller.sys;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridContent;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridFilter;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridPager;
-import com.hanqian.kepler.common.entity.jqgrid.JqGridReturn;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
-import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -96,7 +88,6 @@ public class DepartmentController extends BaseController {
         if(department == null){
             department = new Department();
             System.out.println(user.getId());
-            department.setCreator(user);
         }
 
         department.setName(name);

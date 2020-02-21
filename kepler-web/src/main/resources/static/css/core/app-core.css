@@ -51,6 +51,13 @@
 .ui-jqgrid .ui-jqgrid-bdiv {
     overflow-x: hidden;
 }
+/*dialog里的jqgrid隐藏某些部件*/
+.bootstrap-dialog .ui-pager-table td:first-child{
+    width: 120px;
+}
+.bootstrap-dialog .ui-pg-selbox{
+    display: none;
+}
 
 
 
@@ -86,7 +93,7 @@ em.error{
 
 /* floating noty */
 #floating-top-right {
-    z-index: 1100;
+    z-index: 10000232;
 }
 #floating-top-right .alert-wrap {
     min-width: 300px;
@@ -445,4 +452,13 @@ select:-webkit-autofill {
 .fa-lg{
     min-width: 19px;
     text-align: center;
+}
+
+.layx-window .panel{
+    border-bottom: none;
+    box-shadow : none;
+    margin-bottom: 0;
+}
+.layx-window{
+    color: #758697 !important;
 }

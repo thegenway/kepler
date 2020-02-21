@@ -25,10 +25,10 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
-        <!--通用模块-->
+        <!--流程模块-->
         <dependency>
             <groupId>com.hanqian</groupId>
-            <artifactId>kepler-common</artifactId>
+            <artifactId>kepler-flow</artifactId>
         </dependency>
 
     </dependencies>

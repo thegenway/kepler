@@ -1,9 +1,9 @@
 package com.hanqian.kepler.core.dao.primary.sys;
 
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
+import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 

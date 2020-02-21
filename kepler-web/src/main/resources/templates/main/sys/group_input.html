@@ -1,0 +1,68 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<form id="form_group_input" class="form-horizontal">
+    <input type="hidden" id="keyId" name="keyId" th:value="${group?.id}" />
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">群组名称<i class="fa fa-asterisk txt-color-red"></i></label>
+        <div class="col-md-7">
+            <input type="text" name="name" id="name" th:value="${group?.name}" class="form-control" placeholder="请输入群组名称">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">描述</label>
+        <div class="col-md-7">
+            <input type="text" name="description" id="description" th:value="${group?.description}" class="form-control" placeholder="请输入描述">
+        </div>
+    </div>
+
+</form>
+
+<script th:inline="javascript">
+    $(function(){
+        fn_group_input_validate();
+    });
+
+    // 表单数据校验
+    function fn_group_input_validate() {
+        __init_validate('form_group_input', {
+            rules : {
+                name : {
+                    required : true,
+                    remote : {
+                        type: 'post',
+                        url: '/main/group/validate/name',
+                        data: {
+                            name: function() {
+                                return $('#form_group_input #name').val()
+                            },
+                            keyId : function(){
+                                return $('#form_group_input #keyId').val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages : {
+                name : {
+                    required : '请输入群组名称',
+                    remote : "已经存在此群组名了"
+                }
+            }
+        });
+    }
+
+    function fn_group_save(callback){
+        if (!$('#form_group_input').valid()) {
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save('form_group_input', '/main/group/save', function(data) {
+                callback(data);
+            });
+        });
+    }
+</script>
+
+</html>

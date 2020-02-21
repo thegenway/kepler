@@ -2,7 +2,7 @@ package com.hanqian.kepler.security.vo;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.core.entity.primary.sys.User;
+import com.hanqian.kepler.flow.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

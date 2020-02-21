@@ -2,8 +2,8 @@ package com.hanqian.kepler.core.service.sys.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
-import com.hanqian.kepler.core.dao.primary.base.BaseDao;
-import com.hanqian.kepler.core.service.base.BaseServiceImpl;
+import com.hanqian.kepler.common.base.dao.BaseDao;
+import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.PostDao;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.service.sys.PostService;

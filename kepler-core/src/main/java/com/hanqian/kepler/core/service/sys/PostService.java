@@ -1,9 +1,7 @@
 package com.hanqian.kepler.core.service.sys;
 
-import com.hanqian.kepler.core.service.base.BaseService;
+import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

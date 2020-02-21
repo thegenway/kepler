@@ -1,10 +1,10 @@
 package com.hanqian.kepler.core.service.sys;
 
-import com.hanqian.kepler.common.entity.dict.DictTypeVo;
-import com.hanqian.kepler.common.entity.result.AjaxResult;
+import com.hanqian.kepler.common.bean.dict.DictTypeVo;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.core.entity.primary.sys.Dict;
-import com.hanqian.kepler.core.service.base.BaseService;
+import com.hanqian.kepler.common.base.service.BaseService;
 
 import java.util.List;
 

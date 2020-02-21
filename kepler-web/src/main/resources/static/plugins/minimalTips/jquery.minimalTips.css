@@ -28,8 +28,8 @@
 	padding: 4px 8px;
 	display: none;
 
-	max-width: 260px;
-	
+	max-width: 600px;
+
 	z-index: 3001; /* Aumente ou diminua se for necessário */
 
 	box-shadow: 1px 1px 2px #000;
