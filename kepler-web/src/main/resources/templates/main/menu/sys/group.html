@@ -17,12 +17,14 @@
             </div>
         </div>
     </div>
+    <input id="aaa" class="form-control" value="asf,eaf,fea"/>
 </div>
 
 <script th:inline="javascript">
 
     $(function(){
         init_grid_group();
+        $("#aaa").tagsinput();
     });
 
     function init_grid_group(){
@@ -72,7 +74,8 @@
     //群成员管理
     function fn_group_member(id){
         var dataRows = __jqGrid_data("group_table", id);
-        __user_dialog_selects("群成员管理", dataRows.userIds, function(memberData){
+        __users_dialog_select("member_select_of_group", dataRows.userIds, "", function(memberData){
+            __layX_close("member_select_of_group");
             var userIds = memberData.ids;
             __ajax_post("/main/group/setMembers", {keyId : id, userIds : userIds}, function(data){
                 __toastr(data);

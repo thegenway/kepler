@@ -44,7 +44,7 @@
 
         function actFormat(cellvalue, options, rowObject) {
             var id = rowObject.id;
-            cellvalue = '<button class="btn btn-default btn-xs" data-original-title="编辑" onclick="fn_post_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+            cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_post_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
             return cellvalue;
         }
 

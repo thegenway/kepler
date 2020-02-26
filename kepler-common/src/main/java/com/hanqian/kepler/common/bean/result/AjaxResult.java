@@ -220,12 +220,11 @@ public class AjaxResult extends HashMap<String, Object> {
         this.data = data;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("code", getCode())
-            .append("msg", getMsg())
-            .append("data", getData())
-            .toString();
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Flow("学生管理")
-@Table(name = "kepler_classes")
+@Table(name = "kepler_student")
 public class Student extends FlowEntity {
 
     /**
@@ -37,5 +37,10 @@ public class Student extends FlowEntity {
      * 生日
      */
     private Date birthday;
+
+    /**
+     * 英语成绩
+     */
+    private float englishSource;
 
 }

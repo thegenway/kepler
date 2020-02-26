@@ -462,3 +462,13 @@ select:-webkit-autofill {
 .layx-window{
     color: #758697 !important;
 }
+
+.select2-dropdown{
+    z-index: 999999990;
+}
+.modal-backdrop{
+    z-index: 999999991 !important;
+}
+.bootstrap-dialog{
+    z-index: 999999992 !important;
+}

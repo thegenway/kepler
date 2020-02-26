@@ -1,17 +1,26 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div class="jqGrid_wrapper">
-    <table id="dialog_common_selects_table"></table>
-    <div id="dialog_common_selects_page"></div>
+<div class="panel">
+    <div class="panel-body">
+        <div class="jqGrid_wrapper">
+            <table id="dialog_common_selects_table"></table>
+            <div id="dialog_common_selects_page"></div>
+        </div>
+    </div>
 </div>
 
 <script th:inline="javascript">
 
+    var layXId = readCookie("jqGrid_common_layX_id");
     var selectedIds = readCookie("jqGrid_common_selectIds");
+    var selectedNames = readCookie("jqGrid_common_selectedNames");
     var url = readCookie("jqGrid_common_url");
     var colNames = readCookie("jqGrid_common_colNames");
     var colModel = readCookie("jqGrid_common_colModel");
     var width = readCookie("jqGrid_common_width");
+
+    var selectedIdsArr = selectedIds ? selectedIds.split(",") : [];
+    var selectedNamesArr = selectedNames ? selectedNames.split(",") : [];
 
     $(function(){
         __init_jqgrid("dialog_common_selects_table","dialog_common_selects_page", url,
@@ -22,10 +31,24 @@
                 width : width ? width : 565,
                 multiselect : true,
                 gridComplete : function(){
-                    if(selectedIds){
-                        var rowIds = selectedIds.split(",");
-                        for(var i=0;i<rowIds.length;i++){
-                            $("#dialog_common_selects_table").setSelection(rowIds[i], false);
+                    __layX_adapt_height(layXId);
+                    if(selectedIdsArr.length > 0){
+                        for(var i=0;i<selectedIdsArr.length;i++){
+                            $("#dialog_common_selects_table").setSelection(selectedIdsArr[i], false);
+                        }
+                    }
+                },
+                onSelectRow : function(rowId,status,e){
+                    if(e){
+                        var index = selectedIdsArr.indexOf(rowId);
+                        if(status){
+                            if(index === -1){
+                                selectedIdsArr.push(rowId);
+                                selectedNamesArr.push(__jqGrid_data("dialog_common_selects_table", rowId).name);
+                            }
+                        }else{
+                            selectedIdsArr.splice(index, 1);
+                            selectedNamesArr.splice(index, 1);
                         }
                     }
                 }
@@ -34,25 +57,33 @@
     });
 
     function fn_common_dialogs_select(callback){
-        var ids = $("#dialog_common_selects_table").jqGrid("getGridParam", "selarrrow");
-        var data = {};
-        if (ids.length > 0) {
-            data.data = [];
-            var names = [];
-            for(var i=0;i<ids.length;i++){
-                var rowData = $('#dialog_common_selects_table').jqGrid('getRowData', ids[i]);
-                names.push(rowData.name);
-                data.data.push(rowData);
-            }
-
-            data.ids = ids.join(",");
-            data.names = names.join(",");
-            callback(data);
-        } else {
-            data.ids = "";
-            data.names = "";
-            callback(data);
-        }
+        // var ids = $("#dialog_common_selects_table").jqGrid("getGridParam", "selarrrow");
+        // var data = {};
+        // if (ids.length > 0) {
+        //     data.data = [];
+        //     var names = [];
+        //     for(var i=0;i<ids.length;i++){
+        //         var rowData = $('#dialog_common_selects_table').jqGrid('getRowData', ids[i]);
+        //         names.push(rowData.name);
+        //         data.data.push(rowData);
+        //     }
+        //
+        //     data.ids = ids.join(",");
+        //     data.names = names.join(",");
+        //     callback(data);
+        // } else {
+        //     data.ids = "";
+        //     data.names = "";
+        //     callback(data);
+        // }
+        setCookie("jqGrid_common_selectIds", selectedIdsArr.join(","));
+        setCookie("jqGrid_common_selectedNames", selectedNamesArr.join(","));
+        console.info(selectedIdsArr);
+        var data = {
+            ids : selectedIdsArr.join(","),
+            names : selectedNamesArr.join(",")
+        };
+        callback(data);
     }
 
 </script>

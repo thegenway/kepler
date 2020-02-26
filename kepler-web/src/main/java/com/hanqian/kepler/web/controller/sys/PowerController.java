@@ -141,7 +141,9 @@ public class PowerController extends BaseController {
 
         Pageable pageable = getJqGridPageable(pager);
         List<Rule> rules = getJqGridSearch(filters);
-        rules.add(Rule.eq("department.id", departmentId));
+        if(StrUtil.isNotBlank(departmentId)){
+            rules.add(Rule.eq("department.id", departmentId));
+        }
         JqGridContent<Power> powerJqGridContent = powerService.getJqGridContent(rules, pageable);
 
         List<Map<String, Object>> dataRows = new ArrayList<>();
@@ -149,7 +151,7 @@ public class PowerController extends BaseController {
         for(Power power : powerJqGridContent.getList()){
             map = new HashMap<>();
             map.put("id", power.getId());
-            map.put("name", power.getName());
+            map.put("name", power.getNameWithDeptPost());
             map.put("parent.name", power.getParent()!=null ? power.getParent().getName() : "");
             if(StrUtil.isNotBlank(checkUserId)){
                 map.put("isChecked", powerList.contains(power));

@@ -482,7 +482,7 @@ function __confirm_dialog_input(title, hint, value, confirm, cancel, opt) {
  * @param colNames jqgrid表头
  * @param colModel jqgrid表体
  * @param selectedId
- * @param confirm
+ * @param callback
  * @param opt
  */
 function __common_dialog_select(title, dataUrl, colNames, colModel, selectedId, callback, opt){
@@ -499,38 +499,104 @@ function __common_dialog_select(title, dataUrl, colNames, colModel, selectedId, 
 
 /**
  * 通用数据多选选择框
+ * @param id 自定义layX dialog id
  * @param title 标题
  * @param dataUrl 获取数据地址
  * @param colNames jqgrid表头
  * @param colModel jqgrid表体
  * @param selectIds 默认选中的ids（英文逗号隔开）
- * @param confirm callback
+ * @param selectedNames
+ * @param callback
  * @param opt
  */
-function __common_dialog_selects(title, dataUrl, colNames, colModel, selectIds, callback, opt){
+function __common_dialog_selects(id, title, dataUrl, colNames, colModel, selectIds, selectedNames, callback, opt){
+    setCookie("jqGrid_common_layX_id", id);
     setCookie("jqGrid_common_selectIds", selectIds);
+    setCookie("jqGrid_common_selectedNames", selectedNames);
     setCookie("jqGrid_common_url", dataUrl);
     setCookie("jqGrid_common_colNames", JSON.stringify(colNames));
     setCookie("jqGrid_common_colModel", JSON.stringify(colModel));
     setCookie("jqGrid_common_width", "");
-    __open_dialog_select(title, "../common/dialog/selectDialogs", function(dialogRef){
-        dialogRef.enableButtons();
-        dialogRef.close();
+    // __open_dialog_select(title, "../common/dialog/selectDialogs", function(dialogRef){
+    //     dialogRef.enableButtons();
+    //     dialogRef.close();
+    //     fn_common_dialogs_select(callback);
+    // }, opt);
+    __layX_html_select(id, title, "../common/dialog/selectDialogs", function(id, button, event){
         fn_common_dialogs_select(callback);
-    }, opt);
+    });
 }
 
 /**
  * 选择成员多选
  */
-function __user_dialog_selects(title, selectedIds, callback, opt){
+function __users_dialog_select(dialogId, selectedIds, selectedNames, callback, opt){
     var dataUrl = "/main/member/list";
     var colNames = ["姓名","id"];
     var colModel = [
         {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
         {name: 'id', index: 'id', key: true, hidden: true}
     ];
-    __common_dialog_selects(title, dataUrl, colNames, colModel, selectedIds, callback, opt);
+    __common_dialog_selects(dialogId, "成员选择", dataUrl, colNames, colModel, selectedIds, selectedNames, callback, opt);
+}
+
+/**
+ * 岗位多选
+ */
+function __posts_dialog_select(dialogId, postIds, postNames, callback, opt){
+    var dataUrl = "/main/post/list";
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_selects(dialogId, "岗位选择", dataUrl, colNames, colModel, postIds, postNames, callback, opt);
+}
+
+/**
+ * 职权多选
+ */
+function __powers_dialog_select(dialogId, powerIds, powerNames, callback, opt){
+    var dataUrl = "/main/power/list_department";
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_selects(dialogId, "职权选择", dataUrl, colNames, colModel, powerIds, powerNames, callback, opt);
+}
+
+/**
+ * 群组多选
+ */
+function __groups_dialog_select(dialogId, groupIds, groupNames, callback, opt){
+    var dataUrl = "/main/group/list";
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_selects(dialogId, "群组选择", dataUrl, colNames, colModel, groupIds, groupNames, callback, opt);
+}
+
+/**
+ * 部门多选
+ * fn_dialog_departments_select
+ */
+function __departments_dialog_select(dialogId, deptIds, callback){
+    __layX_html_select(dialogId,"选择部门", "../main/department/dialog?multi=y&deptIds="+deptIds, function(id, button, event){
+        fn_dialog_departments_select(callback);
+    });
+}
+
+/**
+ * 部门单选
+ * fn_dialog_departments_select
+ */
+function __department_dialog_select(dialogId, deptIds, callback){
+    __layX_html_select(dialogId, "选择部门", "../main/department/dialog?multi=n&deptIds="+deptIds, function(id, button, event){
+        fn_dialog_departments_select(callback);
+    });
 }
 
 
@@ -790,11 +856,11 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
         url: url,
         loadonce:ifPage!=null ? !ifPage : false,
         datatype: 'json',
-        height: 'auto',
-        autowidth:true,
-        colNames: colNames,
-        colModel: colModel,
-        pager: '#'+page_id,
+        height : 'auto',
+        autowidth : true,
+        colNames : colNames,
+        colModel : colModel,
+        pager : '#'+page_id,
         rowList: [10, 30, 50, 100],
         rowNum: page_id!=null&&page_id!=='' ? 10 : -1,
         rownumbers: true,
@@ -848,6 +914,11 @@ function __reflash_jqgrid(tableId, param){
 //通过id获取所有数据jqgrid
 function __jqGrid_data(tableId, id){
     return jQuery("#"+tableId).jqGrid('getRowData', id)
+}
+
+//调整表格宽度
+function __jqGrid_width(tableId, width){
+    $("#"+tableId).jqGrid("setGridWidth", width);
 }
 
 
@@ -985,7 +1056,7 @@ function __layX(dialogId, title, type, content, buttons, onloadAfter, opt){
         id : dialogId,
 
         //图标 或 标题栏左边内容
-        icon : "<i class='fa fa-windows'></i>",
+        icon : "<i class='fa fa-paper-plane-o'></i>",
 
         //标题
         title : title,
@@ -1138,8 +1209,8 @@ function __layX_adapt_height(id){
     var $layXEle = $("#layx-"+id);
     var $contentEle = $("#layx-"+id+"-html").children(":first");
     if($layXEle && $contentEle){
-        if($layXEle.height() > $contentEle.height()){
-            layx.setSize(id, {height : $contentEle.height()+100});
+        if($layXEle.height() > $contentEle.height() || $contentEle.height() < 600){
+            layx.setSize(id, {height : $contentEle.height()+80});
         }
     }
 }
@@ -1187,4 +1258,38 @@ function __layX_html_save(dialogId, title, content, saveFunction, opt){
             loadURL(content, $("#layx-"+dialogId+"-html"));
         }, 200)
     },opt)
+}
+
+//选择dialog（一个确定按钮，加遮罩层）
+function __layX_html_select(dialogId, title, url, confirm, opt){
+    var buttons = [{
+        id : 'save',
+        classes : ["btn", "btn-success"],
+        label : '确定',
+        callback : confirm
+    },{
+        id : 'close',
+        classes : ["btn", "btn-default"],
+        label : '关闭',
+        callback:function(id, button, event){
+            layx.destroy(id);
+        }
+    }];
+
+    var options = $.extend({}, {
+        shadable : 0.8,
+        width : "605",
+        height : "68%",
+        minMenu : false,
+        maxMenu : false,
+        dragInTopToMax : false,
+        resizable : false
+    }, opt);
+
+    __layX(dialogId, title, "html", "", buttons, function(ayxWindow, winform){
+        setTimeout(function(){
+            $(".layx-button-item").removeClass("layx-button-item");
+            loadURL(url, $("#layx-"+dialogId+"-html"));
+        }, 200)
+    }, options)
 }

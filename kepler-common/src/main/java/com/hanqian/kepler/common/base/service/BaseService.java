@@ -23,7 +23,9 @@ import java.util.Optional;
  */
 public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 
-	T abcdefg(PK pk);
+	List<T> findAllEnable();
+
+	List<T> findAllInIds(String ids);
 
 
 //	================= 以下是JPA JpaRepository、JpaSpecificationExecutor 中复制过来 =================

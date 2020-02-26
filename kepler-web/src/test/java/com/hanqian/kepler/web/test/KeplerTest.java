@@ -1,12 +1,23 @@
 package com.hanqian.kepler.web.test;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.hanqian.kepler.common.bean.NameValueVo;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.utils.RedisUtil;
+import com.hanqian.kepler.core.entity.primary.education.Student;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
+import com.hanqian.kepler.core.service.edu.StudentService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowTaskEntity;
 import org.junit.Test;
@@ -18,7 +29,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +49,8 @@ public class KeplerTest {
 	private UserService userService;
 	@Autowired
 	private DepartmentService departmentService;
+	@Autowired
+	private StudentService studentService;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -118,8 +133,50 @@ public class KeplerTest {
 
 	@Test
 	public void enumTest(){
-		List<FlowTaskEntity> flowTaskEntityList = FlowUtil.getFlowTaskEntityList();
-		flowTaskEntityList.forEach(flow-> System.out.println(flow.toString()));
+		Student student = new Student();
+		student.setName("小明");
+		student.setBirthday(new Date());
+		student.setGender(BaseEnumManager.SexEnum.female);
+		student.setStudentNo("12345");
+		student.setEnglishSource(99.9f);
+
+		Object o = null;
+		try{
+			o = ReflectUtil.invoke(student, "getGendwer");
+		}catch (UtilException e){
+			System.out.println("false!!!!!!!");
+		}
+		if(o != null){
+			if(o instanceof String){
+				System.out.println("string:" + o);
+			}else if(o instanceof Date){
+				System.out.println("date:" + DateUtil.formatDateTime((Date)o));
+			}else if(o instanceof Number){
+				System.out.println("number:" + new BigDecimal(NumberUtil.toStr((Number)o)));
+			}else if(o instanceof Enum) {
+				System.out.println(o.toString());
+			}
+		}
+
+		System.out.println("*************************");
+ 	}
+
+ 	@Test
+	public void flowTest(){
+//		Student student = new Student();
+//		student.setName("abc");
+//		student.setStudentNo("12345");
+//		student.setEnglishSource(80);
+//		student.setBirthday(DateUtil.parseDate("1994-01-01"));
+//		student.setGender(BaseEnumManager.SexEnum.female);
+
+		Student student = studentService.get("402880e8707b13b901707b13ea8f0000");
+
+		System.out.println("======== start");
+		AjaxResult ajaxResult = studentService.approve(student);
+		System.out.println("======== end");
+		System.out.println(ajaxResult);
+
 	}
 
 }

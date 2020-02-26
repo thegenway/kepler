@@ -1,0 +1,104 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="panel">
+    <div class="panel-body">
+        <form id="form_processStepCon_input" class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">条件名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="text" name="name" id="name" th:value="${processStepCon?.name}" class="form-control" placeholder="请输入条件名称">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">条件描述</label>
+                <div class="col-md-8">
+                    <input type="text" name="description" id="description" th:value="${processStepCon?.description}" class="form-control" placeholder="请输入条件描述">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">公式</label>
+                <div class="col-md-3">
+                    <select name="formulaField" id="formulaField" class="form-control" >
+                        <option value="">请选择</option>
+                        <option th:each="field : ${fieldList}" th:value="${field}" th:text="${field}" th:selected="${processStepCon?.formulaField == field}" ></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="formulaFlag" id="formulaFlag" class="form-control" >
+                        <option value="">请选择</option>
+                        <option th:each="flag : ${formulaFlagList}" th:value="${flag.name()}" th:text="${flag.value()}" th:selected="${processStepCon?.formulaFlag == flag.name()}" ></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="formulaVal" id="formulaVal" th:value="${processStepCon?.formulaVal}" class="form-control" placeholder="请输入条件值">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">对应步骤号<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="number" name="nextStep" id="nextStep" th:value="${processStepCon?.nextStep}" class="form-control" placeholder="请输入对应步骤号">
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${processStepCon?.id}]];
+    var data_processStepCon = {
+        id : keyId ? keyId : "new_processStepCon_"+new Date().getMilliseconds()
+    };
+
+    $(function(){
+        __layX_adapt_height("processStepConInput");
+        fn_processStep_input_validate();
+        __select2("formulaField");
+        __select2("formulaFlag");
+    });
+
+    function fn_processStep_input_validate(){
+        __init_validate("form_processStepCon_input", {
+            rules : {
+                name : {
+                    required : true
+                },
+                formulaField : {
+                    required : true
+                },
+                formulaFlag : {
+                    required : true
+                },
+                formulaVal : {
+                    required : true
+                },
+                nextStep : {
+                    required : true,
+                    digits : true,
+                    min : 0
+                }
+            }
+        });
+    }
+
+    function fn_processStepCon_save(callback){
+        if(!$("#form_processStepCon_input").valid()){
+            return false;
+        }
+
+        data_processStepCon.name = $("#form_processStepCon_input #name").val();
+        data_processStepCon.description = $("#form_processStepCon_input #description").val();
+        data_processStepCon.formulaField = $("#form_processStepCon_input #formulaField option:selected").val();
+        data_processStepCon.formulaFlag = $("#form_processStepCon_input #formulaFlag option:selected").val();
+        data_processStepCon.formulaVal = $("#form_processStepCon_input #formulaVal").val();
+        data_processStepCon.nextStep = $("#form_processStepCon_input #nextStep").val();
+        callback(data_processStepCon);
+    }
+
+</script>
+
+</html>

@@ -9,7 +9,9 @@ import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.controller.BaseController;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -131,6 +133,16 @@ public class DepartmentController extends BaseController {
         department.setChargeUser(duty.getUser());
         departmentService.save(department);
         return AjaxResult.success();
+    }
+
+    /**
+     * 选择用户所在部门
+     */
+    @RequestMapping(value = "dialog", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public String dialog(String multi, String deptIds, Model model) {
+        model.addAttribute("multi", multi);
+        model.addAttribute("deptIds", StrUtil.split(deptIds, ","));
+        return "main/sys/department_select";
     }
 
 }

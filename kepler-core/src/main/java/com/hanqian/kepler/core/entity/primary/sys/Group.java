@@ -4,6 +4,7 @@ import com.hanqian.kepler.common.base.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -28,6 +29,7 @@ public class Group extends BaseEntity {
     /**
      *用户id（逗号隔开）
      */
+    @Column(length = 2000)
     private String userIds;
 
 }

@@ -9,6 +9,7 @@ import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
@@ -46,7 +47,6 @@ public class MemberController extends BaseController {
 		List<Rule> rules = getJqGridSearch(filters);
 		JqGridContent<User> userJqGridContent = userService.getJqGridContent(rules, pageable);
 
-		Map<String, Object> data = new HashMap<>();
 		List<Map<String, Object>> dataRows = new ArrayList<>();
 		Map<String, Object> map;
 		for(User member : userJqGridContent.getList()){

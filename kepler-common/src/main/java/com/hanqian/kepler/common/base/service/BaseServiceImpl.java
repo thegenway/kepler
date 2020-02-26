@@ -1,6 +1,8 @@
 package com.hanqian.kepler.common.base.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.base.dao.BaseDao;
@@ -13,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +32,19 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 	public abstract BaseDao<T, PK> getBaseDao();
 
 	@Override
-	public T abcdefg(PK pk) {
-		Optional<T> optional =  getBaseDao().findById(pk);
-		return optional.orElse(null);
+	public List<T> findAllEnable() {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		return findAll(SpecificationFactory.where(rules));
+	}
+
+	@Override
+	public List<T> findAllInIds(String ids) {
+		if(StrUtil.isBlank(ids)) return new ArrayList<>();
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		rules.add(Rule.in("id", StrUtil.split(ids, ",")));
+		return findAll(SpecificationFactory.where(rules));
 	}
 
 	@Override

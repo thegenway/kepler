@@ -88,26 +88,6 @@ public class BaseEnumManager {
     }
 
     /**
-     * 流程配置的状态
-     */
-    public enum ProcessState{
-        Running("流转中"),
-        Backed("退回中"),
-        Finished("已归档"),
-        Deny("被否决"),
-        Draft("草稿");
-
-        private final String value;
-
-        ProcessState(final String value) {
-            this.value = value;
-        }
-        public String value() {
-            return this.value;
-        }
-    }
-
-    /**
      * 性别
      */
     public static enum SexEnum {

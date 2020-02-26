@@ -20,10 +20,7 @@ public class CurrUserMethodArgumentResolver implements HandlerMethodArgumentReso
 
 	@Override
 	public boolean supportsParameter(MethodParameter methodParameter) {
-		if(methodParameter.hasParameterAnnotation(CurrentUser.class)){
-			return true;
-		}
-		return false;
+		return methodParameter.hasParameterAnnotation(CurrentUser.class);
 	}
 
 	@Override

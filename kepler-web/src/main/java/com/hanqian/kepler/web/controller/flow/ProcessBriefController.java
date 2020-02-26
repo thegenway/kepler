@@ -12,8 +12,10 @@ import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.flow.annotation.Flow;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
+import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
-import com.hanqian.kepler.flow.service.ProcessBriefService;
+import com.hanqian.kepler.core.service.flow.ProcessBriefService;
+import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowTaskEntity;
 import com.hanqian.kepler.security.annotation.CurrentUser;
@@ -42,6 +44,8 @@ public class ProcessBriefController extends BaseController {
 
     @Autowired
     private ProcessBriefService processBriefService;
+    @Autowired
+    private ProcessStepService processStepService;
 
     /**
      * list
@@ -108,7 +112,17 @@ public class ProcessBriefController extends BaseController {
             processBrief.setModule(nameArr[0]);
             processBrief.setTableName(nameArr[1]);
         }
-        processBriefService.save(processBrief);
+        processBrief = processBriefService.save(processBrief);
+
+        //创建后自动一条一步归档流程
+        ProcessStep processStep = new ProcessStep();
+        processStep.setProcessBrief(processBrief);
+        processStep.setName("新建");
+        processStep.setStep(1);
+        processStep.setNextStep(0);
+        processStep.setIfAll(1);
+        processStepService.save(processStep);
+
         return AjaxResult.success("保存成功");
     }
 

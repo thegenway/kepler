@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
+import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +43,11 @@ public class Power extends BaseEntity {
     @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "parent")
     private Set<Power> children;
 
+    public String getNameWithDeptPost() {
+        if(department!=null && post!=null){
+            return StrUtil.format("{} - {}", department.getName(), post.getName());
+        }else{
+            return "数据异常";
+        }
+    }
 }

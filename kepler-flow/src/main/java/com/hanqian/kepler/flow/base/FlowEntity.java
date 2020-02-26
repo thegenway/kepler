@@ -3,6 +3,7 @@ package com.hanqian.kepler.flow.base;
 import com.hanqian.kepler.common.base.entity.BaseEntity;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.flow.enums.FlowEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ public class FlowEntity extends BaseEntity {
      * 流程状态
      */
     @Enumerated(EnumType.STRING)
-    private BaseEnumManager.ProcessState processState;
+    private FlowEnum.ProcessState processState;
 
     /**
      * 归档日期

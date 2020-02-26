@@ -1,0 +1,448 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="panel" style="padding-bottom: 200px">
+    <form id="form_processStep_input" class="form-horizontal">
+
+        <div class="panel-heading header"><h3 class="panel-title">基本信息</h3></div>
+
+        <input type="hidden" id="keyId" name="keyId" th:value="${processStep?.id}" />
+        <input type="hidden" id="path" name="path" th:value="${path}" />
+        <input type="hidden" id="processStepConJson" name="processStepConJson" />
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">步骤号<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <input type="number" name="step" id="step" th:value="${processStep?.step}" class="form-control" placeholder="请输入当前步骤号">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">名称<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <input type="text" name="name" id="name" th:value="${processStep?.name}" class="form-control" placeholder="请输入步骤名称">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">参与者权限</label>
+            <div class="col-md-7">
+                <div class="checkbox">
+                    <input type="checkbox" id="back" name="actionType" value="1" class="magic-checkbox" th:checked="${processStep?.actionType!=null && #strings.contains(processStep?.actionType, '1')}">
+                    <label for="back">允许退回</label>
+                    <input type="checkbox" id="deny" name="actionType" value="2" class="magic-checkbox" th:checked="${processStep?.actionType!=null && #strings.contains(processStep?.actionType, '2')}">
+                    <label for="deny">允许否决</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="backStepDiv" th:hidden="${processStep?.actionType==null || !#strings.contains(processStep?.actionType, '1')}" >
+            <label class="col-md-3 control-label">退回步骤号<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <input type="number" name="backStep" id="backStep" th:value="${processStep?.backStep}" class="form-control" placeholder="请输入退回步骤号">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">是否会签<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <div class="radio">
+                    <input type="radio" name="jointlySing" id="jointlySing1" value="1" class="magic-radio" th:checked="${processStep?.jointlySing == 1}" >
+                    <label for="jointlySing1">是</label>
+                    <input type="radio" name="jointlySing" id="jointlySing0" value="0" class="magic-radio" th:checked="${processStep==null || processStep?.jointlySing == 0}" >
+                    <label for="jointlySing0">否</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">路由类型<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <div class="radio">
+                    <input type="radio" name="routeType" id="routeType0" value="0"  class="magic-radio" th:checked="${processStep==null || processStep?.routeType == 0}" />
+                    <label for="routeType0">一般路由</label>
+                    <input type="radio" name="routeType" id="routeType1" value="1" class="magic-radio" th:checked="${processStep?.routeType == 1}"  />
+                    <label for="routeType1">条件路由</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="processStepConDiv" class="form-group" th:hidden="${processStep==null || processStep?.routeType == 0}" >
+            <label class="col-md-3 control-label">
+                <button type="button" class="btn btn-primary btn-sm" onclick="processStepConInput()">添加条件</button>
+            </label>
+            <div class="col-md-9">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>描述</th>
+                        <th>字段名</th>
+                        <th>公式</th>
+                        <th>条件值</th>
+                        <th>对应步骤号</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="processStepConTboty">
+                    <tr th:each="con : ${processStepConList}" th:id="${con.id}">
+                        <td th:data-content="${con.name}" th:text="${con.name}"></td>
+                        <td th:data-content="${con.description}" th:text="${con.description}"></td>
+                        <td th:data-content="${con.formulaField}" th:text="${con.formulaField}"></td>
+                        <td th:data-content="${con.formulaFlag}" th:text="${con.formulaFlag}"></td>
+                        <td th:data-content="${con.formulaVal}" th:text="${con.formulaVal}"></td>
+                        <td th:data-content="${con.nextStep}" th:text="${con.nextStep}"></td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-xs" th:onclick="processStepConInput([[${con.id}]])">编辑</button>
+                            <button type="button" class="btn btn-danger btn-xs" th:onclick="processStepConDelete([[${con.id}]])">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="nextStepDiv" class="form-group" th:hidden="${processStep?.routeType == 1}">
+            <label class="col-md-3 control-label">下一步<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <input type="number" name="nextStep" id="nextStep" th:value="${processStep?.nextStep}" class="form-control" placeholder="请输入下一步编号">
+            </div>
+        </div>
+
+        <div class="panel-heading header"><h3 class="panel-title">参与者信息</h3></div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">是否所有人参与<i class="fa fa-asterisk txt-color-red"></i></label>
+            <div class="col-md-7">
+                <div class="radio">
+                    <input type="radio" name="ifAll" id="ifAll0" value="0"  class="magic-radio" th:checked="${processStep?.ifAll == 0}" />
+                    <label for="ifAll0">否</label>
+                    <input type="radio" name="ifAll" id="ifAll1" value="1" class="magic-radio" th:checked="${processStep==null || processStep?.ifAll == 1}"  />
+                    <label for="ifAll1">是</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="participantDiv" th:hidden="${processStep==null || processStep?.ifAll == 1}">
+            <div class="form-group">
+                <label class="col-md-3 control-label">
+                    <a href="javascript:void(0);" class="btn-link text-semibold" onclick="department_select()">部门</a>
+                </label>
+                <div class="col-md-7">
+                    <input readonly type="text" id="departmentNames" class="form-control" th:value="${participant?.departmentNames}" />
+                    <input type="hidden" id="departmentIds" name="departmentIds" th:value="${participant?.departmentIds}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">
+                    <a href="javascript:void(0);" class="btn-link text-semibold" onclick="post_select()">岗位</a>
+                </label>
+                <div class="col-md-7">
+                    <input readonly type="text" id="postNames" class="form-control" th:value="${participant?.postNames}"/>
+                    <input type="hidden" id="postIds" name="postIds" th:value="${participant?.postIds}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">
+                    <a href="javascript:void(0);" class="btn-link text-semibold" onclick="power_select()">职权</a>
+                </label>
+                <div class="col-md-7">
+                    <input readonly type="text" id="powerNames" class="form-control" th:value="${participant?.powerNames}" />
+                    <input type="hidden" id="powerIds" name="powerIds" th:value="${participant?.powerIds}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">
+                    <a href="javascript:void(0);" class="btn-link text-semibold" onclick="group_select()">群组</a>
+                </label>
+                <div class="col-md-7">
+                    <input readonly type="text" id="groupNames" class="form-control" th:value="${participant?.groupNames}" />
+                    <input type="hidden" id="groupIds" name="groupIds" th:value="${participant?.groupIds}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">
+                    <a href="javascript:void(0);" class="btn-link text-semibold" onclick="user_select()">用户</a>
+                </label>
+                <div class="col-md-7">
+                    <input readonly type="text" id="userNames" class="form-control" th:value="${participant?.userNames}" />
+                    <input type="hidden" id="userIds" name="userIds" th:value="${participant?.userIds}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">域名</label>
+                <div class="col-md-7">
+                    <select name="variable" id="variable" class="form-control" >
+                        <option value="">请选择</option>
+                        <option th:each="field : ${fieldNameList}" th:value="${field}" th:text="${field}" th:if="${#strings.startsWith(field, 'duty')}" th:selected="${participant?.variable == field}" ></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">特殊配置</label>
+                <div class="col-md-7">
+                    <div class="checkbox">
+                        <input type="checkbox" id="superior" name="superior" value="1" class="magic-checkbox" th:checked="${participant?.superior == 1}">
+                        <label for="superior">上一步操作人的职权上级</label>
+
+                        <input type="checkbox" id="leader" name="leader" value="1" class="magic-checkbox" th:checked="${participant?.leader == 1}">
+                        <label for="leader">上一步操作人的所属部门负责人</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script id="processStepCon-list-temp" type="text/x-jquery-tmpl">
+    <tr id="${id}">
+        <td data-content="${name}">${name}</td>
+        <td data-content="${description}">${description}</td>
+        <td data-content="${formulaField}">${formulaField}</td>
+        <td data-content="${formulaFlag}">${formulaFlag}</td>
+        <td data-content="${formulaVal}">${formulaVal}</td>
+        <td data-content="${nextStep}">${nextStep}</td>
+        <td>
+            <button type="button" class="btn btn-default btn-xs" onclick="processStepConInput('${id}')">编辑</button>
+            <button type="button" class="btn btn-danger btn-xs" onclick="processStepConDelete('${id}')">删除</button>
+        </td>
+    </tr>
+</script>
+
+<script th:inline="javascript">
+
+    var data = {
+        path : [[${path}]]
+    };
+
+    $(function(){
+        __select2("variable", "请选择域名");
+        fn_processStep_input_validate();
+    });
+
+    //参与者信息显示隐藏
+    $(":radio[name='ifAll']").on("click", function(){
+        if($(this).val() == 1){
+            $("#participantDiv").hide();
+        }else{
+            $("#participantDiv").show();
+        }
+    });
+
+    //退回步骤号显示隐藏
+    $(":checkbox[name='actionType']").on("click", function(){
+        var actionTypeArr = [];
+        $(":checkbox[name='actionType']:checked").each(function(){
+            actionTypeArr.push($(this).val());
+        });
+        if(actionTypeArr.indexOf("1")>=0){
+            $("#backStepDiv").show();
+        }else{
+            $("#backStepDiv").hide();
+        }
+    });
+
+    // ===========================条件路由=================================
+
+    //条件路由显示隐藏
+    $(":radio[name='routeType']").on("click", function(){
+        if($(this).val() == 1){
+            $("#processStepConDiv").show();
+            $("#nextStepDiv").hide();
+        }else{
+            $("#processStepConDiv").hide();
+            $("#nextStepDiv").show();
+        }
+    });
+
+    //新建 编辑
+    function processStepConInput(keyId){
+        var paramUrl = "";
+        if(keyId){
+            var $tr = $("#"+keyId);
+            var description = $tr.find("td:eq(1)").attr("data-content") ? $tr.find("td:eq(1)").attr("data-content") : "";
+            paramUrl =
+                "&id="+keyId+
+                "&name="+$tr.find("td:eq(0)").attr("data-content")+
+                "&description="+description+
+                "&formulaField="+$tr.find("td:eq(2)").attr("data-content")+
+                "&formulaFlag="+$tr.find("td:eq(3)").attr("data-content")+
+                "&formulaVal="+$tr.find("td:eq(4)").attr("data-content")+
+                "&nextStep="+$tr.find("td:eq(5)").attr("data-content");
+        }
+        __layX_html_save("processStepConInput", "条件路由", "/flow/processStep/input_stepCon?path="+ data.path + paramUrl, function(id){
+            var callback = function(data){
+                if(data){
+                    if($("#"+data.id).length > 0){
+                        $("#"+data.id).find("td:eq(0)").attr("data-content", data.name).text(data.name);
+                        $("#"+data.id).find("td:eq(1)").attr("data-content", data.description).text(data.description);
+                        $("#"+data.id).find("td:eq(2)").attr("data-content", data.formulaField).text(data.formulaField);
+                        $("#"+data.id).find("td:eq(3)").attr("data-content", data.formulaFlag).text(data.formulaFlag);
+                        $("#"+data.id).find("td:eq(4)").attr("data-content", data.formulaVal).text(data.formulaVal);
+                        $("#"+data.id).find("td:eq(5)").attr("data-content", data.nextStep).text(data.nextStep);
+                    }else{
+                        $("#processStepCon-list-temp").tmpl(data).appendTo("#processStepConTboty");
+                    }
+                    __layX_close(id);
+                }
+            };
+            fn_processStepCon_save(callback);
+        },{
+            width : "50%",
+            shadable : 0.6
+        })
+    }
+
+    //删除 条件路由
+    function processStepConDelete(keyId){
+        if(keyId && keyId.indexOf("new")<0){
+            __confirm_dialog("", "确认删除吗？", function(){
+                __ajax_post("/flow/processStep/deleteCon", {keyId : keyId}, function(data){
+                    __toastr(data);
+                    if(data && data.state === 1){
+                        $("#"+keyId).remove();
+                    }
+                })
+            })
+        }else{
+            $("#"+keyId).remove();
+        }
+    }
+
+
+    // ===========================参与者信息=================================
+
+    function department_select(){
+        var deptIds = $("#form_processStep_input #departmentIds").val();
+        __departments_dialog_select("processStep_input_department_select", deptIds, function(data){
+            __layX_close("processStep_input_department_select");
+            $("#form_processStep_input #departmentNames").val(data.name);
+            $("#form_processStep_input #departmentIds").val(data.id);
+        })
+    }
+
+    function post_select(){
+        var postIds = $("#form_processStep_input #postIds").val();
+        var postNames = $("#form_processStep_input #postNames").val();
+        __posts_dialog_select("processStep_input_post_select", postIds, postNames, function(data){
+            $("#form_processStep_input #postNames").val(data.names);
+            $("#form_processStep_input #postIds").val(data.ids);
+            __layX_close("processStep_input_post_select");
+        });
+    }
+
+    function power_select(){
+        var powerIds = $("#form_processStep_input #powerIds").val();
+        var powerNames = $("#form_processStep_input #powerNames").val();
+        __powers_dialog_select("processStep_input_power_select", powerIds, powerNames, function(data){
+            $("#form_processStep_input #powerNames").val(data.names);
+            $("#form_processStep_input #powerIds").val(data.ids);
+            __layX_close("processStep_input_power_select");
+        });
+    }
+
+    function group_select(){
+        var groupIds = $("#form_processStep_input #groupIds").val();
+        var groupNames = $("#form_processStep_input #groupNames").val();
+        __groups_dialog_select("processStep_input_group_select", groupIds, groupNames, function(data){
+            $("#form_processStep_input #groupNames").val(data.names);
+            $("#form_processStep_input #groupIds").val(data.ids);
+            __layX_close("processStep_input_group_select");
+        });
+    }
+
+    function user_select(){
+        var userIds = $("#form_processStep_input #userIds").val();
+        var userNames = $("#form_processStep_input #userNames").val();
+        __users_dialog_select("processStep_input_user_select", userIds, userNames, function(data){
+            $("#form_processStep_input #userNames").val(data.names);
+            $("#form_processStep_input #userIds").val(data.ids);
+            __layX_close("processStep_input_user_select");
+        });
+    }
+
+    // ======================================================================
+
+    function fn_processStep_input_validate(){
+        __init_validate("form_processStep_input", {
+            rules : {
+                step : {
+                    required : true,
+                    min : 1,
+                    digits : true
+                },
+                name : {
+                    required : true
+                },
+                backStep : {
+                    required : function(){
+                        var actionTypeArr = [];
+                        $(":checkbox[name='actionType']:checked").each(function(){
+                            actionTypeArr.push($(this).val());
+                        });
+                        return actionTypeArr.indexOf("1")>=0;
+                    },
+                    min : 0,
+                    digits : true
+                },
+                jointlySing : {
+                    required : true
+                },
+                routeType : {
+                    required : true
+                },
+                nextStep : {
+                    required : function(){
+                        return $(":radio[name='routeType']:checked").val() == 0
+                    },
+                    min : 0,
+                    digits : true
+                },
+                ifAll : {
+                    required : true
+                }
+            }
+        })
+    }
+
+    function fn_processStep_save(callback) {
+        if(!$("#form_processStep_input").valid()){
+            return false;
+        }
+
+        __confirm_dialog("", "确认提交吗？", function(){
+
+            //条件路由
+            if($(":radio[name='routeType']:checked").val() == 1){
+                var conArr = [];
+                $("#processStepConTboty tr").each(function(){
+                    var con = {};
+                    con.id = $(this).attr("id");
+                    con.name = $(this).find("td:eq(0)").attr("data-content");
+                    con.description = $(this).find("td:eq(1)").attr("data-content");
+                    con.formulaField = $(this).find("td:eq(2)").attr("data-content");
+                    con.formulaFlag = $(this).find("td:eq(3)").attr("data-content");
+                    con.formulaVal = $(this).find("td:eq(4)").attr("data-content");
+                    con.nextStep = $(this).find("td:eq(5)").attr("data-content");
+                    conArr.push(con);
+                });
+                $("#processStepConJson").val(JSON.stringify(conArr));
+            }
+
+            __form_save("form_processStep_input", "/flow/processStep/save", function(data){
+                callback(data);
+            })
+        }, function(){
+            callback();
+        })
+
+    }
+
+</script>
+
+</html>
