@@ -2,9 +2,11 @@ package com.hanqian.kepler.core.service.sys;
 
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.base.service.BaseService;
+import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * newFile
@@ -50,5 +52,36 @@ public interface UserService extends BaseService<User, String> {
 	 */
 	List<User> findManagers();
 
+	/**
+	 * 根据部门获取用户
+	 */
+	List<User> getUserListByDepartment(String[] departmentIdArr);
+
+	/**
+	 * 根据部门获取用户
+	 */
+	List<User> getUserListByPost(String[] postIdArr);
+
+	/**
+	 * 根据职权获取用户
+	 */
+	List<User> getUserListByPower(String[] powerIdArr);
+
+	/**
+	 * 根据群组获取用户
+	 */
+	List<User> getUserListByGroup(String[] groupIdArr);
+
+
+	/**
+	 * 获取当前流程操作人员
+	 */
+	Set<User> getUserListOfFlow(ProcessStep processStep, String keyId);
+
+
+	/**
+	 * 根据配置获取所有用户
+	 */
+	List<User> getUserListByFlowConfig(String[] departmentIds, String[] postIds, String[] powerIds, String[] groupIds, String[] userIds);
 
 }

@@ -191,7 +191,7 @@ public class ProcessStepController extends BaseController {
                 processStepCon.setName(vo.getName());
                 processStepCon.setDescription(vo.getDescription());
                 processStepCon.setFormulaField(vo.getFormulaField());
-                processStepCon.setFormulaFlag(FlowEnum.processStepRule.valueOf(vo.getFormulaFlag()));
+                processStepCon.setFormulaFlag(FlowEnum.ProcessStepRule.valueOf(vo.getFormulaFlag()));
                 processStepCon.setFormulaVal(vo.getFormulaVal());
                 processStepCon.setNextStep(vo.getNextStep()!=null ? vo.getNextStep() : 0);
                 processStepConService.save(processStepCon);
@@ -216,7 +216,7 @@ public class ProcessStepController extends BaseController {
             Arrays.stream(fields).forEach(field -> fieldList.add(field.getName()));
         }
         model.addAttribute("fieldList", fieldList);
-        model.addAttribute("formulaFlagList", FlowEnum.processStepRule.values());
+        model.addAttribute("formulaFlagList", FlowEnum.ProcessStepRule.values());
 
         return "main/flow/processStepCon_input";
     }

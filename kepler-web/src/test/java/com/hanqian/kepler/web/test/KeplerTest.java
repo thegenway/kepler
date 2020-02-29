@@ -12,14 +12,17 @@ import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.utils.RedisUtil;
+import com.hanqian.kepler.core.entity.primary.education.Classes;
 import com.hanqian.kepler.core.entity.primary.education.Student;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.service.edu.StudentService;
+import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowTaskEntity;
+import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -51,6 +54,8 @@ public class KeplerTest {
 	private DepartmentService departmentService;
 	@Autowired
 	private StudentService studentService;
+	@Autowired
+	private ProcessBriefService processBriefService;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -173,8 +178,31 @@ public class KeplerTest {
 		Student student = studentService.get("402880e8707b13b901707b13ea8f0000");
 
 		System.out.println("======== start");
-		AjaxResult ajaxResult = studentService.approve(student);
+		AjaxResult ajaxResult = studentService.approve(student, null);
 		System.out.println("======== end");
+		System.out.println(ajaxResult);
+
+	}
+
+	@Test
+	public void deTest(){
+		User user = userService.get("4028ab8e7028b83f017028b84ac60000");
+//		Student student = new Student();
+//		student.setName("eee");
+//		student.setStudentNo("12345");
+//		student.setGender(BaseEnumManager.SexEnum.female);
+//		student.setEnglishSource(12.5f);
+//		student.setBirthday(new Date());
+
+		Student student = studentService.get("4028ab8e708f257501708f25b7060000");
+
+		ProcessLogVo processLogVo = new ProcessLogVo();
+		processLogVo.setFlowDutyName("开发部-大堂经理");
+		processLogVo.setFlowDutyId("4028ab8e704298a601704298ff8c0000");
+		processLogVo.setKeyId("4028ab8e708f257501708f25b7060000");
+		processLogVo.setFlowComment("好名字啊");
+
+		AjaxResult ajaxResult = studentService.approve(student, processLogVo, user);
 		System.out.println(ajaxResult);
 
 	}

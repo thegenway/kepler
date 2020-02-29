@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="panel">
+    <div id="classes-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">班级管理<span id="title-duty-name-classes" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form id="form_classes_input" class="form-horizontal">
+
+            <input style="display:none;">
+            <input type="hidden" name="keyId" th:value="${classes?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">班级名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="name" id="name" th:value="${classes?.name}" class="form-control" placeholder="请输入班级名称">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">所属年级<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="grade" id="grade" th:value="${classes?.grade}" class="form-control" placeholder="请输入所属年级">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">班主任姓名<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="headmasterName" id="headmasterName" th:value="${classes?.headmasterName}" class="form-control" placeholder="请输入班主任姓名">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">是否是重点班级<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <div class="radio">
+                        <input type="radio" name="ifImportant" id="ifImportant1" value="0" class="magic-radio" th:checked="${classes?.ifImportant==0}" >
+                        <label for="ifImportant1">否</label>
+                        <input type="radio" name="ifImportant" id="ifImportant2" value="1" class="magic-radio" th:checked="${classes?.ifImportant==1}" >
+                        <label for="ifImportant2">是</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">备注</label>
+                <div class="col-md-7">
+                    <input type="text" name="remark" id="remark" th:value="${classes?.remark}" class="form-control" placeholder="请输入备注">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+
+
+    var data = {
+        keyId : [[${classes?.id}]],
+        formId : "form_classes_input",
+        path : "com.hanqian.kepler.core.entity.primary.education.Classes",
+        titleId : "title-duty-name-classes"
+    };
+
+        $(function(){
+        __flow_duty_data(data);
+        fn_classes_input_validate();
+    });
+
+    function fn_classes_input_validate(){
+        __init_validate(data.formId, {
+            rules : {
+                name : {
+                    required : true
+                },
+                grade : {
+                    required : true
+                },
+                headmasterName : {
+                    required : true
+                },
+                ifImportant : {
+                    required : true
+                }
+            }
+        })
+    }
+
+    function fn_classes_commit(callback){
+        if(!$("#" + data.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save(data.formId, "/classes/commit", function(data){
+                callback(data);
+            })
+        })
+    }
+
+    function fn_classes_save(callback){
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(data.formId, "/classes/save", function(data){
+                callback(data);
+            })
+        })
+    }
+
+</script>
+
+</html>

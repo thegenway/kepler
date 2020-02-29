@@ -2,6 +2,7 @@ package com.hanqian.kepler.core.service.flow;
 
 import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 
@@ -16,5 +17,10 @@ public interface ProcessBriefService extends BaseService<ProcessBrief, String> {
      * 根据path获取流程简要表
      */
     ProcessBrief getProcessBriefByPath(String path);
+
+    /**
+     * 判断此人是否有权力创建此流程
+     */
+    boolean checkCreatorOfPath(User user, String path);
 
 }

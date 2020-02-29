@@ -49,7 +49,7 @@ public class ProcessStepConServiceImpl extends BaseServiceImpl<ProcessStepCon, S
     public boolean checkStepConWithFlowTask(FlowEntity entity, ProcessStepCon con) {
         if(entity!=null && con!=null){
             String formulaField = con.getFormulaField();
-            FlowEnum.processStepRule formulaFlag = con.getFormulaFlag();
+            FlowEnum.ProcessStepRule formulaFlag = con.getFormulaFlag();
             String formulaVal = con.getFormulaVal();
             if(StrUtil.isNotBlank(formulaField) && formulaFlag!=null && StrUtil.isNotBlank(formulaVal)){
                 Object object = null;
@@ -75,16 +75,16 @@ public class ProcessStepConServiceImpl extends BaseServiceImpl<ProcessStepCon, S
     }
 
     //字符串类型的比较（枚举类型也使用，取name()）
-    private boolean compareOfString(Object object, FlowEnum.processStepRule flag, String formulaVal){
+    private boolean compareOfString(Object object, FlowEnum.ProcessStepRule flag, String formulaVal){
         if(object!=null && flag!=null && StrUtil.isNotBlank(formulaVal)){
             String value = String.valueOf(object);
-            if(FlowEnum.processStepRule.EQ.equals(flag)){
+            if(FlowEnum.ProcessStepRule.EQ.equals(flag)){
                 return StrUtil.equals(value, formulaVal);
-            }else if(FlowEnum.processStepRule.NE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.NE.equals(flag)){
                 return !StrUtil.equals(value, formulaVal);
-            }else if(FlowEnum.processStepRule.IN.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.IN.equals(flag)){
                 return value.contains(formulaVal);
-            }else if(FlowEnum.processStepRule.NotIn.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.NotIn.equals(flag)){
                 return !value.contains(formulaVal);
             }
         }
@@ -92,7 +92,7 @@ public class ProcessStepConServiceImpl extends BaseServiceImpl<ProcessStepCon, S
     }
 
     //日期类型比较
-    private boolean compareOfDate(Object object, FlowEnum.processStepRule flag, String formulaVal){
+    private boolean compareOfDate(Object object, FlowEnum.ProcessStepRule flag, String formulaVal){
         if(object!=null && flag!=null && StrUtil.isNotBlank(formulaVal)){
             Date value = (Date)object;
             Date refDate = null;
@@ -102,17 +102,17 @@ public class ProcessStepConServiceImpl extends BaseServiceImpl<ProcessStepCon, S
                 return false;
             }
 
-            if(FlowEnum.processStepRule.EQ.equals(flag)){
+            if(FlowEnum.ProcessStepRule.EQ.equals(flag)){
                 return DateUtil.compare(value, refDate) == 0;
-            }else if(FlowEnum.processStepRule.NE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.NE.equals(flag)){
                 return DateUtil.compare(value, refDate) != 0;
-            }else if(FlowEnum.processStepRule.GE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.GE.equals(flag)){
                 return DateUtil.compare(value, refDate) >= 0;
-            }else if(FlowEnum.processStepRule.GT.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.GT.equals(flag)){
                 return DateUtil.compare(value, refDate) > 0;
-            }else if(FlowEnum.processStepRule.LE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.LE.equals(flag)){
                 return DateUtil.compare(value, refDate) <= 0;
-            }else if(FlowEnum.processStepRule.LT.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.LT.equals(flag)){
                 return DateUtil.compare(value, refDate) < 0;
             }
 
@@ -121,26 +121,26 @@ public class ProcessStepConServiceImpl extends BaseServiceImpl<ProcessStepCon, S
     }
 
     //数字类型比较
-    private boolean compareOfNumber(Object object, FlowEnum.processStepRule flag, String formulaVal){
+    private boolean compareOfNumber(Object object, FlowEnum.ProcessStepRule flag, String formulaVal){
         if(object!=null && flag!=null && StrUtil.isNotBlank(formulaVal)){
             BigDecimal value = NumberUtil.toBigDecimal((Number)object);
             BigDecimal refValue = NumberUtil.toBigDecimal(formulaVal);
 
-            if(FlowEnum.processStepRule.EQ.equals(flag)){
+            if(FlowEnum.ProcessStepRule.EQ.equals(flag)){
                 return NumberUtil.equals(value, refValue);
-            }else if(FlowEnum.processStepRule.NE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.NE.equals(flag)){
                 return !NumberUtil.equals(value, refValue);
-            }else if(FlowEnum.processStepRule.GE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.GE.equals(flag)){
                 return NumberUtil.isGreaterOrEqual(value, refValue);
-            }else if(FlowEnum.processStepRule.GT.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.GT.equals(flag)){
                 return NumberUtil.isGreater(value, refValue);
-            }else if(FlowEnum.processStepRule.LE.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.LE.equals(flag)){
                 return NumberUtil.isLessOrEqual(value, refValue);
-            }else if(FlowEnum.processStepRule.LT.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.LT.equals(flag)){
                 return NumberUtil.isLess(value, refValue);
-            }else if(FlowEnum.processStepRule.IN.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.IN.equals(flag)){
                 return formulaVal.contains(String.valueOf(object));
-            }else if(FlowEnum.processStepRule.NotIn.equals(flag)){
+            }else if(FlowEnum.ProcessStepRule.NotIn.equals(flag)){
                 return !formulaVal.contains(String.valueOf(object));
             }
         }

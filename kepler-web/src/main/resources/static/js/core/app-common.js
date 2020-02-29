@@ -477,6 +477,7 @@ function __confirm_dialog_input(title, hint, value, confirm, cancel, opt) {
 
 /**
  * 通用数据单选选择框
+ * @param id
  * @param title 标题
  * @param dataUrl 获取数据地址
  * @param colNames jqgrid表头
@@ -485,16 +486,16 @@ function __confirm_dialog_input(title, hint, value, confirm, cancel, opt) {
  * @param callback
  * @param opt
  */
-function __common_dialog_select(title, dataUrl, colNames, colModel, selectedId, callback, opt){
+function __common_dialog_select(id, title, dataUrl, colNames, colModel, selectedId, callback, opt){
+    setCookie("jqGrid_common_layX_id", id);
     setCookie("jqGrid_common_selectIds", selectedId);
     setCookie("jqGrid_common_url", dataUrl);
     setCookie("jqGrid_common_colNames", JSON.stringify(colNames));
     setCookie("jqGrid_common_colModel", JSON.stringify(colModel));
-    __open_dialog_select(title, "../common/dialog/selectDialog", function(dialogRef){
-        dialogRef.enableButtons();
-        dialogRef.close();
+    setCookie("jqGrid_common_width", "");
+    __layX_html_select(id, title, "../common/dialog/selectDialog", function(id, button, event){
         fn_common_dialog_select(callback);
-    }, opt);
+    });
 }
 
 /**
@@ -1239,6 +1240,10 @@ function __layX_html_read(dialogId, title, content, opt){
 function __layX_html_save(dialogId, title, content, saveFunction, opt){
 
     var buttons = [{
+        id : 'help-btn',
+        classes : ["btn", "hidden"],
+        label : '阻止回车'
+    },{
         id : 'save',
         classes : ["btn", "btn-success"],
         label : '保存',
@@ -1263,6 +1268,10 @@ function __layX_html_save(dialogId, title, content, saveFunction, opt){
 //选择dialog（一个确定按钮，加遮罩层）
 function __layX_html_select(dialogId, title, url, confirm, opt){
     var buttons = [{
+        id : 'help-btn',
+        classes : ["btn", "hidden"],
+        label : '阻止回车'
+    },{
         id : 'save',
         classes : ["btn", "btn-success"],
         label : '确定',
@@ -1292,4 +1301,85 @@ function __layX_html_select(dialogId, title, url, confirm, opt){
             loadURL(url, $("#layx-"+dialogId+"-html"));
         }, 200)
     }, options)
+}
+
+//流程创建input dialog（保存草稿按钮，提交按钮，关闭按钮）
+function __layX_flow_input(dialogId, title, url, commitFun, saveFun, opt){
+    var buttons = [{
+        id : 'help-btn',
+        classes : ["btn", "hidden"],
+        label : '阻止回车'
+    },{
+        id : 'commit',
+        classes : ["btn", "btn-primary"],
+        label : '提交',
+        callback : commitFun
+    },{
+        id : 'save',
+        classes : ["btn", "btn-success"],
+        label : '保存',
+        callback : saveFun
+    },{
+        id : 'close',
+        classes : ["btn", "btn-default"],
+        label : '关闭',
+        callback:function(id, button, event){
+            layx.destroy(id);
+        }
+    }];
+
+    __layX(dialogId, title, "html", "", buttons, function(ayxWindow, winform){
+        setTimeout(function(){
+            $(".layx-button-item").removeClass("layx-button-item");
+            loadURL(url, $("#layx-"+dialogId+"-html"));
+        }, 200)
+    },opt)
+}
+
+/* flow */
+/*======================================*/
+function __flow_duty_data(entityData){
+    if(!entityData.step){
+        entityData.step = 1
+    }
+    if(!entityData.keyId){
+        entityData.keyId = ""
+    }
+    var dataUrl = "/main/duty/findDutiesOfProcess";
+    var param = {path : entityData.path, step : entityData.step, keyId : entityData.keyId};
+    __ajax_get(dataUrl, param, function(data){
+        if(data && data.dataRows.length>0){
+            $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.dataRows[0].id);
+            $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.dataRows[0].name);
+            $("#"+entityData.titleId).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+        }else{
+            $("#"+entityData.titleId).text(" | 没有符合的职责");
+        }
+    })
+}
+
+function __flow_duty_select(entityData){
+    if(!entityData.step){
+        entityData.step = 1
+    }
+    if(!entityData.keyId){
+        entityData.keyId = ""
+    }
+    var dataUrl = "/main/duty/findDutiesOfProcess?path="+entityData.path+"&step="+entityData.step+"&keyId="+entityData.keyId;
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    setCookie("jqGrid_common_page", "false");
+    __common_dialog_select("flow_duty_select", "职权选择", dataUrl, colNames, colModel, "", function(data){
+        if(data && data.id){
+            $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.id);
+            $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.name);
+            $("#"+entityData.titleId).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            __layX_close("flow_duty_select");
+        }else{
+            __toastr_warning("未选择职责")
+        }
+    });
 }

@@ -3,6 +3,9 @@ package com.hanqian.kepler.core.dao.primary.sys;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
+import com.hanqian.kepler.flow.entity.User;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

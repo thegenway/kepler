@@ -36,7 +36,7 @@ public class ProcessStepCon extends BaseEntity {
      *公式
      */
     @Enumerated(EnumType.STRING)
-    private FlowEnum.processStepRule formulaFlag;
+    private FlowEnum.ProcessStepRule formulaFlag;
 
     /**
      * 条件值

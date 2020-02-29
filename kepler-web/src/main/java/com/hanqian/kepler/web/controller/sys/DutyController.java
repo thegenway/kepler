@@ -9,23 +9,26 @@ import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
+import com.hanqian.kepler.core.service.flow.ProcessStepService;
+import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/main/duty")
 public class DutyController extends BaseController {
+
+    @Autowired
+    private ProcessStepService processStepService;
 
     /**
      * 进入人员职责设置页面
@@ -95,6 +98,24 @@ public class DutyController extends BaseController {
             dataRows.add(map);
         }
         return getJqGridReturn(dataRows, dutyJqGridContent.getPage());
+    }
+
+    /**
+     * 获取流程可用职责
+     */
+    @GetMapping("findDutiesOfProcess")
+    @ResponseBody
+    public JqGridReturn findDutiesOfProcess(@CurrentUser User user, String path, Integer step, String keyId){
+        ProcessStep processStep = processStepService.getProcessStepByPathAndStep(path, step!=null ? step : 1);
+        List<Duty> duties = dutyService.findDutiesOfUserAndProcessStep(user, processStep, keyId);
+        List<Map<String, Object>> dataRows = new ArrayList<>();
+        duties.forEach(duty -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", duty.getId());
+            map.put("name", duty.getPower()!=null ? duty.getPower().getNameWithDeptPost() : "");
+            dataRows.add(map);
+        });
+        return getJqGridReturn(dataRows, null);
     }
 
 }

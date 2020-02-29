@@ -1,19 +1,40 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div class="jqGrid_wrapper">
-    <table id="dialog_common_select_table"></table>
-    <div id="dialog_common_select_page"></div>
+<div class="panel">
+    <div class="panel-body">
+        <div class="jqGrid_wrapper">
+            <table id="dialog_common_select_table"></table>
+            <div id="dialog_common_select_page"></div>
+        </div>
+    </div>
 </div>
 
 <script th:inline="javascript">
 
+    var layXId = readCookie("jqGrid_common_layX_id");
+    var selectedIds = readCookie("jqGrid_common_selectIds");
+    var selectedNames = readCookie("jqGrid_common_selectedNames");
+    var url = readCookie("jqGrid_common_url");
+    var colNames = readCookie("jqGrid_common_colNames");
+    var colModel = readCookie("jqGrid_common_colModel");
+    var width = readCookie("jqGrid_common_width");
+    var isPage = readCookie("jqGrid_common_page");
+
     $(function(){
+        deleteCookie("jqGrid_common_page");
         __init_jqgrid("dialog_common_select_table","dialog_common_select_page",
-            [[${dataUrl}]],
-            [[${colNames}]],
-            [[${colModel}]],
-            true,{
+            url,
+            JSON.parse(colNames),
+            JSON.parse(colModel),
+            isPage != "false",{
                 autowidth : false,
+                width : width ? width : 565,
+                gridComplete : function(){
+                    __layX_adapt_height(layXId);
+                    if(selectedIds){
+                        $("#dialog_common_select_table").setSelection(selectedIds, false);
+                    }
+                }
             }
         );
     });
@@ -23,7 +44,6 @@
         if (rowId) {
             callback($('#dialog_common_select_table').jqGrid('getRowData', rowId));
         } else {
-            __toastr_error("请选择一条数据");
             callback();
         }
     }

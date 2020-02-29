@@ -17,14 +17,12 @@
             </div>
         </div>
     </div>
-    <input id="aaa" class="form-control" value="asf,eaf,fea"/>
 </div>
 
 <script th:inline="javascript">
 
     $(function(){
         init_grid_group();
-        $("#aaa").tagsinput();
     });
 
     function init_grid_group(){
@@ -51,7 +49,7 @@
         $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table></div>");
         __init_jqgrid(subgrid_table_id, null,"/main/group/listMember?keyId="+row_id,
             ["姓名","id"],
-            [
+                [
                 {name:'name', index:'name', width:100, search:false, sortable:false, searchoptions: {sopt: ['cn']}},
                 {name:'id',index:'id',search:false,hidden:true}
             ], false

@@ -25,7 +25,7 @@ public class  FlowEnum {
     /**
      * 条件公式
      */
-    public enum processStepRule{
+    public enum ProcessStepRule{
         EQ("等于"),
         NE("不等于"),
         GE("大于等于"),
@@ -37,7 +37,7 @@ public class  FlowEnum {
 
         private final String value;
 
-        processStepRule(String value) {
+        ProcessStepRule(String value) {
             this.value = value;
         }
         public String value() {

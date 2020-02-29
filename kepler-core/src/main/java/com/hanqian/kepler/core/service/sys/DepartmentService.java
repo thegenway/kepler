@@ -3,6 +3,7 @@ package com.hanqian.kepler.core.service.sys;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 import java.util.Map;

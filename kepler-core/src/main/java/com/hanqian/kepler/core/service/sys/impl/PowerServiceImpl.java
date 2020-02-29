@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
@@ -94,5 +95,10 @@ public class PowerServiceImpl extends BaseServiceImpl<Power, String> implements 
             }
         }
         return powerTreeList;
+    }
+
+    @Override
+    public Power getParentPowerByProcessLogKeyId(String keyId) {
+        return StrUtil.isNotBlank(keyId) ? powerDao.getParentPowerByProcessLogKeyId(keyId) : null;
     }
 }

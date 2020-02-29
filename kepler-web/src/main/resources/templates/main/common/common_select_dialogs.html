@@ -18,15 +18,17 @@
     var colNames = readCookie("jqGrid_common_colNames");
     var colModel = readCookie("jqGrid_common_colModel");
     var width = readCookie("jqGrid_common_width");
+    var isPage = readCookie("jqGrid_common_page");
 
     var selectedIdsArr = selectedIds ? selectedIds.split(",") : [];
     var selectedNamesArr = selectedNames ? selectedNames.split(",") : [];
 
     $(function(){
+        deleteCookie("jqGrid_common_page");
         __init_jqgrid("dialog_common_selects_table","dialog_common_selects_page", url,
             JSON.parse(colNames),
             JSON.parse(colModel),
-            true,{
+            isPage != "false",{
                 autowidth : false,
                 width : width ? width : 565,
                 multiselect : true,
@@ -78,7 +80,6 @@
         // }
         setCookie("jqGrid_common_selectIds", selectedIdsArr.join(","));
         setCookie("jqGrid_common_selectedNames", selectedNamesArr.join(","));
-        console.info(selectedIdsArr);
         var data = {
             ids : selectedIdsArr.join(","),
             names : selectedNamesArr.join(",")

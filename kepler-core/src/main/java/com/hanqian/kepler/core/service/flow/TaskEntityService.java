@@ -6,6 +6,7 @@ import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
+import com.hanqian.kepler.flow.vo.ProcessLogVo;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public interface TaskEntityService extends BaseService<TaskEntity, String> {
      * 保存更新taskEntity
      */
     TaskEntity saveTaskEntity(FlowEnum.ProcessState processState, User currentUser, String keyId, String path, String module, String tableName);
+    TaskEntity saveTaskEntity(TaskEntity taskEntity, FlowEnum.ProcessState processState, User currentUser, String keyId, String path, String module, String tableName);
 
     /**
      * 下一步处理

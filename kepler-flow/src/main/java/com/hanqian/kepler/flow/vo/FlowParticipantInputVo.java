@@ -43,7 +43,7 @@ public class FlowParticipantInputVo {
     private String userNames;
 
     /**
-     * 域名
+     * 域名（保存userId）
      */
     private String variable;
 

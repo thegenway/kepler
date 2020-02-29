@@ -53,7 +53,8 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, String> implements Me
 			rules.add(Rule.eq("isManageMenu", 0));
 		}
 
-		List<Menu> allMenuList = findAll(SpecificationFactory.where(rules));
+		Sort sort = new Sort(Sort.Direction.ASC, "orderNum");
+		List<Menu> allMenuList = findAll(SpecificationFactory.where(rules), sort);
 
 		//先获取第一级
 		for(Menu menu : allMenuList){

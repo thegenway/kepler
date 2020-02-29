@@ -7,22 +7,41 @@ import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.core.dao.primary.sys.DutyDao;
+import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
+import com.hanqian.kepler.core.service.flow.ProcessLogService;
+import com.hanqian.kepler.core.service.flow.TaskEntityService;
+import com.hanqian.kepler.core.service.sys.GroupService;
+import com.hanqian.kepler.core.service.sys.PowerService;
+import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.entity.ProcessLog;
+import com.hanqian.kepler.flow.entity.ProcessStep;
+import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.service.sys.DutyService;
+import com.hanqian.kepler.flow.utils.FlowUtil;
+import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements DutyService {
 
     @Autowired
     private DutyDao dutyDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PowerService powerService;
+    @Autowired
+    private ProcessLogService processLogService;
 
     @Override
     public BaseDao<Duty, String> getBaseDao() {
@@ -108,5 +127,65 @@ public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements Du
         duty.setIfMain(1);
         save(duty);
         return AjaxResult.success();
+    }
+
+    @Override
+    public List<Duty> findDutiesOfUserAndProcessStep(User user, ProcessStep processStep, String keyId) {
+        List<Duty> dutyList = new ArrayList<>();
+        if(user==null || processStep==null) return dutyList;
+
+        List<Duty> userDutyList = findByUser(user);
+        if(userDutyList.size() == 0) return dutyList;
+
+        FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(processStep);
+
+        //如果符合域名配置或人员配置或群组配置，则返回所有职责
+        if(StrUtil.isNotBlank(vo.getVariable()) && vo.getVariable().contains(user.getId())){
+            return userDutyList;
+        }
+        if(StrUtil.isNotBlank(vo.getUserIds()) && vo.getUserIds().contains(user.getId())){
+            return userDutyList;
+        }
+        if(StrUtil.isNotBlank(vo.getGroupIds()) && userService.getUserListByGroup(StrUtil.split(vo.getGroupIds(), ",")).contains(user)){
+            return userDutyList;
+        }
+
+        //上一步操作人的部门负责人
+        if(vo.getLeader() == 1){
+            ProcessLog lastLog = processLogService.getLastLogByKeyId(keyId);
+            if(lastLog!=null){
+                Duty lastDuty = get(lastLog.getDutyId());
+                if(lastDuty!=null){
+                    Department department = lastDuty.getPower().getDepartment();
+                    if(department!=null && department.getChargeUser()!=null && StrUtil.equals(department.getChargeUser().getId(), user.getId())){
+                        return userDutyList;
+                    }
+                }
+            }
+        }
+
+
+        //上一步操作人的职权上级
+        if(vo.getSuperior() == 1){
+            Power parentPower = powerService.getParentPowerByProcessLogKeyId(keyId);
+            if(parentPower!=null){
+                Duty parentDuty = dutyDao.getFirstByStateEqualsAndPowerIsAndUserIs(BaseEnumManager.StateEnum.Enable, parentPower, user);
+                if(parentDuty != null){
+                    dutyList.add(parentDuty);
+                }
+            }
+        }
+
+        userDutyList.forEach(duty -> {
+            if(StrUtil.isNotBlank(vo.getDepartmentIds()) && vo.getDepartmentIds().contains(duty.getPower().getDepartment().getId()) && !dutyList.contains(duty)){
+                dutyList.add(duty);
+            }else if(StrUtil.isNotBlank(vo.getPostIds()) && vo.getPostIds().contains(duty.getPower().getPost().getId()) && !dutyList.contains(duty)){
+                dutyList.add(duty);
+            }else if(StrUtil.isNotBlank(vo.getPowerIds()) && vo.getPowerIds().contains(duty.getPower().getId()) && !dutyList.contains(duty)){
+                dutyList.add(duty);
+            }
+        });
+
+        return dutyList;
     }
 }

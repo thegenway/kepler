@@ -15,6 +15,7 @@ import com.hanqian.kepler.flow.dao.ProcessStepDao;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.ProcessStepCon;
 import com.hanqian.kepler.flow.entity.TaskEntity;
+import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import com.hanqian.kepler.flow.vo.FlowParticipantVo;
@@ -139,5 +140,16 @@ public class ProcessStepServiceImpl extends BaseServiceImpl<ProcessStep, String>
         backRules.add(Rule.eq("processBrief.path", taskEntity.getPath()));
         backRules.add(Rule.eq("step", backStep));
         return getFirstOne(SpecificationFactory.where(backRules));
+    }
+
+    @Override
+    public List<User> getUserListOfProcessStep(ProcessStep processStep) {
+        return null;
+    }
+
+    @Override
+    public ProcessStep getProcessStepByPathAndStep(String path, Integer step) {
+        if(StrUtil.isBlank(path) || step==null) return null;
+        return processStepDao.getProcessStepByPathAndStep(path, step);
     }
 }

@@ -1,0 +1,68 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">班级管理</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12 table-toolbar-left">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-classes-add">新建班级</button>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="classes_table"></table>
+                <div id="classes_page"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    $(function(){
+        init_grid_classes();
+    });
+
+    function init_grid_classes(){
+        __init_jqgrid('classes_table', 'classes_page', '/classes/list',
+            ['班级名称', '班主任', '操作', 'id'],
+            [
+                {name: 'name', index: 'name', width: 300, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'headmasterName', index: 'headmasterName', width: 500, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ]
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_classes_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    $("#btn-classes-add").on("click", function(){
+        __layX_flow_input("classes_create", "班级管理", "/classes/input", function(dialogId){
+            fn_classes_commit(function(data){
+                __toastr_warning("提交" + dialogId);
+                if(data && data.state===1){
+                    __layX_close(dialogId);
+                }
+            });
+        }, function(dialogId){
+            fn_classes_save(function(data){
+                __toastr_info("保存" + dialogId);
+                if(data && data.state===1){
+                    __layX_close(dialogId);
+                }
+            });
+        });
+    });
+
+</script>
+
+</html>

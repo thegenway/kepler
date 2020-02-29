@@ -5,6 +5,7 @@ import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.common.base.service.BaseService;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,10 @@ public interface PowerService extends BaseService<Power, String> {
      * 获取一个人拥有的职权
      */
     List<Power> findPowersByUser(User user);
+
+    /**
+     * flow：根据keyId获取上一步操作人的职权上级职权
+     */
+    Power getParentPowerByProcessLogKeyId(String keyId);
 
 }

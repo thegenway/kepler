@@ -3,6 +3,7 @@ package com.hanqian.kepler.core.service.sys;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
+import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.common.base.service.BaseService;
 
@@ -35,5 +36,10 @@ public interface DutyService extends BaseService<Duty, String> {
      * 给一个用户设置默认职责
      */
     AjaxResult setDefaultDuty(User user, Duty duty);
+
+    /**
+     * 获取流程步骤，此用户符合的职责
+     */
+    List<Duty> findDutiesOfUserAndProcessStep(User user, ProcessStep processStep, String keyId);
 
 }

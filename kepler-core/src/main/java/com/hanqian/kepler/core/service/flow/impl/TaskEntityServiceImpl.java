@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.core.service.flow.ProcessLogService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.flow.TaskEntityService;
 import com.hanqian.kepler.flow.base.FlowEntity;
@@ -13,6 +14,7 @@ import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
+import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     private TaskEntityDao taskEntityDao;
     @Autowired
     private ProcessStepService processStepService;
+    @Autowired
+    private ProcessLogService processLogService;
 
     @Override
     public BaseDao<TaskEntity, String> getBaseDao() {
@@ -43,12 +47,17 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     @Override
     public TaskEntity saveTaskEntity(FlowEnum.ProcessState processState, User currentUser, String keyId, String path, String module, String tableName) {
         TaskEntity taskEntity = getTaskEntityByKeyId(keyId);
+        return saveTaskEntity(taskEntity,processState,currentUser,keyId,path,module,tableName);
+    }
+
+    @Override
+    public TaskEntity saveTaskEntity(TaskEntity taskEntity, FlowEnum.ProcessState processState, User currentUser, String keyId, String path, String module, String tableName) {
         if(taskEntity == null){
-            taskEntity = new TaskEntity();
-            taskEntity.setPath(path);
-            taskEntity.setKeyId(keyId);
-            taskEntity.setCreator(currentUser);
+            return null;
         }
+        taskEntity.setPath(path);
+        taskEntity.setKeyId(keyId);
+        taskEntity.setCreator(currentUser);
         taskEntity.setStep(ObjectUtil.equal(FlowEnum.ProcessState.Draft,processState) ? 0 : 1);
         taskEntity.setProcessState(processState);
         taskEntity.setModule(module);

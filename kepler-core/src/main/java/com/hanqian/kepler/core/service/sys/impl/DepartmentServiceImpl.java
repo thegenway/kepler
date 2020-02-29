@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
@@ -7,10 +8,12 @@ import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.DepartmentDao;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
+import com.hanqian.kepler.flow.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
