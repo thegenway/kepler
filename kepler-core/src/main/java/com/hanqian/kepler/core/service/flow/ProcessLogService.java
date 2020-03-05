@@ -15,6 +15,11 @@ public interface ProcessLogService extends BaseService<ProcessLog, String> {
      */
     ProcessLog getLastLogByKeyId(String keyId);
 
-    ProcessLog createLog(FlowEnum.ProcessOperate operate, User user, ProcessLogVo processLogVo, String path, Integer step);
+    ProcessLog createLog(FlowEnum.ProcessOperate operate, User user, ProcessLogVo processLogVo, TaskEntity taskEntity);
+
+    /**
+     * 根据keyId和step找到这一步是谁审批的
+     */
+    User getOpUserByKeyIdAndStep(String keyId, Integer step);
 
 }

@@ -11,7 +11,9 @@ import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.flow.entity.ProcessStep;
+import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
@@ -105,8 +107,9 @@ public class DutyController extends BaseController {
      */
     @GetMapping("findDutiesOfProcess")
     @ResponseBody
-    public JqGridReturn findDutiesOfProcess(@CurrentUser User user, String path, Integer step, String keyId){
-        ProcessStep processStep = processStepService.getProcessStepByPathAndStep(path, step!=null ? step : 1);
+    public JqGridReturn findDutiesOfProcess(@CurrentUser User user, String path, String keyId){
+        TaskEntity taskEntity = taskEntityService.getTaskEntityByKeyId(keyId);
+        ProcessStep processStep = processStepService.getProcessStepByPathAndStep(path, taskEntity!=null&&ObjectUtil.notEqual(taskEntity.getProcessState(), FlowEnum.ProcessState.Draft) ? taskEntity.getStep() : 1);
         List<Duty> duties = dutyService.findDutiesOfUserAndProcessStep(user, processStep, keyId);
         List<Map<String, Object>> dataRows = new ArrayList<>();
         duties.forEach(duty -> {

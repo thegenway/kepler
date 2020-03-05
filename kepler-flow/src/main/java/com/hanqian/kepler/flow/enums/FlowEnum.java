@@ -49,6 +49,7 @@ public class  FlowEnum {
      * 流程执行操作
      */
     public enum ProcessOperate{
+        save("保存"),
         submit("提交"),
         reSubmit("再提交"),
         approve("同意"),

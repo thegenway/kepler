@@ -6,7 +6,10 @@ import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
+import com.hanqian.kepler.flow.vo.FlowInfoVo;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -33,6 +36,17 @@ public interface TaskEntityService extends BaseService<TaskEntity, String> {
     /**
      * 获取到流程 页面上需要的按钮
      */
-    List<String> getFlowButtonList(TaskEntity taskEntity);
+    List<FlowEnum.ProcessOperate> getFlowButtonList(TaskEntity taskEntity, User currUser);
+
+    /**
+     * 获取一条流程的所有信息
+     */
+    FlowInfoVo getFlowInfo(String keyId, User currUser);
+    FlowInfoVo getFlowInfo(TaskEntity taskEntity, User currUser);
+
+    /**
+     * 查询已办已结，已办未结
+     */
+    Page<TaskEntity> findTaskEntityRecord(Integer type, User user, Pageable pageable);
 
 }

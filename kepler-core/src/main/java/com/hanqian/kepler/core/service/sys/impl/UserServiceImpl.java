@@ -14,13 +14,16 @@ import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Duty;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
 import com.hanqian.kepler.core.service.flow.ProcessLogService;
+import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.sys.DutyService;
 import com.hanqian.kepler.core.service.sys.PowerService;
 import com.hanqian.kepler.flow.entity.ProcessLog;
 import com.hanqian.kepler.flow.entity.ProcessStep;
+import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.dao.primary.sys.UserDao;
 import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 	private DutyService dutyService;
 	@Autowired
 	private PowerService powerService;
+	@Autowired
+	private ProcessStepService processStepService;
 
 	@Override
 	public BaseDao<User, String> getBaseDao() {
@@ -155,21 +160,47 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 	}
 
 	@Override
-	public Set<User> getUserListOfFlow(ProcessStep processStep, String keyId) {
+	public Set<User> getUserListOfFlow(TaskEntity taskEntity) {
+		Set<User> userSet = new HashSet<>();
+		if(FlowEnum.ProcessState.Deny.equals(taskEntity.getProcessState()) || FlowEnum.ProcessState.Finished.equals(taskEntity.getProcessState())){
+			return userSet;
+		}
+
+		String keyId = taskEntity.getKeyId();
+
+		//如果当前是退回中状态
+		if(FlowEnum.ProcessState.Backed.equals(taskEntity.getProcessState())){
+			if(taskEntity.getStep() == 1){
+				userSet.add(taskEntity.getCreator());
+			}else{
+				User opUser = processLogService.getOpUserByKeyIdAndStep(keyId, taskEntity.getStep());
+				if(opUser!=null) userSet.add(opUser);
+			}
+			return userSet;
+		}
+
+		ProcessStep processStep = processStepService.getCurrStep(taskEntity);
+
 		if(processStep==null || !JSONUtil.isJsonObj(processStep.getParticipantJson())) return new HashSet<>();
 		FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(processStep);
 
-		Set<User> userSet = new HashSet<>();
+
 		if(StrUtil.isNotBlank(vo.getDepartmentIds())){
 			userSet.addAll(getUserListByDepartment(StrUtil.split(",", vo.getDepartmentIds())));
 		}
 
+		String[] emptyArr = new String[]{""};
+		String[] departmentIdArr = StrUtil.split(vo.getDepartmentIds(), ",");
+		String[] postIdArr = StrUtil.split(vo.getPostIds(), ",");
+		String[] powerIdArr = StrUtil.split(vo.getPowerIds(), ",");
+		String[] groupIdArr = StrUtil.split(vo.getGroupIds(), ",");
+		String[] userIdArr = StrUtil.split(vo.getUserIds(), ",");
 		userSet.addAll(userDao.getUserListByFlowConfig(
-				StrUtil.split(vo.getDepartmentIds(), ","),
-				StrUtil.split(vo.getPostIds(), ","),
-				StrUtil.split(vo.getPowerIds(), ","),
-				StrUtil.split(vo.getGroupIds(), ","),
-				StrUtil.split(vo.getUserIds(), ",")
+				departmentIdArr.length>0 ? departmentIdArr : emptyArr,
+				postIdArr.length>0 ? postIdArr : emptyArr,
+				powerIdArr.length>0 ? powerIdArr : emptyArr,
+				groupIdArr.length>0 ? groupIdArr : emptyArr,
+				userIdArr.length>0 ? userIdArr : emptyArr
 		));
 
 		if(StrUtil.isNotBlank(vo.getVariable())){

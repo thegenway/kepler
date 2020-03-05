@@ -55,6 +55,13 @@ public class ClassesController extends BaseController {
         return getJqGridReturn(dataRows, jqGridContent.getPage());
     }
 
+    @GetMapping("read")
+    public String read(String keyId, Model model){
+        Classes classes = classesService.get(keyId);
+        model.addAttribute("classes", classes);
+        return "main/edu/classes_read";
+    }
+
     @GetMapping("input")
     public String input(String keyId, Model model){
         Classes classes = classesService.get(keyId);
@@ -101,7 +108,39 @@ public class ClassesController extends BaseController {
     public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo, String name, Integer grade,
                              String headmasterName, Integer ifImportant, String remark){
         Classes classes = setData(user,processLogVo.getKeyId(),name,grade,headmasterName,ifImportant,remark);
-        return classesService.commit(classes, processLogVo);
+        AjaxResult ajaxResult = classesService.commit(classes, processLogVo);
+        System.out.println(ajaxResult.getId());
+        return ajaxResult;
+    }
+
+    /**
+     * 审批
+     */
+    @PostMapping("approve")
+    @ResponseBody
+    public AjaxResult approve(@CurrentUser User user, ProcessLogVo processLogVo){
+        Classes classes = classesService.get(processLogVo.getKeyId());
+        return classesService.approve(classes, processLogVo);
+    }
+
+    /**
+     * 退回
+     */
+    @PostMapping("back")
+    @ResponseBody
+    public AjaxResult back(@CurrentUser User user, ProcessLogVo processLogVo){
+        Classes classes = classesService.get(processLogVo.getKeyId());
+        return classesService.back(classes, processLogVo);
+    }
+
+    /**
+     * 否决
+     */
+    @PostMapping("deny")
+    @ResponseBody
+    public AjaxResult deny(@CurrentUser User user, ProcessLogVo processLogVo){
+        Classes classes = classesService.get(processLogVo.getKeyId());
+        return classesService.deny(classes, processLogVo);
     }
 
 }

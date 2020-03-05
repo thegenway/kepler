@@ -182,6 +182,12 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 	}
 
 	@Override
+	public T getLastOne(Specification<T> var1) {
+		List<T> list = findAll(var1);
+		return list.size() > 0 ? list.get(list.size()-1) : null;
+	}
+
+	@Override
 	public List<T> findAll(Specification<T> var1) {
 		return getBaseDao().findAll(var1);
 	}

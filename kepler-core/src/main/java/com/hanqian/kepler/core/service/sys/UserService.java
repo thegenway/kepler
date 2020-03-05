@@ -3,6 +3,7 @@ package com.hanqian.kepler.core.service.sys;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.flow.entity.ProcessStep;
+import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public interface UserService extends BaseService<User, String> {
 	/**
 	 * 获取当前流程操作人员
 	 */
-	Set<User> getUserListOfFlow(ProcessStep processStep, String keyId);
+	Set<User> getUserListOfFlow(TaskEntity taskEntity);
 
 
 	/**

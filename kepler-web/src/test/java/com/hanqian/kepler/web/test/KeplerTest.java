@@ -17,8 +17,10 @@ import com.hanqian.kepler.core.entity.primary.education.Student;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.service.edu.StudentService;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
+import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.UserService;
+import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowTaskEntity;
@@ -56,6 +58,8 @@ public class KeplerTest {
 	private StudentService studentService;
 	@Autowired
 	private ProcessBriefService processBriefService;
+	@Autowired
+	private ProcessStepService processStepService;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -168,20 +172,13 @@ public class KeplerTest {
 
  	@Test
 	public void flowTest(){
-//		Student student = new Student();
-//		student.setName("abc");
-//		student.setStudentNo("12345");
-//		student.setEnglishSource(80);
-//		student.setBirthday(DateUtil.parseDate("1994-01-01"));
-//		student.setGender(BaseEnumManager.SexEnum.female);
-
-		Student student = studentService.get("402880e8707b13b901707b13ea8f0000");
-
-		System.out.println("======== start");
-		AjaxResult ajaxResult = studentService.approve(student, null);
-		System.out.println("======== end");
-		System.out.println(ajaxResult);
-
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		rules.add(Rule.eq("processBrief.path", "com.hanqian.kepler.core.entity.primary.education.Classes"));
+		rules.add(Rule.eq("step", 2));
+		ProcessStep processStep = processStepService.getFirstOne(SpecificationFactory.where(rules));
+		System.out.println("===");
+		System.out.println(processStep);
 	}
 
 	@Test

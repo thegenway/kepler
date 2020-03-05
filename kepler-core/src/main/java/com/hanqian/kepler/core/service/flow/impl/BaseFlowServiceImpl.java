@@ -7,6 +7,7 @@ import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.service.flow.*;
+import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.base.dao.BaseFlowDao;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
@@ -37,6 +38,8 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
     private ProcessStepService processStepService;
     @Autowired
     private ProcessLogService processLogService;
+    @Autowired
+    private UserService userService;
 
     // =================================================================================================
 
@@ -77,7 +80,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
                 processBrief.getTableName()
         );
 
-        return AjaxResult.success("保存成功", entity.getId());
+        return AjaxResult.successWithId("操作成功", entity.getId());
     }
 
     @Override
@@ -114,19 +117,23 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         //流程记录
         if(taskEntity==null){
             taskEntity = new TaskEntity();
+            taskEntity.setKeyId(entity.getId());
+            taskEntity.setStep(1);
+            taskEntity.setPath(path);
+            taskEntityService.save(taskEntity);
             processLogVo.setKeyId(entity.getId());
-            processLogService.createLog(FlowEnum.ProcessOperate.submit, user, processLogVo, path, 1);
+            processLogService.createLog(FlowEnum.ProcessOperate.submit, user, processLogVo, taskEntity);
         }else{
             processLogService.createLog(
                     ObjectUtil.equal(FlowEnum.ProcessState.Backed, taskEntity.getProcessState()) ? FlowEnum.ProcessOperate.reSubmit : FlowEnum.ProcessOperate.submit,
                     user,
                     processLogVo,
-                    path,
-                    1);
+                    taskEntity);
         }
 
 
         //下一步流程处理
+        ProcessStep nextProcessStep = processStepService.getNextStep(taskEntity, entity);
         taskEntity.setLastUser(user);
         taskEntity = taskEntityService.saveTaskEntity(
                 taskEntity,
@@ -137,11 +144,9 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
                 processBrief.getModule(),
                 processBrief.getTableName()
         );
-        ProcessStep nextProcessStep = processStepService.getNextStep(taskEntity, entity);
         taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
 
-
-        return AjaxResult.success();
+        return AjaxResult.successWithId("操作成功", entity.getId());
     }
 
     @Override
@@ -160,7 +165,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
         //流程记录
         String path = ClassUtil.getClassName(entity, false);
-        processLogService.createLog(FlowEnum.ProcessOperate.approve, user, processLogVo, path, taskEntity.getStep());
+        processLogService.createLog(FlowEnum.ProcessOperate.approve, user, processLogVo, taskEntity);
 
         //下一步流程处理
         taskEntity.setLastUser(user);
@@ -172,7 +177,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         }
         save(entity);
 
-        return AjaxResult.success();
+        return AjaxResult.successWithId("操作成功", entity.getId());
     }
 
     @Override
@@ -194,7 +199,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
         //流程记录
         String path = ClassUtil.getClassName(entity, false);
-        processLogService.createLog(FlowEnum.ProcessOperate.back, user, processLogVo, path, taskEntity.getStep());
+        processLogService.createLog(FlowEnum.ProcessOperate.back, user, processLogVo, taskEntity);
 
         //下一步流程处理
         taskEntity.setLastUser(user);
@@ -202,9 +207,9 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.back, taskEntity, nextProcessStep);
 
         entity.setProcessState(taskEntity.getProcessState());
-        save(entity);
+        entity = save(entity);
 
-        return AjaxResult.success();
+        return AjaxResult.successWithId("操作成功", entity.getId());
     }
 
     @Override
@@ -223,7 +228,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
         //流程记录
         String path = ClassUtil.getClassName(entity, false);
-        processLogService.createLog(FlowEnum.ProcessOperate.deny, user, processLogVo, path, taskEntity.getStep());
+        processLogService.createLog(FlowEnum.ProcessOperate.deny, user, processLogVo, taskEntity);
 
         taskEntity.setLastUser(user);
         taskEntity.setStep(-1);
@@ -231,8 +236,8 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         taskEntityService.save(taskEntity);
 
         entity.setProcessState(FlowEnum.ProcessState.Deny);
-        save(entity);
+        entity = save(entity);
 
-        return AjaxResult.success();
+        return AjaxResult.successWithId("操作成功", entity.getId());
     }
 }

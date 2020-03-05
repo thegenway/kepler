@@ -41,27 +41,32 @@
 
     function actFormat(cellvalue, options, rowObject) {
         var id = rowObject.id;
-        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_classes_edit(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_classes_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
         return cellvalue;
     }
 
     $("#btn-classes-add").on("click", function(){
-        __layX_flow_input("classes_create", "班级管理", "/classes/input", function(dialogId){
-            fn_classes_commit(function(data){
-                __toastr_warning("提交" + dialogId);
-                if(data && data.state===1){
-                    __layX_close(dialogId);
-                }
-            });
-        }, function(dialogId){
-            fn_classes_save(function(data){
-                __toastr_info("保存" + dialogId);
-                if(data && data.state===1){
-                    __layX_close(dialogId);
-                }
-            });
-        });
+        // __layX_flow_input("classes_create", "班级管理", "/classes/input", function(dialogId){
+        //     fn_classes_commit(function(data){
+        //         __toastr_warning("提交" + dialogId);
+        //         if(data && data.state===1){
+        //             __layX_close(dialogId);
+        //         }
+        //     });
+        // }, function(dialogId){
+        //     fn_classes_save(function(data){
+        //         __toastr_info("保存" + dialogId);
+        //         if(data && data.state===1){
+        //             __layX_close(dialogId);
+        //         }
+        //     });
+        // });
+        __layX_html_read("create", "班级管理", "/classes/input");
     });
+
+    function fn_classes_read(id){
+        __layX_html_read(id, "班级管理", "/classes/read?keyId="+id);
+    }
 
 </script>
 

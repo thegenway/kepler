@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="row bord-top pad-top">
+    <div class="col-md-12">
+
+        <!--Bordered Accordion-->
+        <!--===================================================-->
+        <div class="panel-group accordion" id="acc-flow-process-log">
+            <div class="panel panel-bordered panel-info" style="border-bottom: 1px solid #00bcd4">
+
+                <!--Accordion title-->
+                <div class="panel-heading">
+                    <h4 class="panel-title" style="line-height: 50px">
+                        <a data-parent="#acc-flow-process-log" data-toggle="collapse" href="#acc-flow-process-log-1">流程记录</a>
+                    </h4>
+                </div>
+
+                <!--Accordion content-->
+                <div class="panel-collapse collapse in" id="acc-flow-process-log-1">
+                    <div class="panel-body">
+
+                        <div class="timeline">
+
+                            <!-- Timeline header -->
+                            <div class="timeline-entry" th:each="log : ${processLogList}">
+                                <div class="timeline-stat">
+                                    <div class="timeline-icon bg-info" th:if="${log?.operateType?.name()=='submit'}"><i class="fa fa-hdd-o fa-lg"></i></div>
+                                    <div class="timeline-icon bg-info" th:if="${log?.operateType?.name()=='reSubmit'}"><i class="fa fa-circle-o-notch fa-lg"></i></div>
+                                    <div class="timeline-icon bg-success" th:if="${log?.operateType?.name()=='approve'}"><i class="fa fa-smile-o fa-lg"></i></div>
+                                    <div class="timeline-icon bg-warning" th:if="${log?.operateType?.name()=='back'}"><i class="fa fa-reply-all fa-lg"></i></div>
+                                    <div class="timeline-icon bg-danger" th:if="${log?.operateType?.name()=='deny'}"><i class="fa fa-power-off fa-lg"></i></div>
+                                    <div class="timeline-time">
+                                        <span th:text="${#dates.format(log?.createTime, 'yyyy-MM-dd HH:mm')}"></span>
+                                    </div>
+                                </div>
+                                <div class="timeline-label">
+                                    <div>
+                                        <img class="img-xs img-circle" th:src="${log?.creator?.avatarId}" alt="Profile picture" />
+                                        <a href="javascript:void(0)" class="btn-link text-semibold" th:text="${log?.creator?.name}">操作人</a>
+                                        <span class="text-semibold" th:if="${log?.dutyName!=null && log?.dutyName!=''}" th:id="${log?.dutyId}" th:text="'( '+${log?.dutyName}+' )'"></span>
+                                        <span class="text-bold text-muted" th:text="${log?.operateType?.value()}"></span>
+                                    </div>
+                                    <blockquote th:if="${log?.comment!=null}" class="mar-no" th:utext="${log?.comment}"></blockquote>
+                                </div>
+                            </div>
+
+                            <div class="timeline-header" th:if="${taskEntity?.processState.name()=='Finished'}">
+                                <div class="timeline-header-title bg-info">结束</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--===================================================-->
+        <!--End Bordered Accordion-->
+
+        <!--Bordered Accordion-->
+        <!--===================================================-->
+        <div class="panel-group accordion" id="acc-flow-process-user">
+            <div class="panel panel-bordered panel-info" style="border-bottom: 1px solid #00bcd4">
+
+                <!--Accordion title-->
+                <div class="panel-heading">
+                    <h4 class="panel-title" style="line-height: 50px">
+                        <a data-parent="#acc-flow-process-user" data-toggle="collapse" href="#acc-flow-process-user-1">当前流程操作人</a>
+                    </h4>
+                </div>
+
+                <!--Accordion content-->
+                <div class="panel-collapse collapse in" id="acc-flow-process-user-1">
+                    <div class="panel-body">
+                        <div class="label label-table label-success" th:each="user : ${userSet}" th:text="${user.name}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--===================================================-->
+        <!--End Bordered Accordion-->
+
+    </div>
+</div>
+
+</html>

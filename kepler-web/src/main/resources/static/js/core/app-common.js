@@ -862,6 +862,7 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
         colNames : colNames,
         colModel : colModel,
         pager : '#'+page_id,
+        sortorder : 'desc',
         rowList: [10, 30, 50, 100],
         rowNum: page_id!=null&&page_id!=='' ? 10 : -1,
         rownumbers: true,
@@ -1220,8 +1221,12 @@ function __layX_adapt_height(id){
 function __layX_html_read(dialogId, title, content, opt){
 
     var buttons = [{
+        id : 'help-btn',
+        classes : ["btn", "hidden"],
+        label : '阻止回车'
+    },{
         id : 'close',
-        classes : ["btn", "btn-default"],
+        classes : ["btn", "btn-default","mar-lft"],
         label : '关闭',
         callback:function(id, button, event){
             layx.destroy(id);
@@ -1336,36 +1341,59 @@ function __layX_flow_input(dialogId, title, url, commitFun, saveFun, opt){
     },opt)
 }
 
+/* summernote */
+/*======================================*/
+function __summernote($ele, opt){
+    if($ele){
+        var defaults = {
+            placeholder : "请输入审批意见",
+            lang: 'zh-CN',
+            height: 150,
+            dialogsInBody : false,
+            shortcuts:false,
+            tabsize: 2,
+            toolbar : [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview']]
+            ]
+        };
+
+        var options = $.extend({}, defaults, opt);
+        $ele.summernote(options);
+    }else{
+        __toastr_warning("summernote init fail")
+    }
+}
+
 /* flow */
 /*======================================*/
-function __flow_duty_data(entityData){
-    if(!entityData.step){
-        entityData.step = 1
-    }
-    if(!entityData.keyId){
-        entityData.keyId = ""
-    }
+function __flow_duty_handle(entityData){
+    if(!entityData.keyId){entityData.keyId = ""}
+    var keyId = entityData.keyId=="create" ? "" : entityData.keyId;
     var dataUrl = "/main/duty/findDutiesOfProcess";
-    var param = {path : entityData.path, step : entityData.step, keyId : entityData.keyId};
+    var param = {path : entityData.path, keyId : keyId};
     __ajax_get(dataUrl, param, function(data){
         if(data && data.dataRows.length>0){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.dataRows[0].id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.dataRows[0].name);
-            $("#"+entityData.titleId).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
         }else{
-            $("#"+entityData.titleId).text(" | 没有符合的职责");
+            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | 没有符合的职责");
         }
     })
 }
 
+//流程中使用职权选择
 function __flow_duty_select(entityData){
-    if(!entityData.step){
-        entityData.step = 1
-    }
-    if(!entityData.keyId){
-        entityData.keyId = ""
-    }
-    var dataUrl = "/main/duty/findDutiesOfProcess?path="+entityData.path+"&step="+entityData.step+"&keyId="+entityData.keyId;
+    if(!entityData.keyId){entityData.keyId = ""}
+    var keyId = entityData.keyId=="create" ? "" : entityData.keyId;
+    var dataUrl = "/main/duty/findDutiesOfProcess?path="+entityData.path+"&keyId="+keyId;
     var colNames = ["名称","id"];
     var colModel = [
         {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
@@ -1376,10 +1404,103 @@ function __flow_duty_select(entityData){
         if(data && data.id){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.name);
-            $("#"+entityData.titleId).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
             __layX_close("flow_duty_select");
         }else{
             __toastr_warning("未选择职责")
         }
     });
+}
+
+//流程input页面处理
+function __flow_button_input_handle(entityData, save, commit){
+    if(!entityData.step){entityData.step = 1}
+    if(!entityData.keyId){entityData.keyId = ""}
+
+    var url = "/flow/taskEntity/getFlowInfo";
+    var p = {keyId : entityData.keyId};
+    __ajax_get(url, p, function(data){
+        if(!data){
+            __toastr_warning("获取流程信息失败");
+            return false;
+        }
+
+        var flag = entityData.layxId;
+        var btn_save = '<button class="btn btn-success" title="保存" id="'+flag+'-button-save">保存</button>';
+        var btn_submit = '<button class="btn btn-primary" title="提交" id="'+flag+'-button-submit">提交</button>';
+        var btn_reSubmit = '<button class="btn btn-primary" title="再提交" id="'+flag+'-button-submit">再提交</button>';
+
+        for(var i=0;i<data.flowButtonList.length;i++){
+            if(data.flowButtonList[i].name == "save"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_save);
+                $("#"+flag+"-button-save").on("click", save)
+            }else if(data.flowButtonList[i].name == "submit"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_submit);
+                $("#"+flag+"-button-submit").on("click", commit)
+            }else if(data.flowButtonList[i].name == "reSubmit"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_reSubmit);
+                $("#"+flag+"-button-submit").on("click", commit)
+            }
+        }
+    })
+}
+
+//流程input页面处理
+function __flow_button_read_handle(entityData, approve, back, deny, edit){
+    var url = "/flow/taskEntity/getFlowInfo";
+    var p = {keyId : entityData.keyId};
+    __ajax_get(url, p, function(data){
+        if(!data){
+            __toastr_warning("获取流程信息失败");
+            return false;
+        }
+
+        //设置审批意见框
+        if(data.processState == "Running" && data.flowButtonList.length>0){
+            var textarea = '<hr/><div class="form-group">' +
+                '<label class="col-md-3 control-label">审批意见</label>' +
+                '<div class="col-md-7">' +
+                '<textarea id="flowComment" name="flowComment"></textarea>'+
+                '</div>' +
+                '</div>';
+            $("#"+entityData.formId).append(textarea);
+            __summernote($("#"+entityData.formId).find("#flowComment"));
+        };
+
+        //设置按钮组
+        var flag = entityData.layxId;
+        var btn_approve = '<button class="btn btn-primary" title="通过" id="'+flag+'-button-approve">通过</button>';
+        var btn_back = '<button class="btn btn-warning" title="退回" id="'+flag+'-button-back">退回</button>';
+        var btn_deny = '<button class="btn btn-danger" title="否决" id="'+flag+'-button-deny">否决</button>';
+        var btn_edit = '<button class="btn btn-default" title="编辑" id="'+flag+'-button-edit">编辑</button>';
+
+        for(var i=0;i<data.flowButtonList.length;i++){
+            if(data.flowButtonList[i].name == "deny"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_deny);
+                $("#"+flag+"-button-deny").on("click", deny)
+            }else if(data.flowButtonList[i].name == "approve"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_approve);
+                $("#"+flag+"-button-approve").on("click", approve)
+            }else if(data.flowButtonList[i].name == "back"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_back);
+                $("#"+flag+"-button-back").on("click", back)
+            }else if(data.flowButtonList[i].name == "reSubmit"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
+                $("#"+flag+"-button-edit").on("click", edit)
+            }
+        }
+
+        //草稿状态添加编辑按钮
+        if(data.processState == 'Draft'){
+            $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
+            $("#"+flag+"-button-edit").on("click", edit)
+        }
+
+        //设置审批记录
+        if(data.processState == "Running" || data.processState == "Finished" || data.processState == "Backed" || data.processState == "Deny"){
+            $("#"+entityData.formId).append('</div><div id="process-log-'+entityData.keyId+'" class="process-log row"></div>');
+            loadURL("/flow/taskEntity/processLog?keyId="+entityData.keyId, $("#process-log-"+entityData.keyId));
+        }
+
+    })
 }

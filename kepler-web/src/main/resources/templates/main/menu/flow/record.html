@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title" th:if="${viewtype=='1'}">已办未结</h3>
+            <h3 class="panel-title" th:if="${viewtype=='2'}">已办已结</h3>
+        </div>
+        <div class="panel-body">
+            <div class="jqGrid_wrapper">
+                <table id="record_table"></table>
+                <div id="record_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var type = [[${viewtype}]];
+
+    $(function(){
+        init_grid_record();
+    });
+
+    function init_grid_record(){
+        __init_jqgrid('record_table', 'record_page', '/flow/taskEntity/list_record?type='+type,
+            ['所属模块', '操作表','创建时间','当前操作人', '操作', 'id', 'keyId','readUrl'],
+            [
+                {name: 'module', index: 'module', width: 300, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'tableName', index: 'tableName', width: 500, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'createTime', index: 'createTime', width: 500, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'nextUserNames', index: 'nextUserNames', width: 500, sortable: false, search: true, searchoptions: {sopt: ['cn']}, hidden : type==2},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true},
+                {name: 'keyId', index: 'keyId', width: 100, hidden: true},
+                {name: 'readUrl', index: 'readUrl', width: 100, hidden: true}
+            ],true,{
+                gridComplete : function(){
+                    $(".ui-search-toolbar").hide();
+                }
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_record_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    function fn_record_read(id){
+        var data = __jqGrid_data("record_table", id);
+        if(!data || !data.keyId || !data.readUrl){
+            __toastr_warning("数据异常");
+            return false;
+        }
+        __layX_html_read(data.keyId, data.tableName, "../"+data.readUrl);
+    }
+
+</script>
+
+</html>

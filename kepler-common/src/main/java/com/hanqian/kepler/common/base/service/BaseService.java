@@ -83,6 +83,7 @@ public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 	Optional<T> findOne(@Nullable Specification<T> var1);
 
 	T getFirstOne(@Nullable Specification<T> var1);
+	T getLastOne(@Nullable Specification<T> var1);
 
 	List<T> findAll(@Nullable Specification<T> var1);
 

@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.jqgrid.*;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.core.service.flow.TaskEntityService;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.*;
 import com.hanqian.kepler.security.SecurityUtil;
@@ -54,6 +55,9 @@ public class BaseController implements Serializable {
 
 	@Autowired
 	protected DictService dictService;
+
+	@Autowired
+	protected TaskEntityService taskEntityService;
 
 
 	/**

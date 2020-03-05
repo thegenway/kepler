@@ -5,10 +5,7 @@ import com.hanqian.kepler.flow.enums.FlowEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *流程任务实例
@@ -45,9 +42,17 @@ public class TaskEntity extends FlowEntity {
     private int step;
 
     /**
-     * 最后一步操作人（上一部操作人）
+     * 最后一步操作人（上一步操作人）
      */
     @ManyToOne(fetch = FetchType.LAZY)
     private User lastUser;
+
+    /**
+     * 下一步操作人
+     */
+    @Column(length = 2000)
+    private String nextUserIds;
+    @Column(length = 2000)
+    private String nextUserNames;
 
 }

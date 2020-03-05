@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <div class="panel">
     <div id="classes-heading" class="panel-heading bg-gray-light">
         <h3 class="panel-title">班级管理<span id="title-duty-name-classes" class="text-muted"> | </span></h3>
     </div>
 
     <div class="panel-body">
-        <form th:id="'form_classes_input'+${classes?.id}" class="form-horizontal">
+        <form th:id="'form_classes_input'+${classes?.id}" class="form-horizontal bord-btm">
 
             <input type="hidden" name="keyId" th:value="${classes?.id}">
             <input type="hidden" name="flowDutyId">
@@ -15,21 +16,21 @@
             <div class="form-group">
                 <label class="col-md-3 control-label">班级名称<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-7">
-                    <input type="text" name="name" id="name" th:value="${classes?.name}" class="form-control" placeholder="请输入班级名称">
+                    <input disabled type="text" name="name" id="name" th:value="${classes?.name}" class="form-control" placeholder="请输入班级名称">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 control-label">所属年级<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-7">
-                    <input type="text" name="grade" id="grade" th:value="${classes?.grade}" class="form-control" placeholder="请输入所属年级">
+                    <input disabled type="text" name="grade" id="grade" th:value="${classes?.grade}" class="form-control" placeholder="请输入所属年级">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 control-label">班主任姓名<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-7">
-                    <input type="text" name="headmasterName" id="headmasterName" th:value="${classes?.headmasterName}" class="form-control" placeholder="请输入班主任姓名">
+                    <input disabled type="text" name="headmasterName" id="headmasterName" th:value="${classes?.headmasterName}" class="form-control" placeholder="请输入班主任姓名">
                 </div>
             </div>
 
@@ -37,9 +38,9 @@
                 <label class="col-md-3 control-label">是否是重点班级<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-7">
                     <div class="radio">
-                        <input type="radio" name="ifImportant" id="ifImportant1" value="0" class="magic-radio" th:checked="${classes?.ifImportant==0}" >
+                        <input disabled type="radio" name="ifImportant" id="ifImportant1" value="0" class="magic-radio" th:checked="${classes?.ifImportant==0}" >
                         <label for="ifImportant1">否</label>
-                        <input type="radio" name="ifImportant" id="ifImportant2" value="1" class="magic-radio" th:checked="${classes?.ifImportant==1}" >
+                        <input disabled type="radio" name="ifImportant" id="ifImportant2" value="1" class="magic-radio" th:checked="${classes?.ifImportant==1}" >
                         <label for="ifImportant2">是</label>
                     </div>
                 </div>
@@ -48,11 +49,12 @@
             <div class="form-group">
                 <label class="col-md-3 control-label">备注</label>
                 <div class="col-md-7">
-                    <input type="text" name="remark" id="remark" th:value="${classes?.remark}" class="form-control" placeholder="请输入备注">
+                    <input disabled type="text" name="remark" id="remark" th:value="${classes?.remark}" class="form-control" placeholder="请输入备注">
                 </div>
             </div>
 
         </form>
+
     </div>
 
 </div>
@@ -61,7 +63,7 @@
 
     var keyId = [[${classes?.id}]];
     var flowData = {
-        keyId : keyId ? keyId : "create",
+        keyId : keyId ? keyId : "",
         formId : "form_classes_input"+[[${classes?.id}]],
         path : "com.hanqian.kepler.core.entity.primary.education.Classes",
         layxId : "layx-"+ (keyId ? keyId : "create"),
@@ -70,52 +72,45 @@
 
     $(function(){
         __flow_duty_handle(flowData);
-        __flow_button_input_handle(flowData, fn_classes_save, fn_classes_commit);
-        fn_classes_input_validate();
+        __flow_button_read_handle(flowData, fn_classes_approve, fn_classes_back, fn_classes_deny, fn_classes_edit);
     });
 
-
-    function fn_classes_input_validate(){
-        __init_validate(flowData.formId, {
-            rules : {
-                name : {
-                    required : true
-                },
-                grade : {
-                    required : true
-                },
-                headmasterName : {
-                    required : true
-                },
-                ifImportant : {
-                    required : true
-                }
-            }
-        })
-    }
-
-    function fn_classes_commit(){
-        if(!$("#" + flowData.formId).valid()){
-            return false;
-        }
-        __confirm_dialog("", "确认提交吗？", function(){
-            __form_save(flowData.formId, "/classes/commit", function(data){
+    function fn_classes_approve(){
+        __confirm_dialog("", "确定通过审批吗？", function(dialogRef){
+            __form_save(flowData.formId, "/classes/approve", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
                 }
             })
-        })
+        });
     }
 
-
-    function fn_classes_save(){
-        __confirm_dialog("", "确认保存吗？", function(){
-            __form_save(flowData.formId, "/classes/save", function(data){
+    function fn_classes_back(){
+        __confirm_dialog("", "确定退回吗？", function(dialogRef){
+            __form_save(flowData.formId, "/classes/back", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
                 }
             })
-        })
+        });
+    }
+
+    function fn_classes_deny(){
+        __confirm_dialog("", "确定否决吗？", function(dialogRef){
+            __form_save(flowData.formId, "/classes/deny", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
+                }
+            })
+        });
+    }
+
+    function fn_classes_edit(){
+        __layX_close(flowData.keyId);
+        __layX_html_read(flowData.keyId, "班级管理", "/classes/input?keyId="+flowData.keyId);
     }
 
 </script>

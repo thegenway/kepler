@@ -8,20 +8,21 @@ import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.service.flow.ProcessLogService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.flow.TaskEntityService;
+import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.dao.TaskEntityDao;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
+import com.hanqian.kepler.flow.vo.FlowInfoVo;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> implements TaskEntityService {
@@ -32,6 +33,8 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     private ProcessStepService processStepService;
     @Autowired
     private ProcessLogService processLogService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseDao<TaskEntity, String> getBaseDao() {
@@ -53,7 +56,7 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     @Override
     public TaskEntity saveTaskEntity(TaskEntity taskEntity, FlowEnum.ProcessState processState, User currentUser, String keyId, String path, String module, String tableName) {
         if(taskEntity == null){
-            return null;
+            taskEntity = new TaskEntity();
         }
         taskEntity.setPath(path);
         taskEntity.setKeyId(keyId);
@@ -71,6 +74,7 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
             return null;
         }
 
+        //设置流程状态
         if(ObjectUtil.equal(operate, FlowEnum.ProcessOperate.approve)){
             int step = processStep!=null ? processStep.getStep() : 0;
             taskEntity.setStep(step);
@@ -85,33 +89,80 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
             taskEntity.setProcessState(FlowEnum.ProcessState.Deny);
         }
 
+        //设置下一步操作人
+        Set<User> userSet = userService.getUserListOfFlow(taskEntity);
+        List<String> nextUserIds = new ArrayList<>();
+        List<String> nextUserNames = new ArrayList<>();
+        userSet.forEach(user -> {
+            nextUserIds.add(user.getId());
+            nextUserNames.add(user.getName());
+        });
+        taskEntity.setNextUserIds(StrUtil.join(",", nextUserIds));
+        taskEntity.setNextUserNames(StrUtil.join(",", nextUserNames));
+
         return save(taskEntity);
     }
 
     @Override
-    public List<String> getFlowButtonList(TaskEntity taskEntity) {
+    public List<FlowEnum.ProcessOperate> getFlowButtonList(TaskEntity taskEntity, User currUser) {
         if(taskEntity == null){
-            return Arrays.asList("submit", "save");
+            return Arrays.asList(FlowEnum.ProcessOperate.submit, FlowEnum.ProcessOperate.save);
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Draft,taskEntity.getProcessState())){
-            return Collections.singletonList("submit");
+            return Arrays.asList(FlowEnum.ProcessOperate.submit, FlowEnum.ProcessOperate.save);
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Backed,taskEntity.getProcessState())){
-            return Collections.singletonList("reSubmit");
+            if(currUser!=null && StrUtil.equals(currUser.getId(), taskEntity.getCreator().getId())){
+                return Collections.singletonList(FlowEnum.ProcessOperate.reSubmit);
+            }else{
+                return new ArrayList<>();
+            }
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Running,taskEntity.getProcessState())){
-            List<String> list = new ArrayList<>();
-            list.add("approve");
-
+            List<FlowEnum.ProcessOperate> list = new ArrayList<>();
             ProcessStep processStep = processStepService.getCurrStep(taskEntity);
             if(processStep!=null){
-                if(StrUtil.isNotBlank(processStep.getActionType()) && processStep.getActionType().contains("1")){
-                    list.add("back");
-                }
                 if(StrUtil.isNotBlank(processStep.getActionType()) && processStep.getActionType().contains("2")){
-                    list.add("deny");
+                    list.add(FlowEnum.ProcessOperate.deny);
+                }
+                if(StrUtil.isNotBlank(processStep.getActionType()) && processStep.getActionType().contains("1")){
+                    list.add(FlowEnum.ProcessOperate.back);
                 }
             }
+
+            list.add(FlowEnum.ProcessOperate.approve);
             return list;
         }else{
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public FlowInfoVo getFlowInfo(String keyId, User currUser) {
+        return getFlowInfo(getTaskEntityByKeyId(keyId), currUser);
+    }
+
+    @Override
+    public FlowInfoVo getFlowInfo(TaskEntity taskEntity, User currUser) {
+        List<FlowEnum.ProcessOperate> operates = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
+        if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
+            operates = getFlowButtonList(taskEntity, currUser);
+        }else{
+            userService.getUserListOfFlow(taskEntity).forEach(user -> ids.add(user.getId()));
+            if(currUser!=null && ids.contains(currUser.getId())){
+                operates = getFlowButtonList(taskEntity, currUser);
+            }
+        }
+        return FlowInfoVo.build(taskEntity, operates);
+    }
+
+    @Override
+    public Page<TaskEntity> findTaskEntityRecord(Integer type, User user, Pageable pageable) {
+        if(type==null || user==null) return null;
+        String[] processStateArr = new String[0];
+        if(type == 1){
+            processStateArr = new String[]{FlowEnum.ProcessState.Running.name(), FlowEnum.ProcessState.Backed.name()};
+        }else if(type == 2){
+            processStateArr = new String[]{FlowEnum.ProcessState.Finished.name()};
+        }
+        return taskEntityDao.findTaskEntityRecord(processStateArr, user.getId(), pageable);
     }
 }

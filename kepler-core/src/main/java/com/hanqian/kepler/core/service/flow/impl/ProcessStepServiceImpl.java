@@ -81,12 +81,12 @@ public class ProcessStepServiceImpl extends BaseServiceImpl<ProcessStep, String>
         rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
         rules.add(Rule.eq("processBrief.path", path));
 
-
-        if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
+        if(taskEntity==null || taskEntity.getProcessState()==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
 
             //如果当前是草稿状态，或直接提交，当前步骤默认为新建步骤（第一步）
-            rules.add(Rule.eq("step", 1));
-            currProcessStep =  getFirstOne(SpecificationFactory.where(rules));
+            List<Rule> currRules = new ArrayList<>(rules);
+            currRules.add(Rule.eq("step", 1));
+            currProcessStep =  getFirstOne(SpecificationFactory.where(currRules));
         }else{
 
             //如果是流转中状态：先获取到当前的processStep

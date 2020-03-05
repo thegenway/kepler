@@ -146,8 +146,12 @@ public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements Du
         if(StrUtil.isNotBlank(vo.getUserIds()) && vo.getUserIds().contains(user.getId())){
             return userDutyList;
         }
-        if(StrUtil.isNotBlank(vo.getGroupIds()) && userService.getUserListByGroup(StrUtil.split(vo.getGroupIds(), ",")).contains(user)){
-            return userDutyList;
+        if(StrUtil.isNotBlank(vo.getGroupIds())){
+            List<String> userIds = new ArrayList<>();
+            userService.getUserListByGroup(StrUtil.split(vo.getGroupIds(), ",")).forEach(u->userIds.add(u.getId()));
+            if(userIds.contains(user.getId())){
+                return userDutyList;
+            }
         }
 
         //上一步操作人的部门负责人

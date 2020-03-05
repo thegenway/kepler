@@ -21,6 +21,8 @@ public class AjaxResult extends HashMap<String, Object> {
 
     private static final String STATE = "state";
 
+    private static final String ID = "id";
+
     /**
      * 状态类型
      */
@@ -59,6 +61,9 @@ public class AjaxResult extends HashMap<String, Object> {
     /**0失败 1成功*/
     private int state;
 
+    /**辅助id*/
+    private String id;
+
     /**
      * 初始化一个新创建的 AjaxResult 对象，使其表示一个空消息。
      */
@@ -75,6 +80,13 @@ public class AjaxResult extends HashMap<String, Object> {
         super.put(CODE_TAG, type.value);
         super.put(MSG_TAG, msg);
         super.put(STATE, state);
+    }
+
+    public AjaxResult(Type type, String msg, int state, String id) {
+        super.put(CODE_TAG, type.value);
+        super.put(MSG_TAG, msg);
+        super.put(STATE, state);
+        super.put(ID, id);
     }
 
     /**
@@ -122,6 +134,14 @@ public class AjaxResult extends HashMap<String, Object> {
     public static AjaxResult success(String msg, Object data)
     {
         return new AjaxResult(Type.SUCCESS, msg, data, 1);
+    }
+
+    /**
+     * 返回成功增加id字段
+     */
+    public static AjaxResult successWithId(String msg, String id)
+    {
+        return new AjaxResult(Type.SUCCESS, msg, 1, id);
     }
 
     /**
@@ -226,5 +246,13 @@ public class AjaxResult extends HashMap<String, Object> {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
