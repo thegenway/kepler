@@ -1,5 +1,5 @@
 server:
-  port: 8064
+  port: 8065
   servlet:
     context-path: /
     session:

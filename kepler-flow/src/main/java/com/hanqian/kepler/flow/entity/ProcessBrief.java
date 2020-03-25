@@ -4,6 +4,7 @@ import com.hanqian.kepler.common.base.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -30,5 +31,27 @@ public class ProcessBrief extends BaseEntity {
      * 操作表
      */
     private String tableName;
+
+    /**
+     * 是否所有人可查看
+     */
+    private int ifAllRead;
+
+    /**
+     * 查看权限信息
+     */
+    @Column(length = 2000)
+    private String readAuthInfoJson;
+
+    /**
+     * 是否所有人可编辑
+     */
+    private int ifAllEdit;
+
+    /**
+     * 编辑权限信息
+     */
+    @Column(length = 2000)
+    private String editAuthInfoJson;
 
 }

@@ -65,6 +65,7 @@
             var callback = function(data){
                 if(data && data.state === 1){
                     __layX_close(id);
+                    __reflash_jqgrid("processBrief_table");
                 }
             };
             fn_processBrief_save(callback);

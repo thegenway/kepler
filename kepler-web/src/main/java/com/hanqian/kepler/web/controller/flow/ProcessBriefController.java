@@ -4,6 +4,7 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
@@ -17,6 +18,8 @@ import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.flow.utils.FlowUtil;
+import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
+import com.hanqian.kepler.flow.vo.FlowParticipantVo;
 import com.hanqian.kepler.flow.vo.FlowTaskEntity;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.annotation.RequestJsonParam;
@@ -30,10 +33,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 流程简要表
@@ -131,8 +132,66 @@ public class ProcessBriefController extends BaseController {
      */
     @GetMapping("input")
     public String input(String keyId, Model model){
-        model.addAttribute("processBrief", processBriefService.get(keyId));
+        ProcessBrief processBrief = processBriefService.get(keyId);
+        if(processBrief != null){
+            model.addAttribute("processBrief", processBrief);
+
+            //查看权限vo
+            if(JSONUtil.isJsonObj(processBrief.getReadAuthInfoJson())){
+                model.addAttribute("readAuth", FlowUtil.getFlowParticipantInputVo(JSONUtil.toBean(processBrief.getReadAuthInfoJson(), FlowParticipantVo.class)));
+            }
+
+            //编辑权限vo
+            if(JSONUtil.isJsonObj(processBrief.getEditAuthInfoJson())){
+                model.addAttribute("editAuth", FlowUtil.getFlowParticipantInputVo(JSONUtil.toBean(processBrief.getEditAuthInfoJson(), FlowParticipantVo.class)));
+            }
+
+            //获取到域名列表
+            Class<?> entity = ClassUtil.loadClass(processBrief.getPath());
+            Field[] fields = ClassUtil.getDeclaredFields(entity);
+            List<String> fieldNameList = new ArrayList<>();
+            if(fields!=null && fields.length>0){
+                Arrays.stream(fields).forEach(field -> {
+                    fieldNameList.add(field.getName());
+                });
+            }
+            model.addAttribute("fieldNameList", fieldNameList);
+        }
+
         return "main/flow/processBrief_input";
+    }
+
+    /**
+     * save
+     */
+    @PostMapping("save")
+    @ResponseBody
+    public AjaxResult save(String keyId, String name, String module, String tableName, Integer ifAllRead, String readAuthInputJson, Integer ifAllEdit, String editAuthInputJson){
+        ProcessBrief processBrief = processBriefService.get(keyId);
+        if(processBrief == null) return AjaxResult.error("未找到相关流程信息");
+
+        //查看权限
+        if(ifAllRead == 0){
+            FlowParticipantInputVo readAuthVo = JSONUtil.toBean(readAuthInputJson, FlowParticipantInputVo.class);
+            FlowParticipantVo flowParticipantVo = toFlowParticipantVo(readAuthVo);
+            processBrief.setReadAuthInfoJson(JSONUtil.toJsonStr(flowParticipantVo));
+        }
+
+        //编辑权限
+        if(ifAllEdit == 0){
+            FlowParticipantInputVo editAuthVo = JSONUtil.toBean(editAuthInputJson, FlowParticipantInputVo.class);
+            FlowParticipantVo flowParticipantVo = toFlowParticipantVo(editAuthVo);
+            processBrief.setEditAuthInfoJson(JSONUtil.toJsonStr(flowParticipantVo));
+        }
+
+        processBrief.setName(name);
+        processBrief.setModule(module);
+        processBrief.setTableName(tableName);
+        processBrief.setIfAllRead(ifAllRead);
+        processBrief.setIfAllEdit(ifAllEdit);
+        processBriefService.save(processBrief);
+
+        return AjaxResult.success();
     }
 
 }

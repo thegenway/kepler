@@ -123,57 +123,7 @@ public class ProcessStepController extends BaseController {
         if(NumberUtil.compare(0, ifAll) != 0){
             processStep.setParticipantJson("");
         }else{
-            FlowParticipantVo flowParticipantVo = new FlowParticipantVo();
-
-            if(StrUtil.isNotBlank(flowParticipantInput.getDepartmentIds())){
-                List<NameValueVo> nameValueVoList = new ArrayList<>();
-                List<Department> departments = departmentService.findAllInIds(flowParticipantInput.getDepartmentIds());
-                departments.forEach(dept -> nameValueVoList.add(new NameValueVo(dept.getName(), dept.getId())));
-                flowParticipantVo.setDepartment(nameValueVoList);
-            }else{
-                flowParticipantVo.setDepartment(new ArrayList<>());
-            }
-
-            if(StrUtil.isNotBlank(flowParticipantInput.getPostIds())){
-                List<NameValueVo> nameValueVoList = new ArrayList<>();
-                List<Post> posts = postService.findAllInIds(flowParticipantInput.getPostIds());
-                posts.forEach(post -> nameValueVoList.add(new NameValueVo(post.getName(), post.getId())));
-                flowParticipantVo.setPost(nameValueVoList);
-            }else{
-                flowParticipantVo.setPost(new ArrayList<>());
-            }
-
-            if(StrUtil.isNotBlank(flowParticipantInput.getPowerIds())){
-                List<NameValueVo> nameValueVoList = new ArrayList<>();
-                List<Power> powers = powerService.findAllInIds(flowParticipantInput.getPowerIds());
-                powers.forEach(power -> nameValueVoList.add(new NameValueVo(power.getName(), power.getId())));
-                flowParticipantVo.setPower(nameValueVoList);
-            }else{
-                flowParticipantVo.setPower(new ArrayList<>());
-            }
-
-            if(StrUtil.isNotBlank(flowParticipantInput.getGroupIds())){
-                List<NameValueVo> nameValueVoList = new ArrayList<>();
-                List<Group> groups = groupService.findAllInIds(flowParticipantInput.getGroupIds());
-                groups.forEach(group -> nameValueVoList.add(new NameValueVo(group.getName(), group.getId())));
-                flowParticipantVo.setGroup(nameValueVoList);
-            }else{
-                flowParticipantVo.setGroup(new ArrayList<>());
-            }
-
-            if(StrUtil.isNotBlank(flowParticipantInput.getUserIds())){
-                List<NameValueVo> nameValueVoList = new ArrayList<>();
-                List<User> users = userService.findAllInIds(flowParticipantInput.getUserIds());
-                users.forEach(user -> nameValueVoList.add(new NameValueVo(user.getName(), user.getId())));
-                flowParticipantVo.setUser(nameValueVoList);
-            }else{
-                flowParticipantVo.setUser(new ArrayList<>());
-            }
-
-            flowParticipantVo.setVariable(flowParticipantInput.getVariable());
-            flowParticipantVo.setSuperior(flowParticipantInput.getSuperior());
-            flowParticipantVo.setLeader(flowParticipantInput.getLeader());
-
+            FlowParticipantVo flowParticipantVo = toFlowParticipantVo(flowParticipantInput);
             processStep.setParticipantJson(JSONUtil.toJsonStr(flowParticipantVo));
         }
         processStep = processStepService.save(processStep);
