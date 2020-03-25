@@ -65,4 +65,9 @@ public class ProcessLogServiceImpl extends BaseServiceImpl<ProcessLog, String> i
         ProcessLog processLog = getLastOne(SpecificationFactory.where(rules));
         return processLog!=null ? processLog.getCreator() : null;
     }
+
+    @Override
+    public List<String> findKeyIdsOfUserOption(User user, String path) {
+        return user!=null&&StrUtil.isNotBlank(path) ? processLogDao.findKeyIdsOfUserOption(user.getId(),path) : new ArrayList<>();
+    }
 }

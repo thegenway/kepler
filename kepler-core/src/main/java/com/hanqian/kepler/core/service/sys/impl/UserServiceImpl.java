@@ -189,19 +189,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 			userSet.addAll(getUserListByDepartment(StrUtil.split(",", vo.getDepartmentIds())));
 		}
 
-		String[] emptyArr = new String[]{""};
 		String[] departmentIdArr = StrUtil.split(vo.getDepartmentIds(), ",");
 		String[] postIdArr = StrUtil.split(vo.getPostIds(), ",");
 		String[] powerIdArr = StrUtil.split(vo.getPowerIds(), ",");
 		String[] groupIdArr = StrUtil.split(vo.getGroupIds(), ",");
 		String[] userIdArr = StrUtil.split(vo.getUserIds(), ",");
-		userSet.addAll(userDao.getUserListByFlowConfig(
-				departmentIdArr.length>0 ? departmentIdArr : emptyArr,
-				postIdArr.length>0 ? postIdArr : emptyArr,
-				powerIdArr.length>0 ? powerIdArr : emptyArr,
-				groupIdArr.length>0 ? groupIdArr : emptyArr,
-				userIdArr.length>0 ? userIdArr : emptyArr
-		));
+		userSet.addAll(this.getUserListByFlowConfig(departmentIdArr,postIdArr,powerIdArr,groupIdArr,userIdArr));
 
 		if(StrUtil.isNotBlank(vo.getVariable())){
 			userSet.addAll(findAllInIds(vo.getVariable()));
@@ -239,11 +232,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 
 	@Override
 	public List<User> getUserListByFlowConfig(String[] departmentIds, String[] postIds, String[] powerIds, String[] groupIds, String[] userIds) {
-		if(departmentIds==null) departmentIds = new String[0];
-		if(postIds==null) postIds = new String[0];
-		if(powerIds==null) powerIds = new String[0];
-		if(groupIds==null) groupIds = new String[0];
-		if(userIds==null) userIds = new String[0];
-		return userDao.getUserListByFlowConfig(departmentIds, postIds, powerIds, groupIds, userIds);
+		String[] emptyArr = new String[]{""};
+		return userDao.getUserListByFlowConfig(
+				departmentIds!=null && departmentIds.length>0 ? departmentIds : emptyArr,
+				postIds!=null && postIds.length>0 ? postIds : emptyArr,
+				powerIds!=null && powerIds.length>0 ? powerIds : emptyArr,
+				groupIds!=null && groupIds.length>0 ? groupIds : emptyArr,
+				userIds!=null && userIds.length>0 ? userIds : emptyArr
+		);
 	}
 }

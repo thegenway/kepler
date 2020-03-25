@@ -8,6 +8,8 @@ import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 
+import java.util.List;
+
 public interface ProcessLogService extends BaseService<ProcessLog, String> {
 
     /**
@@ -21,5 +23,10 @@ public interface ProcessLogService extends BaseService<ProcessLog, String> {
      * 根据keyId和step找到这一步是谁审批的
      */
     User getOpUserByKeyIdAndStep(String keyId, Integer step);
+
+    /**
+     * 根据人员查找和自己有关的文档id
+     */
+    List<String> findKeyIdsOfUserOption(User user, String path);
 
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProcessBriefServiceImpl extends BaseServiceImpl<ProcessBrief, String> implements ProcessBriefService {
@@ -71,7 +72,31 @@ public class ProcessBriefServiceImpl extends BaseServiceImpl<ProcessBrief, Strin
                     StrUtil.split(vo.getGroupIds(), ","),
                     StrUtil.split(vo.getUserIds(), ",")
             );
-            return userList.contains(user);
+            List<String> userIds = new ArrayList<>();
+            userList.forEach(u->userIds.add(u.getId()));
+
+            return userIds.contains(user.getId());
         }
+    }
+
+    @Override
+    public boolean checkReadAuth(User user, ProcessBrief processBrief) {
+        if(user!=null && processBrief!=null && JSONUtil.isJsonObj(processBrief.getReadAuthInfoJson())){
+            FlowParticipantVo flowParticipantVo = JSONUtil.toBean(processBrief.getReadAuthInfoJson(), FlowParticipantVo.class);
+            FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(flowParticipantVo);
+            List<User> userList = userService.getUserListByFlowConfig(
+                    StrUtil.split(vo.getDepartmentIds(), ","),
+                    StrUtil.split(vo.getPostIds(), ","),
+                    StrUtil.split(vo.getPowerIds(), ","),
+                    StrUtil.split(vo.getGroupIds(), ","),
+                    StrUtil.split(vo.getUserIds(), ",")
+            );
+
+            List<String> userIds = new ArrayList<>();
+            userList.forEach(u->userIds.add(u.getId()));
+
+            return userIds.contains(user.getId());
+        }
+        return false;
     }
 }

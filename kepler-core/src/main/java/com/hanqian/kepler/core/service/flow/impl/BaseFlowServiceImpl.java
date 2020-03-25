@@ -5,7 +5,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.core.service.flow.*;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.base.FlowEntity;
@@ -18,9 +20,13 @@ import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServiceImpl<T, String> implements BaseFlowService<T> {
@@ -239,5 +245,54 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         entity = save(entity);
 
         return AjaxResult.successWithId("操作成功", entity.getId());
+    }
+
+    @Override
+    public boolean checkIfReadAll(User user) {
+        if(user == null) return false;
+        if(userService.isManager(user)) return true;
+
+        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        String path = ClassUtil.getClassName(tClass, false);
+        ProcessBrief processBrief = processBriefService.getProcessBriefByPath(path);
+
+        return processBrief!=null;
+    }
+
+    @Override
+    public JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user, List<String> moreIds) {
+        if(user == null) return new JqGridContent<T>(false, null, new ArrayList<>());
+
+        //如果是系统管理员，不添加任何条件
+        if(userService.isManager(user)){
+            return getJqGridContent(rules, pageable);
+        }
+
+        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        String path = ClassUtil.getClassName(tClass, false);
+        ProcessBrief processBrief = processBriefService.getProcessBriefByPath(path);
+
+        //如果配置的所有人可查看，不添加任何条件
+        if(processBrief!=null && processBrief.getIfAllRead()==1){
+            return getJqGridContent(rules, pageable);
+        }
+
+        //判断当前用户是否在查看权限的配置中,如果在则不添加任何条件
+        if(processBriefService.checkReadAuth(user, processBrief)){
+            return getJqGridContent(rules, pageable);
+        }
+
+        //否则只筛选出和自己有流程相关操作的文档
+        List<String> ids = processLogService.findKeyIdsOfUserOption(user, path);
+        if(moreIds!=null && moreIds.size()>0){
+            ids.addAll(moreIds);
+        }
+        rules.add(Rule.in("id", ids));
+        return getJqGridContent(rules, pageable);
+    }
+
+    @Override
+    public JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user) {
+        return this.getJqGridContentWithFlow(rules,pageable,user,null);
     }
 }

@@ -71,16 +71,19 @@ public class FileController extends BaseController {
             file = fileManageService.getFileByGrid(id);
         }
 
-        GridFsResource resource = gridFsTemplate.getResource(file);
-        InputStream inputStream = resource.getInputStream();
-        ServletOutputStream outputStream = response.getOutputStream();
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getFilename().getBytes("gb2312"), "ISO8859-1"));
-        while (inputStream.read(bs)>0){
-            outputStream.write(bs);
+        if(file != null){
+            GridFsResource resource = gridFsTemplate.getResource(file);
+            InputStream inputStream = resource.getInputStream();
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(file.getFilename().getBytes("gb2312"), "ISO8859-1"));
+            while (inputStream.read(bs)>0){
+                outputStream.write(bs);
+            }
+            inputStream.close();
+            outputStream.close();
         }
-        inputStream.close();
-        outputStream.close();
+
     }
 
 }

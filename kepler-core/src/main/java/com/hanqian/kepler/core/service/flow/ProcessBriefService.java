@@ -23,4 +23,9 @@ public interface ProcessBriefService extends BaseService<ProcessBrief, String> {
      */
     boolean checkCreatorOfPath(User user, String path);
 
+    /**
+     * 判断当前人员是否符合可查看权限的配置中
+     */
+    boolean checkReadAuth(User user, ProcessBrief processBrief);
+
 }

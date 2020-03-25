@@ -38,10 +38,10 @@ public class ClassesController extends BaseController {
 
     @GetMapping("list")
     @ResponseBody
-    public JqGridReturn list(JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters){
+    public JqGridReturn list(@CurrentUser User user,  JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters){
         Pageable pageable = getJqGridPageable(pager);
         List<Rule> rules = getJqGridSearch(filters);
-        JqGridContent<Classes> jqGridContent = classesService.getJqGridContent(rules, pageable);
+        JqGridContent<Classes> jqGridContent = classesService.getJqGridContentWithFlow(rules, pageable, user);
 
         List<Map<String, Object>> dataRows = new ArrayList<>();
         jqGridContent.getList().forEach(classes -> {
