@@ -2,6 +2,7 @@ package com.hanqian.kepler.core.service.flow.impl;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
@@ -17,6 +18,7 @@ import com.hanqian.kepler.flow.entity.ProcessStepCon;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.enums.FlowEnum;
+import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import com.hanqian.kepler.flow.vo.FlowParticipantVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,11 +142,6 @@ public class ProcessStepServiceImpl extends BaseServiceImpl<ProcessStep, String>
         backRules.add(Rule.eq("processBrief.path", taskEntity.getPath()));
         backRules.add(Rule.eq("step", backStep));
         return getFirstOne(SpecificationFactory.where(backRules));
-    }
-
-    @Override
-    public List<User> getUserListOfProcessStep(ProcessStep processStep) {
-        return null;
     }
 
     @Override

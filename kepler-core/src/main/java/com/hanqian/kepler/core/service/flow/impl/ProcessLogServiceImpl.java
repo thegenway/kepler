@@ -68,6 +68,6 @@ public class ProcessLogServiceImpl extends BaseServiceImpl<ProcessLog, String> i
 
     @Override
     public List<String> findKeyIdsOfUserOption(User user, String path) {
-        return user!=null&&StrUtil.isNotBlank(path) ? processLogDao.findKeyIdsOfUserOption(user.getId(),path) : new ArrayList<>();
+        return user!=null&&StrUtil.isNotBlank(path) ? processLogDao.findKeyIdsOfUserOption(user.getId(),path,"%"+user.getId()+"%") : new ArrayList<>();
     }
 }

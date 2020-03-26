@@ -38,11 +38,6 @@ public interface ProcessStepService extends BaseService<ProcessStep, String> {
     ProcessStep getBackStep(TaskEntity taskEntity);
 
     /**
-     * 获取到符合当前步骤的操作人
-     */
-    List<User> getUserListOfProcessStep(ProcessStep processStep);
-
-    /**
      * 根据path和步骤号获取当前步骤配置
      */
     ProcessStep getProcessStepByPathAndStep(String path, Integer step);

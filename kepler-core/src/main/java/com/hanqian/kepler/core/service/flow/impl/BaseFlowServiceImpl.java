@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.flow.impl;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,6 +28,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServiceImpl<T, String> implements BaseFlowService<T> {
@@ -170,13 +172,38 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         TaskEntity taskEntity = taskEntityService.getTaskEntityByKeyId(entity.getId());
 
         //流程记录
-        String path = ClassUtil.getClassName(entity, false);
         processLogService.createLog(FlowEnum.ProcessOperate.approve, user, processLogVo, taskEntity);
 
         //下一步流程处理
         taskEntity.setLastUser(user);
-        ProcessStep nextProcessStep = processStepService.getNextStep(taskEntity, entity);
-        taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
+	    ProcessStep currProcessStep = processStepService.getCurrStep(taskEntity);
+
+	    if(currProcessStep.getJointlySing() == 1){
+		    //如果是会签
+		    String nextUserIds = taskEntity.getNextUserIds();
+		    String nextUserNames = taskEntity.getNextUserNames();
+		    String[] idsArr = StrUtil.split(nextUserIds, ",");
+		    String[] namesArr = StrUtil.split(nextUserNames, ",");
+		    int index = ArrayUtil.indexOf(idsArr, user.getId());
+		    if(index != -1){
+			    idsArr = ArrayUtil.remove(idsArr, index);
+			    namesArr = ArrayUtil.remove(namesArr, index);
+		    }
+		    taskEntity.setNextUserIds(ArrayUtil.join( idsArr, ","));
+		    taskEntity.setNextUserNames(ArrayUtil.join( namesArr, ","));
+		    if(idsArr==null || idsArr.length==0){
+		    	//会签结束了，开始下一步
+			    ProcessStep nextProcessStep = processStepService.getNextStep(taskEntity, entity);
+			    taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
+		    }else{
+		    	taskEntityService.save(taskEntity);
+		    }
+	    }else{
+	    	// 如果不是会签，直接进行下一步
+		    ProcessStep nextProcessStep = processStepService.getNextStep(taskEntity, entity);
+		    taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
+	    }
+
         if(ObjectUtil.equal(FlowEnum.ProcessState.Finished, taskEntity.getProcessState())){
             entity.setProcessState(taskEntity.getProcessState());
             entity.setFinishTime(new Date());

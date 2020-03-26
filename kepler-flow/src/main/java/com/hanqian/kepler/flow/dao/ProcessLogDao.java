@@ -18,7 +18,7 @@ public interface ProcessLogDao extends BaseDao<ProcessLog, String> {
     /**
      * 根据人员查找和自己有关的文档id
      */
-    @Query(value = "select DISTINCT log.keyId from flow_process_log log where log.state='Enable' and log.path=:path and log.creator_id=:userId", nativeQuery = true)
-    List<String> findKeyIdsOfUserOption(@Param("userId") String userId, @Param("path") String path);
+    @Query(value = "select DISTINCT task.keyId from flow_task_entity task where task.keyId in (select DISTINCT log.keyId from flow_process_log log where log.state='Enable' and log.path=:path and log.creator_id=:userId) or task.nextUserIds like :likeUserId", nativeQuery = true)
+    List<String> findKeyIdsOfUserOption(@Param("userId") String userId, @Param("path") String path, @Param("likeUserId") String likeUserId);
 
 }

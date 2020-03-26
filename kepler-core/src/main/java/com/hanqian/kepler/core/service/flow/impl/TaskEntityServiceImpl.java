@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.flow.impl;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
@@ -142,12 +143,12 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     @Override
     public FlowInfoVo getFlowInfo(TaskEntity taskEntity, User currUser) {
         List<FlowEnum.ProcessOperate> operates = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
         if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
             operates = getFlowButtonList(taskEntity, currUser);
         }else{
-            userService.getUserListOfFlow(taskEntity).forEach(user -> ids.add(user.getId()));
-            if(currUser!=null && ids.contains(currUser.getId())){
+//            userService.getUserListOfFlow(taskEntity).forEach(user -> ids.add(user.getId()));
+            String[] ids = StrUtil.split(taskEntity.getNextUserIds(), ",");
+            if(currUser!=null && ArrayUtil.contains(ids, currUser.getId())){
                 operates = getFlowButtonList(taskEntity, currUser);
             }
         }

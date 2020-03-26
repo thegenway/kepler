@@ -73,7 +73,7 @@
                 <!--Accordion content-->
                 <div class="panel-collapse collapse in" id="acc-flow-process-user-1">
                     <div class="panel-body">
-                        <div class="label label-table label-success" th:each="user : ${userSet}" th:text="${user.name}"></div>
+                        <div class="label label-table label-success" th:each="name : ${nextNames}" th:text="${name}"></div>
                     </div>
                 </div>
             </div>

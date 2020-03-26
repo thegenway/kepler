@@ -69,9 +69,11 @@ public class TaskEntityController extends BaseController {
             List<ProcessLog> processLogList = processLogService.findAll(SpecificationFactory.where(rules), sort);
             model.addAttribute("processLogList", processLogList);
 
-            Set<User> userSet = userService.getUserListOfFlow(taskEntity);
-            model.addAttribute("userSet", userSet);
+//            Set<User> userSet = userService.getUserListOfFlow(taskEntity);
+//            model.addAttribute("userSet", userSet);
+            String[] nextNames = StrUtil.split(taskEntity.getNextUserNames(), ",");
             model.addAttribute("taskEntity", taskEntity);
+            model.addAttribute("nextNames", nextNames);
         }
 
         return "main/flow/processLog_ajax";
