@@ -209,11 +209,16 @@ public abstract class BaseServiceImpl<T extends BaseEntity, PK extends Serializa
 
 	@Override
 	public JqGridContent<T> getJqGridContent(List<Rule> rules, Pageable pageable) {
+		return this.getJqGridContent(SpecificationFactory.where(rules), pageable);
+	}
+
+	@Override
+	public JqGridContent<T> getJqGridContent(Specification specification, Pageable pageable) {
 		if(pageable!=null){
-			Page<T> page = findAll(SpecificationFactory.where(rules), pageable);
+			Page<T> page = findAll(SpecificationFactory.wheres(specification).build(), pageable);
 			return new JqGridContent<T>(true, page, page.getContent());
 		}else{
-			List<T> list = findAll(SpecificationFactory.where(rules));
+			List<T> list = findAll(SpecificationFactory.wheres(specification).build());
 			return new JqGridContent<T>(false, null, list);
 		}
 	}

@@ -15,11 +15,13 @@ import com.hanqian.kepler.common.utils.RedisUtil;
 import com.hanqian.kepler.core.entity.primary.education.Classes;
 import com.hanqian.kepler.core.entity.primary.education.Student;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
+import com.hanqian.kepler.core.entity.primary.sys.Notice;
 import com.hanqian.kepler.core.service.edu.ClassesService;
 import com.hanqian.kepler.core.service.edu.StudentService;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
+import com.hanqian.kepler.core.service.sys.NoticeService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
@@ -63,6 +65,8 @@ public class KeplerTest {
 	private ProcessStepService processStepService;
 	@Autowired
 	private ClassesService classesService;
+	@Autowired
+	private NoticeService noticeService;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -186,7 +190,14 @@ public class KeplerTest {
 
 	@Test
 	public void deTest(){
-
+		Date now = new Date();
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		rules.add(Rule.ge("startTime", now));
+		rules.add(Rule.le("endTime", now));
+		List<Notice> notices = noticeService.findAll(SpecificationFactory.wheres(SpecificationFactory.where(rules).or(SpecificationFactory.where(Rule.eq("ifForever", 1)))).build());
+		System.out.println("---------------------");
+		System.out.println(notices.size());
 	}
 
 }

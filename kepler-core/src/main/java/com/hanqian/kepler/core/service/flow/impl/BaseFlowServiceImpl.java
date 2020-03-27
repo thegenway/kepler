@@ -9,6 +9,7 @@ import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.service.flow.*;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.base.FlowEntity;
@@ -22,6 +23,7 @@ import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.ParameterizedType;
@@ -288,11 +290,21 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
     @Override
     public JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user, List<String> moreIds) {
+        return getJqGridContentWithFlow(SpecificationFactory.where(rules), pageable, user, moreIds);
+    }
+
+    @Override
+    public JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user) {
+        return this.getJqGridContentWithFlow(rules,pageable,user,null);
+    }
+
+    @Override
+    public JqGridContent<T> getJqGridContentWithFlow(Specification specification, Pageable pageable, User user, List<String> moreIds) {
         if(user == null) return new JqGridContent<T>(false, null, new ArrayList<>());
 
         //如果是系统管理员，不添加任何条件
         if(userService.isManager(user)){
-            return getJqGridContent(rules, pageable);
+            return getJqGridContent(specification, pageable);
         }
 
         Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -301,12 +313,12 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
         //如果配置的所有人可查看，不添加任何条件
         if(processBrief!=null && processBrief.getIfAllRead()==1){
-            return getJqGridContent(rules, pageable);
+            return getJqGridContent(specification, pageable);
         }
 
         //判断当前用户是否在查看权限的配置中,如果在则不添加任何条件
         if(processBriefService.checkReadAuth(user, processBrief)){
-            return getJqGridContent(rules, pageable);
+            return getJqGridContent(specification, pageable);
         }
 
         //否则只筛选出和自己有流程相关操作的文档
@@ -314,12 +326,13 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         if(moreIds!=null && moreIds.size()>0){
             ids.addAll(moreIds);
         }
-        rules.add(Rule.in("id", ids));
-        return getJqGridContent(rules, pageable);
+        specification = specification.and(SpecificationFactory.in("id", ids));
+
+        return getJqGridContent(specification, pageable);
     }
 
     @Override
-    public JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user) {
-        return this.getJqGridContentWithFlow(rules,pageable,user,null);
+    public JqGridContent<T> getJqGridContentWithFlow(Specification specification, Pageable pageable, User user) {
+        return getJqGridContentWithFlow(specification, pageable, user, null);
     }
 }

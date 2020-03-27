@@ -4,10 +4,12 @@ import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -54,5 +56,7 @@ public interface BaseFlowService<T extends FlowEntity> extends BaseService<T, St
      */
     JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user, List<String> moreIds);
     JqGridContent<T> getJqGridContentWithFlow(List<Rule> rules, Pageable pageable, User user);
+    JqGridContent<T> getJqGridContentWithFlow(Specification specification, Pageable pageable, User user, List<String> moreIds);
+    JqGridContent<T> getJqGridContentWithFlow(Specification specification, Pageable pageable, User user);
 
 }

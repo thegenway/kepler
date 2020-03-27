@@ -303,7 +303,7 @@
                             <div id="mainnav-profile" class="mainnav-profile">
                                 <div class="profile-wrap">
                                     <div class="pad-btm">
-                                        <span class="label label-success pull-right">New</span>
+                                        <span class="label label-success pull-right hidden">New</span>
                                         <img class="img-circle img-sm img-border" th:src="${session?.CURRENT_USER?.avatarId}" alt="Profile Picture">
                                     </div>
                                     <a href="#profile-nav" class="box-block" data-toggle="collapse" aria-expanded="false">
@@ -325,7 +325,7 @@
 <!--                                        <i class="pli-information icon-lg icon-fw"></i> Help-->
 <!--                                    </a>-->
                                     <a href="/logout" class="list-group-item">
-                                        <i class="pli-unlock icon-lg icon-fw"></i> Logout
+                                        <i class="fa fa-key fa-lg"></i> 退出
                                     </a>
                                 </div>
                             </div>
@@ -333,7 +333,7 @@
 
                             <!--Shortcut buttons-->
                             <!--================================-->
-                            <div id="mainnav-shortcut">
+                            <div id="mainnav-shortcut" class="hidden">
                                 <ul class="list-unstyled">
                                     <li class="col-xs-3" data-content="My Profile">
                                         <a class="shortcut-grid" href="#">

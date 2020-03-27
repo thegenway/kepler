@@ -3,6 +3,7 @@ package com.hanqian.kepler.common.base.service;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.base.entity.BaseEntity;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -94,5 +95,6 @@ public interface BaseService<T extends BaseEntity, PK extends Serializable> {
 	long count(@Nullable Specification<T> var1);
 
 	JqGridContent<T> getJqGridContent(List<Rule> rules, Pageable pageable);
+	JqGridContent<T> getJqGridContent(Specification specification, Pageable pageable);
 
 }
