@@ -9,9 +9,12 @@ import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Group;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.entity.primary.sys.Power;
+import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.TaskEntityService;
+import com.hanqian.kepler.flow.entity.ProcessBrief;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.*;
+import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import com.hanqian.kepler.flow.vo.FlowParticipantVo;
 import com.hanqian.kepler.security.SecurityUtil;
@@ -69,13 +72,15 @@ public class BaseController implements Serializable {
 	@Autowired
 	protected TaskEntityService taskEntityService;
 
+	@Autowired
+	protected ProcessBriefService processBriefService;
+
 
 	/**
 	 * 获取当前登录人
 	 */
 	protected User getCurrentUser(){
-		String userId = SecurityUtil.getCurrentUserId();
-		return StrUtil.isNotBlank(userId) ? userService.get(userId) : null;
+		return FlowUtil.getCurrentUser();
 	}
 
 	/**

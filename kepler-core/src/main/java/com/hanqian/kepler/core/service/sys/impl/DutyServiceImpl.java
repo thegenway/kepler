@@ -137,6 +137,11 @@ public class DutyServiceImpl extends BaseServiceImpl<Duty, String> implements Du
         List<Duty> userDutyList = findByUser(user);
         if(userDutyList.size() == 0) return dutyList;
 
+        //如果是所有人参与则返回所有职责
+        if(processStep.getIfAll() == 1){
+            return userDutyList;
+        }
+
         FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(processStep);
 
         //如果符合域名配置或人员配置或群组配置，则返回所有职责

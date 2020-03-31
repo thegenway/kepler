@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
+import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.MenuService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
@@ -52,9 +53,13 @@ public class MenuController extends BaseController {
 	 * 菜单路由(二层菜单)
 	 */
 	@RequestMapping(value = "{menu1}/{menu2}", method = RequestMethod.GET)
-	public String menu(Model model,String viewtype,String parentId,@PathVariable String menu1, @PathVariable String menu2) {
-		model.addAttribute("viewtype",viewtype);
+	public String menu(@CurrentUser User user,  Model model, String viewType, String parentId, @PathVariable String menu1, @PathVariable String menu2) {
+		model.addAttribute("viewType",viewType);
 		model.addAttribute("parentId",parentId);
+
+		String path = StrUtil.format("com.hanqian.kepler.core.entity.primary.{}.{}", menu1, StrUtil.upperFirst(menu2));
+		model.addAttribute("isCreator", processBriefService.checkCreatorAuth(user, path));
+
 		return "/main/menu/"+menu1+"/"+menu2;
 	}
 

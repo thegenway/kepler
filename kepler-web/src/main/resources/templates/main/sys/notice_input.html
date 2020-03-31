@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="notice-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">公告通知<span id="title-duty-name-notice" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_notice_input'+${notice?.id}" class="form-horizontal" autocomplete="off">
+            <input type="hidden" id="keyId" name="keyId" th:value="${notice?.id}" />
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">标题<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="name" id="name" th:value="${notice?.name}" class="form-control" placeholder="请输入标题">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">是否长期有效<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input id="ifForever" name="ifForever" type="checkbox" value="1" th:checked="${notice?.ifForever==1}">
+                </div>
+            </div>
+
+            <div class="form-group" id="timeDiv" th:hidden="${notice?.ifForever==1}">
+                <label class="col-md-3 control-label">生效日期<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="startTime" id="startTime" th:value="${#dates.format(notice?.startTime, 'yyyy-MM-dd HH:mm:ss')}" placeholder="开始时间">
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="form-control" name="endTime" id="endTime" th:value="${#dates.format(notice?.endTime, 'yyyy-MM-dd HH:mm:ss')}" placeholder="结束时间">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">通知内容<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <textarea id="content" name="content" th:text="${notice?.content}"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">附件</label>
+                <div class="col-md-7">
+                    <input th:id="'fileIds'+${notice?.id}" name="fileIds" style="display: none" th:value="${notice?.fileIds}">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${notice?.id}]];
+    var flowData = {
+        keyId : keyId ? keyId : "create",
+        formId : "form_notice_input"+[[${notice?.id}]],
+        path : "com.hanqian.kepler.core.entity.primary.sys.Notice",
+        titleId : "title-duty-name-notice"
+    };
+    var $form = $("#"+flowData.formId);
+
+    $(function(){
+        new Switchery($form.find("#ifForever")[0]);
+        __laydate_datetime(flowData.formId+" #startTime");
+        __laydate_datetime(flowData.formId+ " #endTime");
+        __summernote($form.find("#content"));
+        __init_dropzone_edit("fileIds"+[[${notice?.id}]]);
+
+        fn_notice_input_validate();
+        __flow_duty_handle(flowData);
+        __flow_button_input_handle(flowData, fn_notice_save, fn_notice_commit);
+    });
+
+    $form.find("#ifForever").change(function(){
+        if($(this)[0].checked){
+            $form.find("#timeDiv").hide();
+        }else{
+            $form.find("#timeDiv").show();
+        }
+    });
+
+    //表单验证
+    function fn_notice_input_validate(){
+        __init_validate(flowData.formId, {
+            rules : {
+                name : {
+                    required : true
+                },
+                startTime : {
+                    required : function(){return !$form.find("#ifForever")[0].checked;}
+                },
+                endTime : {
+                    required : function(){return !$form.find("#ifForever")[0].checked;}
+                },
+                content : {
+                    required : true
+                }
+            }
+        });
+    }
+
+    function fn_notice_save(){
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(flowData.formId, "/notice/save", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+    function fn_notice_commit(){
+        if(!$("#" + flowData.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save(flowData.formId, "/notice/commit", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+</script>
+
+</html>

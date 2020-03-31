@@ -616,7 +616,9 @@ function __init_validate(form_id, opt ,wx) {
             }else{
                 if (element.is(':checkbox') || element.is(':radio')) {
                     error.appendTo(element.parent().parent());
-                } else {
+                } else if(element.parent().hasClass("input-group")) {
+                    error.appendTo(element.parent().parent());
+                } else{
                     error.appendTo(element.parent());
                 }
             }
@@ -689,7 +691,7 @@ function __init_dropzone(element_id, readonly, onchange, opt) {
 
     var defaults = {
 
-        url: '../common/file/upload',
+        url: '../main/file/upload',
         maxFiles: 10,// 最大文件数
         maxFilesize: 100,// 最大文件大小(MB)
         parallelUploads: 1,// 最大同时上传文件数
@@ -723,13 +725,13 @@ function __init_dropzone(element_id, readonly, onchange, opt) {
 
                     if (isNotNull(file.type) && file.type.match(/image.*/)) {
                         myDropzone.emit("thumbnail", file, file.url);
-                        $(file.previewElement).find('[data-dz-preview]').attr('href', "../common/file/imgView?fileId="+file.id);
+                        $(file.previewElement).find('[data-dz-preview]').attr('href', "../main/file/imgView?fileId="+file.id);
                     }else{
                         $(file.previewElement).find('[data-dz-preview]').attr('href', file.fileViewUrl);
                     }
                 }
                 if (isNull(file.type) || !file.type.match(/image.*/)) {
-                    myDropzone.emit("thumbnail", file, "../resource/core/img/file-img.png");
+                    myDropzone.emit("thumbnail", file, "../static/img/file-img.png");
                 }
             });
 
@@ -750,8 +752,8 @@ function __init_dropzone(element_id, readonly, onchange, opt) {
 
             myDropzone.on('success', function(file, data) {
                 if (data.state === 1) {
-                    var fileId = data.data.fileId;
-                    var filePath = "../common/file/download?"+data.data.url;
+                    var fileId = data.data.id;
+                    var filePath = ".."+data.data.url;
 
                     $(file.previewElement).attr('file-id', fileId);
                     $(file.previewElement).find('[data-dz-name]').append('<strong class="pad-lft text-success"><i class="ti-check"></i></strong>');
@@ -772,7 +774,7 @@ function __init_dropzone(element_id, readonly, onchange, opt) {
                 var id = $(file.previewElement).attr('file-id');
                 var isBinding = $(file.previewElement).attr('file-binding') === 'true';
                 if (!readonly && id && !isBinding) {// 忽略 只读状态 已绑定文件
-                    __ajax_post('../common/file/delete?keyId='+id, null, function (data) {
+                    __ajax_post('../main/file/delete?keyId='+id, null, function (data) {
                         if (data.state === 1) {
                             __toastr_success('删除成功');
 
@@ -795,7 +797,7 @@ function __init_dropzone(element_id, readonly, onchange, opt) {
             });
 
             if (isNotNull(fileIds)) {
-                __ajax_get('../common/file/fileList', {keyId: fileIds}, function (data) {
+                __ajax_get('../main/file/fileList', {keyId: fileIds}, function (data) {
                     if (data.state === 1) {
                         var existingFileCount = 0;// The number of files already uploaded
                         $(data.data).each(function (i, obj) {
@@ -1346,11 +1348,13 @@ function __layX_flow_input(dialogId, title, url, commitFun, saveFun, opt){
 function __summernote($ele, opt){
     if($ele){
         var defaults = {
-            placeholder : "请输入审批意见",
+            placeholder : "请输入内容",
             lang: 'zh-CN',
             height: 150,
             dialogsInBody : false,
+            dialogsFade : false,
             shortcuts:false,
+            disableDragAndDrop : true,
             tabsize: 2,
             toolbar : [
                 ['style', ['style']],
@@ -1361,7 +1365,12 @@ function __summernote($ele, opt){
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview']]
-            ]
+            ],
+            callbacks : {
+                onDialogShown : function(){ //bootstrap的遮罩层和layx的遮罩层冲突，这里需要隐藏掉
+                    $("body").find(".modal-backdrop:last").hide();
+                }
+            }
         };
 
         var options = $.extend({}, defaults, opt);
@@ -1382,9 +1391,9 @@ function __flow_duty_handle(entityData){
         if(data && data.dataRows.length>0){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.dataRows[0].id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.dataRows[0].name);
-            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
         }else{
-            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | 没有符合的职责");
+            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | 没有符合的职责");
         }
     })
 }
@@ -1404,7 +1413,8 @@ function __flow_duty_select(entityData){
         if(data && data.id){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.name);
-            $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            // $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
             __layX_close("flow_duty_select");
         }else{
             __toastr_warning("未选择职责")
@@ -1425,7 +1435,7 @@ function __flow_button_input_handle(entityData, save, commit){
             return false;
         }
 
-        var flag = entityData.layxId;
+        var flag = "layx-"+entityData.keyId;
         var btn_save = '<button class="btn btn-success" title="保存" id="'+flag+'-button-save">保存</button>';
         var btn_submit = '<button class="btn btn-primary" title="提交" id="'+flag+'-button-submit">提交</button>';
         var btn_reSubmit = '<button class="btn btn-primary" title="再提交" id="'+flag+'-button-submit">再提交</button>';
@@ -1468,7 +1478,7 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
         };
 
         //设置按钮组
-        var flag = entityData.layxId;
+        var flag = "layx-"+entityData.keyId;
         var btn_approve = '<button class="btn btn-primary" title="通过" id="'+flag+'-button-approve">通过</button>';
         var btn_back = '<button class="btn btn-warning" title="退回" id="'+flag+'-button-back">退回</button>';
         var btn_deny = '<button class="btn btn-danger" title="否决" id="'+flag+'-button-deny">否决</button>';
@@ -1484,14 +1494,14 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
             }else if(data.flowButtonList[i].name == "back"){
                 $("#"+flag).find("div.layx-buttons").prepend(btn_back);
                 $("#"+flag+"-button-back").on("click", back)
-            }else if(data.flowButtonList[i].name == "reSubmit"){
+            }else if(data.flowButtonList[i].name == "reSubmit" || data.flowButtonList[i].name == "save"){
                 $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
                 $("#"+flag+"-button-edit").on("click", edit)
             }
         }
 
         //草稿状态添加编辑按钮
-        if(data.processState == 'Draft'){
+        if(data.processState == 'Draft' && $("#"+flag+"-button-edit").size() == 0){
             $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
             $("#"+flag+"-button-edit").on("click", edit)
         }

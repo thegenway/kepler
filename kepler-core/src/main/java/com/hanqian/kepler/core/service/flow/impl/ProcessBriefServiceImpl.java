@@ -57,7 +57,8 @@ public class ProcessBriefServiceImpl extends BaseServiceImpl<ProcessBrief, Strin
     }
 
     @Override
-    public boolean checkCreatorOfPath(User user, String path) {
+    public boolean checkCreatorAuth(User user, String path) {
+        if(StrUtil.isBlank(path) || user==null) return false;
         ProcessStep processStep = processStepService.getProcessStepByPathAndStep(path, 1);
         if(processStep == null) return false;
 
@@ -83,6 +84,27 @@ public class ProcessBriefServiceImpl extends BaseServiceImpl<ProcessBrief, Strin
     public boolean checkReadAuth(User user, ProcessBrief processBrief) {
         if(user!=null && processBrief!=null && JSONUtil.isJsonObj(processBrief.getReadAuthInfoJson())){
             FlowParticipantVo flowParticipantVo = JSONUtil.toBean(processBrief.getReadAuthInfoJson(), FlowParticipantVo.class);
+            FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(flowParticipantVo);
+            List<User> userList = userService.getUserListByFlowConfig(
+                    StrUtil.split(vo.getDepartmentIds(), ","),
+                    StrUtil.split(vo.getPostIds(), ","),
+                    StrUtil.split(vo.getPowerIds(), ","),
+                    StrUtil.split(vo.getGroupIds(), ","),
+                    StrUtil.split(vo.getUserIds(), ",")
+            );
+
+            List<String> userIds = new ArrayList<>();
+            userList.forEach(u->userIds.add(u.getId()));
+
+            return userIds.contains(user.getId());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkEditAuth(User user, ProcessBrief processBrief) {
+        if(user!=null && processBrief!=null && JSONUtil.isJsonObj(processBrief.getEditAuthInfoJson())){
+            FlowParticipantVo flowParticipantVo = JSONUtil.toBean(processBrief.getEditAuthInfoJson(), FlowParticipantVo.class);
             FlowParticipantInputVo vo = FlowUtil.getFlowParticipantInputVo(flowParticipantVo);
             List<User> userList = userService.getUserListByFlowConfig(
                     StrUtil.split(vo.getDepartmentIds(), ","),

@@ -154,7 +154,12 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
                 processBrief.getModule(),
                 processBrief.getTableName()
         );
-        taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
+        taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.approve, taskEntity, nextProcessStep);
+        if(ObjectUtil.equal(FlowEnum.ProcessState.Finished, taskEntity.getProcessState())){
+            entity.setProcessState(taskEntity.getProcessState());
+            entity.setFinishTime(new Date());
+        }
+        save(entity);
 
         return AjaxResult.successWithId("操作成功", entity.getId());
     }

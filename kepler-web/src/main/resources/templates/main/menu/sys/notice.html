@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">系统公告</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-inline">
+                <div class="row">
+                    <div class="col-sm-6 table-toolbar-left">
+                        <button id="btn_add_notice" class="btn btn-primary btn-sm" th:disabled="${!isCreator}">新增通知</button>
+                    </div>
+                    <div class="col-sm-6 table-toolbar-right">
+                        <button id="notice-find-enable-btn" class="btn btn-default btn-sm">有效</button>
+                        <button id="notice-find-all-btn" class="btn btn-default btn-sm">全部</button>
+                    </div>
+                </div>
+            </div>
+            <div class="jqGrid_wrapper">
+                <table id="notice_table"></table>
+                <div id="notice_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function () {
+
+        init_grid_notice();
+
+    });
+
+    function init_grid_notice() {
+        __init_jqgrid('notice_table', 'notice_page', '/notice/list',
+            ['标题', '操作', 'id'],
+            [
+                {name: 'name', index: 'name', width: 300, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ]
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_notice_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    $('#btn_add_notice').click(function () {
+        __layX_html_read("create", "公告通知", "/notice/input");
+    });
+
+    function fn_notice_read(id){
+        __layX_html_read(id, "公告通知", "/notice/read?keyId="+id);
+    }
+
+    //查看全部
+    $("#notice-find-all-btn").on("click", function(){
+        __reflash_jqgrid("notice_table", {ifAll : "1"});
+    });
+    $("#notice-find-enable-btn").on("click", function(){
+        __reflash_jqgrid("notice_table", {ifAll : "0"});
+    });
+
+</script>
+
+</html>

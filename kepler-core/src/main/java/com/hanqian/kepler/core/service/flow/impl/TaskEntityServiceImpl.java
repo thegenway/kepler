@@ -6,12 +6,14 @@ import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessLogService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.flow.TaskEntityService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.dao.TaskEntityDao;
+import com.hanqian.kepler.flow.entity.ProcessBrief;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
@@ -34,6 +36,8 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     private ProcessStepService processStepService;
     @Autowired
     private ProcessLogService processLogService;
+    @Autowired
+    private ProcessBriefService processBriefService;
     @Autowired
     private UserService userService;
 
@@ -146,10 +150,15 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
         if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
             operates = getFlowButtonList(taskEntity, currUser);
         }else{
-//            userService.getUserListOfFlow(taskEntity).forEach(user -> ids.add(user.getId()));
             String[] ids = StrUtil.split(taskEntity.getNextUserIds(), ",");
             if(currUser!=null && ArrayUtil.contains(ids, currUser.getId())){
                 operates = getFlowButtonList(taskEntity, currUser);
+            }
+
+            //如果有编辑权限，增加编辑按钮
+            ProcessBrief processBrief = processBriefService.getProcessBriefByPath(taskEntity.getPath());
+            if(processBriefService.checkEditAuth(currUser, processBrief) && !operates.contains(FlowEnum.ProcessOperate.save)){
+                operates.add(FlowEnum.ProcessOperate.save);
             }
         }
         return FlowInfoVo.build(taskEntity, operates);

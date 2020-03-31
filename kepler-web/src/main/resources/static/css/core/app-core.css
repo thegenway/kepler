@@ -304,6 +304,12 @@ em.error{
 .txt-color-red {
     color: #a90329 !important
 }
+/*开关样式*/
+form .switchery{
+    margin-top: 5px;
+}
+
+
 /* 登录页背景 */
 .login-bg{
     background-image : url("../../img/bg-img/3.jpg");

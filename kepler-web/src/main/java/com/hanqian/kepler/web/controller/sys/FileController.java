@@ -1,6 +1,8 @@
 package com.hanqian.kepler.web.controller.sys;
 
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.entity.primary.sys.FileManage;
 import com.hanqian.kepler.core.service.sys.FileManageService;
@@ -9,14 +11,18 @@ import com.mongodb.client.gridfs.model.GridFSFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +45,7 @@ public class FileController extends BaseController {
      */
     @PostMapping(value = "upload")
     @ResponseBody
-    public Object upload(@RequestParam("file") MultipartFile multipartFile, @RequestParam("fileName")String fileName) throws IOException {
+    public Object upload(@RequestParam("file") MultipartFile multipartFile, @RequestParam(value = "fileName", required = false)String fileName) throws IOException {
         if(multipartFile!=null){
             String filename = StrUtil.isNotBlank(fileName) ? fileName : multipartFile.getOriginalFilename();
             InputStream is = multipartFile.getInputStream();
@@ -84,6 +90,57 @@ public class FileController extends BaseController {
             outputStream.close();
         }
 
+    }
+
+    /**
+     * 删除附件
+     */
+    @PostMapping("delete")
+    @ResponseBody
+    public AjaxResult delete(String keyId){
+        FileManage fileManage = fileManageService.get(keyId);
+        fileManageService.delete(fileManage);
+        return AjaxResult.success("删除成功");
+    }
+
+    /**
+     * 附件列表（针对dropzone插件的）
+     */
+    @GetMapping("fileList")
+    @ResponseBody
+    public AjaxResult fileList(@RequestParam String keyId) {
+        List<Map<String, Object>> dataRows = new ArrayList<>();
+        Map<String, Object> map ;
+        if(StrUtil.isNotBlank(keyId)){
+            for(String fileId : StrUtil.split(keyId, ",")){
+                FileManage fileManage = fileManageService.get(fileId);
+                if(fileManage == null){
+                    continue;
+                }
+                map = new HashMap<>();
+                map.put("id",fileManage.getId());
+                String fileName = fileManage.getName();
+                map.put("name",fileName);
+                map.put("size",fileManage.getSize());
+                map.put("type",fileManage.getContentType());
+                map.put("filePath", "../main/file/"+fileManage.getId());
+                String fileUrl = request.getServerName()+":"+request.getLocalPort()+"/main/file/"+fileManage.getId()+"&fullfilename="+fileName;
+//                String fileViewUrl = "http://"+request.getServerName() + ":8012/onlinePreview?url="+ Encodes.urlEncode(fileUrl);
+                String fileViewUrl = "http://"+request.getServerName() + ":8012/onlinePreview?url="+ URLUtil.encode(fileUrl);
+                map.put("fileViewUrl", fileViewUrl);
+                dataRows.add(map);
+            }
+        }
+        return AjaxResult.success("success", dataRows);
+    }
+
+    /**
+     * 单独针对图片类型的预览
+     */
+    @RequestMapping(value = "imgView", method = RequestMethod.GET)
+    public String imgView(Model model, String fileId){
+        model.addAttribute("fileId", fileId);
+        return "main/common/file_img_view";
     }
 
 }
