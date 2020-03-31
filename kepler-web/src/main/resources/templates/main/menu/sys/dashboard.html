@@ -47,9 +47,198 @@
         <!--===================================================-->
         <!--End Carousel-->
 
+    </div>
+
+    <div class="row">
+        <div class="col-md-7 col-sm-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">近期天气</h3>
+                </div>
+                <div class="panel-body" style="height: 250px">
+                    <div class="media pad-all bord-btm">
+                        <div class="media-left">
+                            <canvas id="weather-0" width="64" height="64"></canvas>
+                        </div>
+                        <div class="media-body pad-lft">
+                            <h4 class="mar-no text-main" id="weather-location">Location</h4>
+                            <p>今天<span  id="weather-date-0" class="text-sm text-muted mar-lft"></span></p>
+                            <span class="text-sm text-muted" id="weather-type-0">多云</span>
+                            <span class="text-sm text-muted mar-lft" id="weather-temperature-0">高温/低温</span>
+                            <span class="text-sm text-muted mar-lft" id="weather-fx-0">Wind 10km/hours</span>
+                            <span class="text-sm text-muted mar-lft" id="weather-note"></span>
+                        </div>
+                    </div>
+                    <div class="row pad-top">
+                        <div class="col-md-4 pad-top">
+                            <p class="">湿度：<span id="weather-shidu" class=""></span></p>
+                            <p class="">空气质量：<span id="weather-quality" class=""></span></p>
+                            <p class="">数据更新于：<span id="weather-update"></span></p>
+                        </div>
+                        <div class="col-md-8 pad-top">
+                            <div class="list-unstyled text-center clearfix">
+                                <div class="col-xs-3">
+                                    <canvas id="weather-1" width="32" height="32"></canvas>
+                                    <p class="text-sm mar-no" id="weather-date-1">date-1</p>
+                                    <span class="text-sm" id="weather-temperature-1"></span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <canvas id="weather-2" width="32" height="32"></canvas>
+                                    <p class="text-sm mar-no" id="weather-date-2">date-2</p>
+                                    <span class="text-sm" id="weather-temperature-2"></span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <canvas id="weather-3" width="32" height="32"></canvas>
+                                    <p class="text-sm mar-no" id="weather-date-3">date-3</p>
+                                    <span class="text-sm" id="weather-temperature-3"></span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <canvas id="weather-4" width="32" height="32"></canvas>
+                                    <p class="text-sm mar-no" id="weather-date-4">date-4</p>
+                                    <span class="text-sm" id="weather-temperature-4"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 col-sm-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-control">
+                        <button type="button" id="btn-index-notice-more" class="btn" style="margin-top: 10px" title="更多" onclick="window.location.hash='menu/sys/notice'"><i class="fa fa-reorder fa-lg"></i></button>
+                    </div>
+                    <h3 class="panel-title">公告通知</h3>
+                </div>
+                <div class="panel-body" style="height: 250px">
+                    <table class="mar-no table table-hover">
+                        <thead>
+                        <tr>
+                            <th width="70%">标题</th>
+                            <th width="30%">发布时间</th>
+                        </tr>
+                        </thead>
+                        <tbody id="index-notice-tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div>
+
 </div>
 
 </body>
+
+<!--公告通知数据模板-->
+<script id="index-notice-list-temp" type="text/x-jquery-tmpl">
+<tr id="${id}" style="cursor: pointer" {{if id!=''}}onclick="__layX_html_read('${id}', '公告通知', '/notice/read?keyId=${id}')"{{/if}}>
+    <td><span class="text-overflow" style="max-width:300px">${name}</span></td>
+    <td>${finishTime}</td>
+</tr>
+</script>
+
+<script th:inline="javascript">
+
+    $(function(){
+        //天气预报
+        init_index_weather();
+
+        //公告通知
+        init_index_notice();
+    });
+
+    //初始化天气预报
+    function init_index_weather(){
+        var skyconsOptions = {
+            "color": "#acb2b7",
+            "resizeClear": true
+        };
+
+        __ajax_get("/common/index/weather/101020100", {}, function(data){
+            if(data && data.status === 200){
+                var weatherList = data.data.forecast;
+                $("#weather-location").text(data.cityInfo.city);
+                $("#weather-shidu").text(data.data.shidu);
+                $("#weather-quality").text(data.data.quality);
+                $("#weather-update").text(data.time.split(" ")[1]);
+                $("#weather-note").text(weatherList[0].notice);
+                $("#weather-fx-0").text(weatherList[0].fx + " " + weatherList[0].fl);
+                $("#weather-type-0").text(weatherList[0].type);
+                $("#weather-date-0").text(weatherList[0].ymd);
+                $("#weather-date-1").text(weatherList[1].ymd);
+                $("#weather-date-2").text(weatherList[2].ymd);
+                $("#weather-date-3").text(weatherList[3].ymd);
+                $("#weather-date-4").text(weatherList[4].ymd);
+                $("#weather-temperature-0").text(weatherList[0].low + "|" + weatherList[0].high);
+                $("#weather-temperature-1").text(weatherList[1].type + " " + weatherList[1].low.split(" ")[1] + " ~ " + weatherList[1].high.split(" ")[1]);
+                $("#weather-temperature-2").text(weatherList[2].type + " " + weatherList[2].low.split(" ")[1] + " ~ " + weatherList[2].high.split(" ")[1]);
+                $("#weather-temperature-3").text(weatherList[3].type + " " + weatherList[3].low.split(" ")[1] + " ~ " + weatherList[3].high.split(" ")[1]);
+                $("#weather-temperature-4").text(weatherList[4].type + " " + weatherList[4].low.split(" ")[1] + " ~ " + weatherList[4].high.split(" ")[1]);
+
+                var skycons0 = new Skycons(skyconsOptions);
+                skycons0.add("weather-0", chooseWeatherIcon(weatherList[0].type));
+                skycons0.play();
+                var skycons1 = new Skycons(skyconsOptions);
+                skycons1.add("weather-1", chooseWeatherIcon(weatherList[1].type));
+                skycons1.play();
+                var skycons2 = new Skycons(skyconsOptions);
+                skycons2.add("weather-2", chooseWeatherIcon(weatherList[2].type));
+                skycons2.play();
+                var skycons3 = new Skycons(skyconsOptions);
+                skycons3.add("weather-3", chooseWeatherIcon(weatherList[3].type));
+                skycons3.play();
+                var skycons4 = new Skycons(skyconsOptions);
+                skycons4.add("weather-4", chooseWeatherIcon(weatherList[4].type));
+                skycons4.play();
+            }else{
+                __toastr_warning("获取天气数据异常");
+            }
+
+        });
+
+    }
+
+    //选择天气预报的图标
+    function chooseWeatherIcon(type){
+        if(type){
+            if(type.indexOf("雨")>=0 && type.indexOf("雪")){
+                return Skycons.SLEET;
+            }else if(type.indexOf("雨")>=0){
+                return Skycons.RAIN;
+            }else if(type.indexOf("雪")>=0 || type.indexOf("冰")>=0 || type.indexOf("雹")>=0){
+                return Skycons.SNOW;
+            }else if(type.indexOf("晴")>=0){
+                return Skycons.CLEAR_DAY;
+            }else if(type.indexOf("多云")>=0){
+                return Skycons.PARTLY_CLOUDY_DAY;
+            }else if(type.indexOf("阴")>=0){
+                return Skycons.CLOUDY;
+            }else if(type.indexOf("沙")>=0 || type.indexOf("雾")>=0 || type.indexOf("霾")>=0){
+                return Skycons.FOG;
+            }
+        }
+        return Skycons.PARTLY_CLOUDY_NIGHT;
+    }
+
+    //公告通知数据
+    function init_index_notice(){
+        __ajax_get("/notice/list", {ifPage : true, page: 1, rows : 5}, function(data){
+            for(var i=0;i<5;i++){
+                if(data.dataRows.length>i){
+                    $("#index-notice-list-temp").tmpl(data.dataRows[i]).appendTo("#index-notice-tbody");
+                }else{
+                    var emptyObj = {id : "", name : "", finishTime : "&nbsp"};
+                    $("#index-notice-list-temp").tmpl(emptyObj).appendTo("#index-notice-tbody");
+                }
+            }
+        })
+    }
+
+</script>
+
 </html>

@@ -68,6 +68,7 @@ public class NoticeController extends BaseController {
 			map = new HashMap<>();
 			map.put("id", notice.getId());
 			map.put("name", notice.getName());
+			map.put("finishTime", notice.getFinishTime()!=null ? DateUtil.formatDate(notice.getFinishTime()) : "");
 			dataRows.add(map);
 		}
 

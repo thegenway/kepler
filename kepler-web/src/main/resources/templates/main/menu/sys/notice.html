@@ -34,9 +34,10 @@
 
     function init_grid_notice() {
         __init_jqgrid('notice_table', 'notice_page', '/notice/list',
-            ['标题', '操作', 'id'],
+            ['标题','发布时间', '操作', 'id'],
             [
                 {name: 'name', index: 'name', width: 300, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'finishTime', index: 'finishTime', width: 150, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
                 {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
                 {name: 'id', index: 'id', width: 100, key: true, hidden: true}
             ]
