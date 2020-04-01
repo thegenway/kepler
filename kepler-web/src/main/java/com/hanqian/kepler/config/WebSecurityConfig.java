@@ -3,6 +3,8 @@ package com.hanqian.kepler.config;
 import com.hanqian.kepler.security.handler.MyAuthenticationFailureHandler;
 import com.hanqian.kepler.security.handler.MyAuthenticationSuccessHandler;
 import com.hanqian.kepler.security.service.SpringDataUserDetailService;
+import com.hanqian.kepler.security.social.mail.MailCodeAuthenticationSecurityConfig;
+import com.hanqian.kepler.security.social.mail.MailValidateCodeFilter;
 import com.hanqian.kepler.security.social.sms.SmsCodeAuthenticationFilter;
 import com.hanqian.kepler.security.social.sms.SmsCodeAuthenticationSecurityConfig;
 import com.hanqian.kepler.security.social.sms.SmsValidateCodeFilter;
@@ -47,11 +49,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
 	@Autowired
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+	@Autowired
+	private MailCodeAuthenticationSecurityConfig mailCodeAuthenticationSecurityConfig;
 
 	@Value("${kepler.formAuthUrl}")
 	private String formAuthUrl;
 	@Value("${kepler.smsAuthUrl}")
 	private String smsAuthUrl;
+	@Value("${kepler.mailAuthUrl}")
+	private String mailAuthUrl;
 
 	/**
 	 * 密码编码器
@@ -68,14 +74,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		smsCodeUrls.add(smsAuthUrl);
 		SmsValidateCodeFilter smsValidateCodeFilter = new SmsValidateCodeFilter(smsCodeUrls,  myAuthenticationFailureHandler);
 
+		List<String> mailCodeUrls = new ArrayList<>();
+		mailCodeUrls.add(mailAuthUrl);
+		MailValidateCodeFilter mailValidateCodeFilter = new MailValidateCodeFilter(mailCodeUrls, myAuthenticationFailureHandler);
+
 		http
 
 				//串联手机验证码登录配置
 				.apply(smsCodeAuthenticationSecurityConfig)
 				.and()
 
+				//串联邮箱验证码登录配置
+				.apply(mailCodeAuthenticationSecurityConfig)
+				.and()
+
 				//手机验证码校验过滤器
 				.addFilterBefore(smsValidateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+
+				//邮箱验证码校验过滤器
+				.addFilterBefore(mailValidateCodeFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.formLogin()
 				.loginPage("/main/login-view")

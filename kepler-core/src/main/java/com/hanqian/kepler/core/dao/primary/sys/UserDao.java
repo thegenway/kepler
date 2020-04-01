@@ -29,6 +29,11 @@ public interface UserDao extends BaseDao<User, String> {
 	List<User> findUsersByPhone(String phone);
 
 	/**
+	 * 根据邮箱获取user
+	 */
+	List<User> findUsersByEmail(String mail);
+
+	/**
 	 * 根据部门获取用户
 	 */
 	@Query(value = "select * from sys_user user where user.state='Enable' and user.id in " +

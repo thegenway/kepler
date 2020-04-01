@@ -66,6 +66,7 @@ logging:
 kepler:
   formAuthUrl: /authentication/form
   smsAuthUrl: /authentication/mobile
+  mailAuthUrl: /authentication/mail
 
 justauth:
   enabled: true

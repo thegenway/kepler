@@ -12,6 +12,7 @@
             <div class="row">
                 <button type="button" id="btn_add_menu" class="btn btn-primary btn-sm">新建菜单</button>
                 <button type="button" id="init_menu_data" class="btn btn-info btn-sm pull-right">初始化菜单数据</button>
+                <button type="button" id="init_menu_test" class="btn btn-info btn-sm pull-right">我的测试</button>
             </div>
 
             <div class="table-jqgrid">
@@ -128,6 +129,12 @@
     //初始化菜单数据
     $("#init_menu_data").on("click", function(){
         __ajax_post("/main/menu/initMenuData", {}, function(data){
+            __toastr(data);
+        })
+    });
+
+    $("#init_menu_test").on("click", function(){
+        __ajax_get("/main/menu/myTest", {}, function(data){
             __toastr(data);
         })
     });

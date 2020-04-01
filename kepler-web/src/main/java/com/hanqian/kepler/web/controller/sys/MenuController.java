@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -246,6 +247,15 @@ public class MenuController extends BaseController {
 				initMenuDataSave(menu, subChildrenList);
 			}
 		}
+	}
+
+	@RequestMapping("myTest")
+	@ResponseBody
+	public AjaxResult myTest(){
+
+		MailUtil.send("641633367@qq.com", "测试", "邮件来自dzw测试", false);
+
+		return AjaxResult.success();
 	}
 
 }

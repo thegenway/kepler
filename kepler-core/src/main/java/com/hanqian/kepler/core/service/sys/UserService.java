@@ -39,6 +39,11 @@ public interface UserService extends BaseService<User, String> {
 	User findUsersByPhone(String phone);
 
 	/**
+	 * 根据邮箱获取user
+	 */
+	User findUsersByMail(String mail);
+
+	/**
 	 * 判断用户是否是系统管理员
 	 */
 	boolean isManager(User user);

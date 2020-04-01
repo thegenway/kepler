@@ -84,6 +84,31 @@
                 </div>
             </div>
 
+            <div class="panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-parent="#accordion" data-toggle="collapse" href="#collapseThree">邮箱登录</a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" id="collapseThree">
+                    <div class="panel-body">
+                        <form autocomplete="off">
+
+                            <div class="form-group">
+                                <input type="text" name="mail" class="form-control" placeholder="邮箱" value="641633367@qq.com">
+                            </div>
+
+                            <div class="input-group mar-btm">
+                                <input type="text" name="mailCode" placeholder="验证码" class="form-control" value="">
+                                <span class="input-group-btn"><button class="btn btn-primary" type="button" id="send-mailCode-button">发送验证码</button></span>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="button" id="mail_login">登录</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -162,6 +187,53 @@
         var smsCode = $("input[name='smsCode']").val();
         if(phone && smsCode){
             __ajax_post("/authentication/mobile", {mobile : phone, smsCode : smsCode}, function(data){
+                if(data.state === 1){
+                    location.href = "/main/index";
+                }else{
+                    __toastr_error(data.msg);
+                }
+            })
+        }
+    });
+
+
+    //发送邮箱验证码
+    $("#send-mailCode-button").on("click", function(){
+        var mail = $("input[name='mail']").val();
+        var reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        if(!reg.test(mail)){
+            __toastr_error("请输入正确的邮箱");
+            return false;
+        }
+
+        var $btn = $("#send-mailCode-button");
+        $btn.attr("disabled", true);
+        __ajax_post("/security/sms/createMail", {mail : mail}, function(data){
+            $btn.attr("disabled", false);
+            if(data && data.state === 1){
+                __toastr_success("验证码已经发送到您的邮箱");
+                $btn.attr("disabled", true);
+                var wait = 60;
+                var time = setInterval(function(){
+                    wait -= 1;
+                    $btn.text("再次发送("+wait+")");
+                    if(wait === 0){
+                        clearInterval(time);
+                        $btn.attr("disabled", false); $btn.text("发送验证码");
+                    }
+                }, 1000);
+            }else{
+                __toastr(data);
+            }
+        });
+    });
+
+    //邮箱登录
+    $("#mail_login").on("click", function(){
+        var mail = $("input[name='mail']").val();
+        var mailCode = $("input[name='mailCode']").val();
+        if(mail && mailCode){
+            __ajax_post("/authentication/mail", {mail : mail, mailCode : mailCode}, function(data){
                 if(data.state === 1){
                     location.href = "/main/index";
                 }else{

@@ -97,6 +97,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 	}
 
 	@Override
+	public User findUsersByMail(String mail) {
+		List<User> userList = userDao.findUsersByEmail(mail);
+		return userList.size() > 0 ? userList.get(0) : null;
+	}
+
+	@Override
 	public boolean isManager(User user) {
 		return user!=null && ObjectUtil.equal(BaseEnumManager.AccountTypeEnum.SystemManager, user.getAccountType());
 	}

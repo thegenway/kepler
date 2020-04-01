@@ -68,6 +68,12 @@
             <artifactId>justauth-spring-boot-starter</artifactId>
         </dependency>
 
+        <!--邮件服务-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+        </dependency>
+
 
 
         <dependency>
