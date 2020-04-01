@@ -3,8 +3,8 @@
 <div id="page-content">
     <div class="panel">
         <div class="panel-heading">
-            <h3 class="panel-title" th:if="${viewtype=='1'}">已办未结</h3>
-            <h3 class="panel-title" th:if="${viewtype=='2'}">已办已结</h3>
+            <h3 class="panel-title" th:if="${viewType=='1'}">已办未结</h3>
+            <h3 class="panel-title" th:if="${viewType=='2'}">已办已结</h3>
         </div>
         <div class="panel-body">
             <div class="jqGrid_wrapper">
@@ -17,7 +17,7 @@
 
 <script th:inline="javascript">
 
-    var type = [[${viewtype}]];
+    var type = [[${viewType}]];
 
     $(function(){
         init_grid_record();

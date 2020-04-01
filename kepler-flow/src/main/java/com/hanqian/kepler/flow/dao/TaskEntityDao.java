@@ -15,7 +15,9 @@ public interface TaskEntityDao extends BaseDao<TaskEntity, String> {
     /**
      * 查询已办已结，已办未结
      */
-    @Query(value = "select * from flow_task_entity task where task.id in (SELECT DISTINCT(log.taskEntity_id) FROM flow_process_log log where log.creator_id=:userId and log.taskEntity_id is not null order by log.createTime desc) and task.state='Enable' and task.processState in :processStateArr order by task.createTime desc", nativeQuery = true)
+    @Query(value = "select * from flow_task_entity task where task.id in (SELECT DISTINCT(log.taskEntity_id) FROM flow_process_log log where log.creator_id=:userId and log.taskEntity_id is not null order by log.createTime desc) and task.state='Enable' and task.processState in :processStateArr order by task.createTime desc ",
+            countQuery = "select count(*) from flow_task_entity task where task.id in (SELECT DISTINCT(log.taskEntity_id) FROM flow_process_log log where log.creator_id=:userId and log.taskEntity_id is not null order by log.createTime desc) and task.state='Enable' and task.processState in :processStateArr",
+            nativeQuery = true)
     Page<TaskEntity> findTaskEntityRecord(@Param("processStateArr") String[] processStateArr, @Param("userId") String userId, Pageable pageable);
 
 }

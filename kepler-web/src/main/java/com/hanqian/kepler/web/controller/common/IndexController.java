@@ -38,20 +38,32 @@ public class IndexController extends BaseController {
 	 */
 	@GetMapping("weather/{cityId}")
 	@ResponseBody
-	public Object weather(@PathVariable String cityId){
-		Object obj = redisUtil.get("weather_"+cityId);
-		if(ObjectUtil.isNotNull(obj)){
-			return JSONUtil.parseObj(obj);
-		}else{
-			String re = HttpUtil.get(baseWeatherUrl + cityId);
-			if(JSONUtil.isJsonObj(re)){
-				JSONObject jsonObject = JSONUtil.parseObj(re);
-				if(StrUtil.equals("200", Convert.toStr(jsonObject.get("status")))){
-					redisUtil.set("weather_"+cityId, re, 60*60*2); //放进redis存2小时
-				}
-			}
-			return JSONUtil.parseObj(re);
+	public Object weather(@PathVariable String cityId, String ifUpdate){
+		String re = null;
+
+		//如果强制刷新，则从接口获取
+		if(StrUtil.equals("1", ifUpdate)){
+			re = HttpUtil.get(baseWeatherUrl + cityId);
 		}
+
+		//先从redis中获取,如果存在则直接返回结果
+		if(StrUtil.isBlank(re)){
+			Object obj = redisUtil.get("weather_"+cityId);
+			re = ObjectUtil.isNotNull(obj) ? Convert.toStr(obj) : null;
+			if(StrUtil.isNotBlank(re)) return JSONUtil.parseObj(re);
+		}
+
+		//如果redis中没有，则再从接口中获取，并放到缓存中2小时
+		if(StrUtil.isBlank(re)){
+			re = HttpUtil.get(baseWeatherUrl + cityId);
+		}
+
+		JSONObject jsonObject = JSONUtil.parseObj(re);
+		if(StrUtil.equals("200", Convert.toStr(jsonObject.get("status")))){
+			redisUtil.set("weather_"+cityId, re, 60*60*2); //放进redis存2小时
+		}
+
+		return JSONUtil.parseObj(re);
 	}
 
 }

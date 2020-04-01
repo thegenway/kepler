@@ -140,6 +140,7 @@ public class TaskEntityController extends BaseController {
         map.put("tableName", taskEntity.getTableName());
         map.put("createTime", DateUtil.format(taskEntity.getCreateTime(), "yyyy-MM-dd HH:mm"));
         map.put("lastUser.name", taskEntity.getLastUser()!=null ? taskEntity.getLastUser().getName() : "");
+        map.put("lastUserName", taskEntity.getLastUser()!=null ? taskEntity.getLastUser().getName() : "");
         map.put("nextUserNames", taskEntity.getNextUserNames());
         map.put("readUrl", StrUtil.lowerFirst(StrUtil.subAfter(taskEntity.getPath(), ".", true))+"/read?keyId="+taskEntity.getKeyId());
         return map;

@@ -53,9 +53,12 @@
         <div class="col-md-7 col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
+                    <div class="panel-control">
+                        <button type="button" id="btn-index-weather-update" class="btn" style="margin-top: 10px" title="刷新" onclick="init_index_weather('1')"><i class="fa fa-refresh fa-lg"></i></button>
+                    </div>
                     <h3 class="panel-title">近期天气</h3>
                 </div>
-                <div class="panel-body" style="height: 250px">
+                <div class="panel-body" style="height: 250px" id="index-weather-container">
                     <div class="media pad-all bord-btm">
                         <div class="media-left">
                             <canvas id="weather-0" width="64" height="64"></canvas>
@@ -112,7 +115,7 @@
                     </div>
                     <h3 class="panel-title">公告通知</h3>
                 </div>
-                <div class="panel-body" style="height: 250px">
+                <div class="panel-body" style="height: 250px" id="index-notice-container">
                     <table class="mar-no table table-hover">
                         <thead>
                         <tr>
@@ -130,6 +133,34 @@
 
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-control">
+                        <button type="button" id="btn-index-todo-more" class="btn" style="margin-top: 10px" title="更多" onclick="window.location.hash='menu/flow/todo'"><i class="fa fa-reorder fa-lg"></i></button>
+                    </div>
+                    <h3 class="panel-title">待办事项</h3>
+                </div>
+                <div class="panel-body" id="index-todo-container">
+                    <table class="mar-no table table-hover">
+                        <thead>
+                        <tr>
+                            <th width="25%">所属模块</th>
+                            <th width="25%">操作表</th>
+                            <th width="25%">上一步操作人</th>
+                            <th width="25%">创建时间</th>
+                        </tr>
+                        </thead>
+                        <tbody id="index-todo-tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 </body>
@@ -142,24 +173,40 @@
 </tr>
 </script>
 
+<!--待办事项数据模板-->
+<script id="index-todo-list-temp" type="text/x-jquery-tmpl">
+<tr id="${id}" style="cursor: pointer" {{if keyId!=''}}onclick="__layX_html_read('${keyId}', '${tableName}', '../${readUrl}')"{{/if}}>
+    <td>${module}</td>
+    <td>${tableName}</td>
+    <td>${lastUserName}</td>
+    <td>${createTime}</td>
+</tr>
+</script>
+
 <script th:inline="javascript">
 
     $(function(){
         //天气预报
-        init_index_weather();
+        init_index_weather("0");
 
         //公告通知
         init_index_notice();
+
+        //待办事项
+        init_index_todo();
     });
 
     //初始化天气预报
-    function init_index_weather(){
+    function init_index_weather(ifUpdate){
         var skyconsOptions = {
             "color": "#acb2b7",
             "resizeClear": true
         };
 
-        __ajax_get("/common/index/weather/101020100", {}, function(data){
+        __panelOverlay("index-weather-container");
+        __panelOverlay_show("index-weather-container");
+        __ajax_get("/common/index/weather/101020100", {ifUpdate : ifUpdate}, function(data){
+            __panelOverlay_hide("index-weather-container");
             if(data && data.status === 200){
                 var weatherList = data.data.forecast;
                 $("#weather-location").text(data.cityInfo.city);
@@ -227,13 +274,34 @@
 
     //公告通知数据
     function init_index_notice(){
+        __panelOverlay("index-notice-container");
+        __panelOverlay_show("index-notice-container");
         __ajax_get("/notice/list", {ifPage : true, page: 1, rows : 5}, function(data){
+            __panelOverlay_hide("index-notice-container");
             for(var i=0;i<5;i++){
                 if(data.dataRows.length>i){
                     $("#index-notice-list-temp").tmpl(data.dataRows[i]).appendTo("#index-notice-tbody");
                 }else{
                     var emptyObj = {id : "", name : "", finishTime : "&nbsp"};
                     $("#index-notice-list-temp").tmpl(emptyObj).appendTo("#index-notice-tbody");
+                }
+            }
+        })
+    }
+
+    //待办事项数据
+    function init_index_todo(){
+        __panelOverlay("index-todo-container");
+        __panelOverlay_show("index-todo-container");
+        __ajax_get("/flow/taskEntity/list_toDo", {ifPage : true, page: 1, rows : 5}, function(data){
+            __panelOverlay_hide("index-todo-container");
+            $("#index-todo-count").text(data.dataRows.length);
+            for(var i=0;i<5;i++){
+                if(data.dataRows.length>i){
+                    $("#index-todo-list-temp").tmpl(data.dataRows[i]).appendTo("#index-todo-tbody");
+                }else{
+                    var emptyObj = {id : "", keyId : "", module : "&nbsp", lastUserName:""};
+                    $("#index-todo-list-temp").tmpl(emptyObj).appendTo("#index-todo-tbody");
                 }
             }
         })
