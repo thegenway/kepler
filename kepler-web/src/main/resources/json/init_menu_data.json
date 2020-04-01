@@ -1,0 +1,145 @@
+[
+  {
+    "name": "组织结构",
+    "menuType": "目录",
+    "iconCode": "fa fa-group",
+    "orderNum": "1",
+    "url": "",
+    "target": "_self",
+    "isManageMenu": "1",
+    "children": [
+      {
+        "name": "成员管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "1",
+        "url": "menu/sys/member",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "部门管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "2",
+        "url": "menu/sys/department",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "岗位管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "3",
+        "url": "menu/sys/post",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "职权管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "4",
+        "url": "menu/sys/power",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "群组管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "5",
+        "url": "menu/sys/group",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "系统管理",
+    "menuType": "目录",
+    "iconCode": "fa fa-gears",
+    "orderNum": "2",
+    "url": "",
+    "target": "_self",
+    "isManageMenu": "1",
+    "children": [
+      {
+        "name": "菜单管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "1",
+        "url": "menu/sys/menu",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "系统字典",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "2",
+        "url": "menu/sys/dict",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "流程管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "3",
+        "url": "menu/flow/processBrief",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "文档管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "4",
+        "url": "menu/flow/taskEntity",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "公告通知",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "5",
+        "url": "menu/sys/notice",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "天天向上",
+    "menuType": "目录",
+    "iconCode": "fa fa-mortar-board",
+    "orderNum": "3",
+    "url": "",
+    "target": "_self",
+    "isManageMenu": "0",
+    "children": [
+      {
+        "name": "班级管理",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "1",
+        "url": "menu/edu/classes",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      }
+    ]
+  }
+]

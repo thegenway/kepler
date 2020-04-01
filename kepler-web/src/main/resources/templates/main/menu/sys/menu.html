@@ -10,9 +10,8 @@
         <div class="panel-body">
 
             <div class="row">
-                <btn id="btn_add_menu" class="btn btn-primary btn-sm" ${isCreate}>
-                    <i class="ti-plus"> </i> 新建菜单
-                </btn>
+                <button type="button" id="btn_add_menu" class="btn btn-primary btn-sm">新建菜单</button>
+                <button type="button" id="init_menu_data" class="btn btn-info btn-sm pull-right">初始化菜单数据</button>
             </div>
 
             <div class="table-jqgrid">
@@ -125,6 +124,13 @@
             __toastr(data);
         })
     }
+
+    //初始化菜单数据
+    $("#init_menu_data").on("click", function(){
+        __ajax_post("/main/menu/initMenuData", {}, function(data){
+            __toastr(data);
+        })
+    });
 
 </script>
 

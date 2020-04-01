@@ -1,9 +1,15 @@
 package com.hanqian.kepler.web.controller.sys;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.entity.primary.sys.Menu;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.flow.entity.User;
@@ -14,11 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -197,6 +201,51 @@ public class MenuController extends BaseController {
 		menu.setVisible(visible);
 		menuService.save(menu);
 		return AjaxResult.success("更新成功");
+	}
+
+	// ==============================================================================================================
+
+	/**
+	 * 初始化菜单数据
+	 */
+	@PostMapping("initMenuData")
+	@ResponseBody
+	public AjaxResult initMenuData(){
+		//先检测系统中是否存在有可用菜单，有则不允许初始化
+		long count = menuService.count(SpecificationFactory.eq("state", BaseEnumManager.StateEnum.Enable));
+		if(count > 0){
+			return AjaxResult.error("系统中存在有可用菜单，不允许执行初始化操作");
+		}
+
+		String path = "/json/init_menu_data.json";
+		File file = new File(this.getClass().getResource(path).getPath());
+		JSONArray jsonArray = JSONUtil.readJSONArray(file, CharsetUtil.charset("UTF-8"));
+		initMenuDataSave(null, jsonArray);
+		return AjaxResult.success("初始化成功");
+	}
+
+	//递归保存
+	private void initMenuDataSave(Menu parent, JSONArray childrenList){
+		for(int i=0; i<childrenList.size(); i++){
+			JSONObject menuObject = childrenList.getJSONObject(i);
+			Menu menu = new Menu();
+			menu.setName(menuObject.getStr("name"));
+			menu.setMenuType(menuObject.getStr("menuType"));
+			menu.setIconCode(menuObject.getStr("iconCode"));
+			menu.setOrderNum(Convert.toInt(menuObject.getStr("orderNum")));
+			menu.setUrl(menuObject.getStr("url"));
+			menu.setTarget(menuObject.getStr("target"));
+			menu.setLevel(parent!=null ? parent.getLevel() + 1 : 1);
+			menu.setIsManageMenu(Convert.toInt(menuObject.getStr("isManageMenu")));
+			if(parent != null){
+				menu.setParent(parent);
+			}
+			menu = menuService.save(menu);
+			JSONArray subChildrenList = menuObject.getJSONArray("children");
+			if(subChildrenList!=null && subChildrenList.size()>0){
+				initMenuDataSave(menu, subChildrenList);
+			}
+		}
 	}
 
 }
