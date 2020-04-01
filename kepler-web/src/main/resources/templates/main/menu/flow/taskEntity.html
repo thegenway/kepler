@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">文档管理</h3>
+        </div>
+        <div class="panel-body">
+            <div class="jqGrid_wrapper">
+                <table id="taskEntity_table"></table>
+                <div id="taskEntity_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        init_grid_taskEntity();
+    });
+
+    function init_grid_taskEntity(){
+        __init_jqgrid('taskEntity_table', 'taskEntity_page', '/flow/taskEntity/list_manage',
+            ['keyId','path','processState','state','所属模块', '操作表','创建者','创建时间', '操作', 'id', 'readUrl'],
+            [
+                {name: 'keyId', index: 'keyId', width: 280, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'path', index: 'path', width: 340, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'processState', index: 'processState', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'state', index: 'state', width: 80, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'module', index: 'module', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'tableName', index: 'tableName', width: 100, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'creator.name', index: 'creator.name', width: 100, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'createTime', index: 'createTime', width: 150, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 200, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true},
+                {name: 'readUrl', index: 'readUrl', width: 100, hidden: true}
+            ],true,{
+                rowNum : 20,
+                ondblClickRow:function(rowId, iRow, iCol, e){
+                    var rowDatas = $("#taskEntity_table").jqGrid('getRowData', rowId);
+                    __layX_html_read(rowDatas.keyId, rowDatas.tableName, "../"+rowDatas.readUrl);
+                }
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        var state = rowObject.state;
+        cellvalue = '<button '+(state=="Delete" ? "disabled" : "")+' class="btn btn-danger btn-sm" onclick="fn_taskEntity_delete(\'' + id + '\');">删除</button>';
+        cellvalue += '<button '+(state=="Enable" ? "disabled" : "")+' class="btn btn-success btn-sm" onclick="fn_taskEntity_enable(\'' + id + '\');">恢复</button>';
+        return cellvalue;
+    }
+
+    //删除
+    function fn_taskEntity_delete(id){
+        __confirm_dialog("谨慎操作！","此操作会删除原始文档、待办信息、已办信息，确认要继续删除吗？", function(){
+            __ajax_post("/flow/taskEntity/delete/"+id, {}, function(data){
+                __toastr(data);
+                __reflash_jqgrid("taskEntity_table");
+            })
+        })
+    }
+
+    //恢复
+    function fn_taskEntity_enable(id){
+        __confirm_dialog("恢复","将删除的文档和相关的待办已办信息恢复正常", function(){
+            __ajax_post("/flow/taskEntity/enable/"+id, {}, function(data){
+                __toastr(data);
+                __reflash_jqgrid("taskEntity_table");
+            })
+        })
+    }
+
+</script>
+
+</html>

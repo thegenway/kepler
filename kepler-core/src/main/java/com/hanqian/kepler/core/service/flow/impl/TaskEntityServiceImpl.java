@@ -5,6 +5,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessLogService;
@@ -25,6 +27,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -40,6 +45,9 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     private ProcessBriefService processBriefService;
     @Autowired
     private UserService userService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public BaseDao<TaskEntity, String> getBaseDao() {
@@ -174,5 +182,18 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
             processStateArr = new String[]{FlowEnum.ProcessState.Finished.name()};
         }
         return taskEntityDao.findTaskEntityRecord(processStateArr, user.getId(), pageable);
+    }
+
+    @Override
+    @Transactional
+    public AjaxResult setStateOfSelf(BaseEnumManager.StateEnum state, String keyId, String className) {
+        if(ObjectUtil.hasEmpty(state,keyId,className)){
+            return AjaxResult.error("存在空值");
+        }
+
+        String hql = "update "+className+" set state=?0 where id=?1";
+        int re = em.createQuery(hql).setParameter(0, state).setParameter(1, keyId).executeUpdate();
+        System.out.println("执行赋值的结果:" + re);
+        return AjaxResult.success();
     }
 }

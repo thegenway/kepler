@@ -1,6 +1,8 @@
 package com.hanqian.kepler.core.service.flow;
 
 import com.hanqian.kepler.common.base.service.BaseService;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
@@ -46,7 +48,13 @@ public interface TaskEntityService extends BaseService<TaskEntity, String> {
 
     /**
      * 查询已办已结，已办未结
+     * @param type 1已办未结  2已办已结
      */
     Page<TaskEntity> findTaskEntityRecord(Integer type, User user, Pageable pageable);
+
+    /**
+     * 更改文档状态
+     */
+    AjaxResult setStateOfSelf(BaseEnumManager.StateEnum state, String keyId, String className);
 
 }

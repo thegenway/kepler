@@ -1,6 +1,7 @@
 package com.hanqian.kepler.web.controller.flow;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
@@ -29,9 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -131,6 +130,21 @@ public class TaskEntityController extends BaseController {
         return getJqGridReturn(dataRows, jqGridContent.getPage());
     }
 
+    /**
+     * 文档管理 list
+     */
+    @GetMapping("list_manage")
+    @ResponseBody
+    public JqGridReturn list_manage(@CurrentUser User user, JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters){
+        Pageable pageable = getJqGridPageable(pager);
+        List<Rule> rules = getJqGridSearch(filters, false);
+        JqGridContent<TaskEntity> jqGridContent = taskEntityService.getJqGridContent(rules, pageable);
+
+        List<Map<String, Object>> dataRows = new ArrayList<>();
+        jqGridContent.getList().forEach(taskEntity -> dataRows.add(getTaskEntityMap(taskEntity)));
+        return getJqGridReturn(dataRows, jqGridContent.getPage());
+    }
+
     //公共封装taskEntity map
     private Map<String, Object> getTaskEntityMap(TaskEntity taskEntity){
         Map<String, Object> map = new HashMap<>();
@@ -143,6 +157,58 @@ public class TaskEntityController extends BaseController {
         map.put("lastUserName", taskEntity.getLastUser()!=null ? taskEntity.getLastUser().getName() : "");
         map.put("nextUserNames", taskEntity.getNextUserNames());
         map.put("readUrl", StrUtil.lowerFirst(StrUtil.subAfter(taskEntity.getPath(), ".", true))+"/read?keyId="+taskEntity.getKeyId());
+
+        map.put("processState", taskEntity.getProcessState()!=null ? taskEntity.getProcessState().name() : "");
+        map.put("state", taskEntity.getState()!=null ? taskEntity.getState().name() : "");
+        map.put("path", taskEntity.getPath());
+        map.put("creator.name", taskEntity.getCreator()!=null ? taskEntity.getCreator().getName() : "");
         return map;
     }
+
+    /**
+     * 删除文档
+     */
+    @PostMapping("delete/{id}")
+    @ResponseBody
+    public AjaxResult delete(@PathVariable String id){
+        TaskEntity taskEntity = taskEntityService.get(id);
+        if(taskEntity == null) return AjaxResult.error("未找到对应TaskEntity");
+
+        if(ObjectUtil.equal(taskEntity.getState(), BaseEnumManager.StateEnum.Delete)){
+            return AjaxResult.error("这条文档本来就是删除状态");
+        }
+
+        //删除原始文档
+        String className = StrUtil.subAfter(taskEntity.getPath(), ".", true);
+        taskEntityService.setStateOfSelf(BaseEnumManager.StateEnum.Delete, taskEntity.getKeyId(), className);
+
+        //删除taskEntity
+        taskEntity.setState(BaseEnumManager.StateEnum.Delete);
+        taskEntityService.save(taskEntity);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 恢复文档
+     */
+    @PostMapping("enable/{id}")
+    @ResponseBody
+    public AjaxResult enable(@PathVariable String id){
+        TaskEntity taskEntity = taskEntityService.get(id);
+        if(taskEntity == null) return AjaxResult.error("未找到对应TaskEntity");
+
+        if(ObjectUtil.equal(taskEntity.getState(), BaseEnumManager.StateEnum.Enable)){
+            return AjaxResult.error("这条文档本来就是删除状态");
+        }
+
+        //删除原始文档
+        String className = StrUtil.subAfter(taskEntity.getPath(), ".", true);
+        taskEntityService.setStateOfSelf(BaseEnumManager.StateEnum.Enable, taskEntity.getKeyId(), className);
+
+        //删除taskEntity
+        taskEntity.setState(BaseEnumManager.StateEnum.Enable);
+        taskEntityService.save(taskEntity);
+        return AjaxResult.success();
+    }
+
 }
