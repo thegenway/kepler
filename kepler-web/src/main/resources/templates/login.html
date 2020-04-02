@@ -41,6 +41,8 @@
                             <div class="checkbox pad-btm text-left">
                                 <input id="demo-form-checkbox" class="magic-checkbox" type="checkbox" name="remember-me">
                                 <label for="demo-form-checkbox">记住我</label>
+
+                                <a id="login-forget-password-btn" href="javascript:void(0)" class="btn-link text-info pull-right" >忘记密码</a>
                             </div>
                             <button class="btn btn-primary btn-lg btn-block" type="button" id="form_login">登录</button>
                         </form>
@@ -241,6 +243,11 @@
                 }
             })
         }
+    });
+
+    //忘记密码
+    $("#login-forget-password-btn").on("click", function(){
+        window.location.href = "/main/forgetPassword";
     });
 
 </script>

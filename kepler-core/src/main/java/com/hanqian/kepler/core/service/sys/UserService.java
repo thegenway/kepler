@@ -27,6 +27,7 @@ public interface UserService extends BaseService<User, String> {
 	 * 修改密码
 	 */
 	AjaxResult updatePasswordByPassword(User user, String oldPassword, String newPassword);
+	AjaxResult updatePasswordByPassword(User user, String newPassword);
 
 	/**
 	 * 根据账号获取user

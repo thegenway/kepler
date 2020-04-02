@@ -51,6 +51,9 @@ public class ValidateCodeController extends BaseController {
 		Date expireTime = DateUtil.offsetMinute(new Date(), 5);
 		ValidateCode validateCode = new ValidateCode(code, expireTime);
 
+		//发送短信步骤：
+		//...
+
 		//将验证码放到session中
 		request.getSession().setAttribute(SESSION_CODE_KEY_SMS, validateCode);
 		return AjaxResult.success(StrUtil.format("验证码为【{}】，有效期5分钟", code));
@@ -71,7 +74,11 @@ public class ValidateCodeController extends BaseController {
 		ValidateCode validateCode = new ValidateCode(code, expireTime);
 
 		//发送邮件
-		MailUtil.send(mail, "请查看您的邮箱登录验证码", StrUtil.format("您的验证码是【{}】", validateCode.getCode()), false);
+		try {
+			MailUtil.send(mail, "请查看您的邮箱登录验证码", StrUtil.format("您的验证码是【{}】", validateCode.getCode()), false);
+		}catch (Exception e){
+			return AjaxResult.error("系统邮件服务配置出错：");
+		}
 
 		//将验证码放到session中
 		request.getSession().setAttribute(SESSION_CODE_KEY_MAIL, validateCode);

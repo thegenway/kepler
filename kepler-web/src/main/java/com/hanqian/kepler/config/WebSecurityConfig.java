@@ -119,6 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/security/**",
 						"/main/login",
 						"/main/login-view",
+						"/main/forgetPassword",
 						"/favicon.ico").permitAll()
 				.anyRequest()
 				.authenticated()
