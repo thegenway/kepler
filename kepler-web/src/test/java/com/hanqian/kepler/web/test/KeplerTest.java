@@ -13,11 +13,9 @@ import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.common.utils.RedisUtil;
 import com.hanqian.kepler.core.entity.primary.education.Classes;
-import com.hanqian.kepler.core.entity.primary.education.Student;
 import com.hanqian.kepler.core.entity.primary.sys.Department;
 import com.hanqian.kepler.core.entity.primary.sys.Notice;
 import com.hanqian.kepler.core.service.edu.ClassesService;
-import com.hanqian.kepler.core.service.edu.StudentService;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
@@ -57,8 +55,6 @@ public class KeplerTest {
 	private UserService userService;
 	@Autowired
 	private DepartmentService departmentService;
-	@Autowired
-	private StudentService studentService;
 	@Autowired
 	private ProcessBriefService processBriefService;
 	@Autowired
@@ -149,32 +145,7 @@ public class KeplerTest {
 
 	@Test
 	public void enumTest(){
-		Student student = new Student();
-		student.setName("小明");
-		student.setBirthday(new Date());
-		student.setGender(BaseEnumManager.SexEnum.female);
-		student.setStudentNo("12345");
-		student.setEnglishSource(99.9f);
 
-		Object o = null;
-		try{
-			o = ReflectUtil.invoke(student, "getGendwer");
-		}catch (UtilException e){
-			System.out.println("false!!!!!!!");
-		}
-		if(o != null){
-			if(o instanceof String){
-				System.out.println("string:" + o);
-			}else if(o instanceof Date){
-				System.out.println("date:" + DateUtil.formatDateTime((Date)o));
-			}else if(o instanceof Number){
-				System.out.println("number:" + new BigDecimal(NumberUtil.toStr((Number)o)));
-			}else if(o instanceof Enum) {
-				System.out.println(o.toString());
-			}
-		}
-
-		System.out.println("*************************");
  	}
 
  	@Test

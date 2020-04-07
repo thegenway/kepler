@@ -603,7 +603,7 @@ function __department_dialog_select(dialogId, deptIds, callback){
 
 /* validate 封装 */
 /*======================================*/
-
+//digits:true整数
 function __init_validate(form_id, opt ,wx) {
     var defaults = {
         ignore: "",
@@ -1422,7 +1422,12 @@ function __flow_duty_select(entityData){
     });
 }
 
-//流程input页面处理
+/**
+ * 流程input页面处理
+ * @param entityData 实体信息
+ * @param save 保存方法fun
+ * @param commit 提交方法fun
+ */
 function __flow_button_input_handle(entityData, save, commit){
     if(!entityData.step){entityData.step = 1}
     if(!entityData.keyId){entityData.keyId = ""}
@@ -1455,7 +1460,14 @@ function __flow_button_input_handle(entityData, save, commit){
     })
 }
 
-//流程input页面处理
+/**
+ * 流程read页面处理
+ * @param entityData 实体信息
+ * @param approve 审批通过方法fun
+ * @param back 退回方法fun
+ * @param deny 否决方法fun
+ * @param edit 编辑按钮方法fun
+ */
 function __flow_button_read_handle(entityData, approve, back, deny, edit){
     var url = "/flow/taskEntity/getFlowInfo";
     var p = {keyId : entityData.keyId};
@@ -1468,8 +1480,8 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
         //设置审批意见框
         if(data.processState == "Running" && data.flowButtonList.length>0){
             var textarea = '<hr/><div class="form-group">' +
-                '<label class="col-md-3 control-label">审批意见</label>' +
-                '<div class="col-md-7">' +
+                '<label class="col-md-2 control-label">审批意见</label>' +
+                '<div class="col-md-8">' +
                 '<textarea id="flowComment" name="flowComment"></textarea>'+
                 '</div>' +
                 '</div>';

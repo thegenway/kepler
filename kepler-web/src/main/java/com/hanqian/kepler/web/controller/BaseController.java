@@ -4,11 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.NameValueVo;
 import com.hanqian.kepler.common.bean.jqgrid.*;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
+import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.common.jpa.specification.Rule;
-import com.hanqian.kepler.core.entity.primary.sys.Department;
-import com.hanqian.kepler.core.entity.primary.sys.Group;
-import com.hanqian.kepler.core.entity.primary.sys.Post;
-import com.hanqian.kepler.core.entity.primary.sys.Power;
+import com.hanqian.kepler.core.entity.primary.sys.*;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.TaskEntityService;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
@@ -218,6 +216,16 @@ public class BaseController implements Serializable {
 		flowParticipantVo.setSuperior(flowParticipantInput.getSuperior());
 		flowParticipantVo.setLeader(flowParticipantInput.getLeader());
 		return flowParticipantVo;
+	}
+
+	/**
+	 * 获取系统字典列表
+	 */
+	protected List<Dict> getDictList(DictEnum dictEnum){
+		if(dictEnum == null){
+			return new ArrayList<>();
+		}
+		return dictService.findDictList(dictEnum);
 	}
 
 }

@@ -59,14 +59,14 @@ public class ClassesController extends BaseController {
     public String read(String keyId, Model model){
         Classes classes = classesService.get(keyId);
         model.addAttribute("classes", classes);
-        return "main/edu/classes_read";
+        return "main/education/classes_read";
     }
 
     @GetMapping("input")
     public String input(String keyId, Model model){
         Classes classes = classesService.get(keyId);
         model.addAttribute("classes", classes);
-        return "main/edu/classes_input";
+        return "main/education/classes_input";
     }
 
     private Classes setData(User user, String keyId, String name, Integer grade,

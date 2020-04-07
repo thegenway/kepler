@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="classes-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">楼宇基建信息<span id="title-duty-name-buildInfo" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_buildInfo_input'+${buildInfo?.id}" class="form-horizontal" autocomplete="off">
+            <input type="hidden" name="keyId" th:value="${buildInfo?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">楼编号<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="buildNo" id="buildNo" th:value="${buildInfo?.buildNo}" class="form-control" placeholder="楼编号">
+                </div>
+
+                <label class="col-md-2 control-label">楼域名<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="name" id="name" th:value="${buildInfo?.name}" class="form-control" placeholder="楼域名">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">曾用名</label>
+                <div class="col-md-3">
+                    <input type="text" name="onceName" id="onceName" th:value="${buildInfo?.onceName}" class="form-control" placeholder="曾用名">
+                </div>
+
+                <label class="col-md-2 control-label">位置<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="location" id="location" th:value="${buildInfo?.location}" class="form-control" placeholder="位置">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">建筑面积<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="buildMeasure" id="buildMeasure" th:value="${buildInfo?.buildMeasure}" class="form-control" placeholder="建筑面积">
+                </div>
+
+                <label class="col-md-2 control-label">建筑高度<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="buildHeight" id="buildHeight" th:value="${buildInfo?.buildHeight}" class="form-control" placeholder="建筑高度">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">地上层数<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="number" name="floorUpCount" id="floorUpCount" th:value="${buildInfo?.floorUpCount}" class="form-control" placeholder="地上层数">
+                </div>
+
+                <label class="col-md-2 control-label">地下层数<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="number" name="floorDownCount" id="floorDownCount" th:value="${buildInfo?.floorDownCount}" class="form-control" placeholder="地下层数">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否存在中间层<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <input type="radio" name="ifHasMiddleFloor" id="ifHasMiddleFloor1" value="1" class="magic-radio" th:checked="${buildInfo?.ifHasMiddleFloor == 1}" >
+                        <label for="ifHasMiddleFloor1">是</label>
+                        <input type="radio" name="ifHasMiddleFloor" id="ifHasMiddleFloor0" value="0" class="magic-radio" th:checked="${buildInfo?.ifHasMiddleFloor == 0}" >
+                        <label for="ifHasMiddleFloor0">否</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="floorOfMiddleDiv" class="form-group" th:hidden="${buildInfo==null || buildInfo.ifHasMiddleFloor!=1}" >
+                <label class="col-md-2 control-label">中间层</label>
+                <div class="col-md-8">
+                    <div class="checkbox" id="floorOfMiddleCheckBoxDiv">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">竣工时间<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="completedDate" id="completedDate" th:value="${#dates.format(buildInfo?.completedDate, 'yyyy-MM')}" class="form-control" placeholder="竣工时间">
+                </div>
+
+                <label class="col-md-2 control-label">投资额（万元）<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="investmentAmount" id="investmentAmount" th:value="${buildInfo?.investmentAmount}" class="form-control" placeholder="投资额（万元）">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">土建安装工程造价<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="installCost" id="installCost" th:value="${buildInfo?.installCost}" class="form-control" placeholder="土建安装工程造价">
+                </div>
+
+                <label class="col-md-2 control-label">造价依据<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="costBasisDictId" name="costBasisDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${costBasisDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.costBasisDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">产权拥有者<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="propertyOwner" id="propertyOwner" th:value="${buildInfo?.propertyOwner}" class="form-control" placeholder="产权拥有者">
+                </div>
+
+                <label class="col-md-2 control-label">建筑用途<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="buildUseDictId" name="buildUseDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${buildUseDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.buildUseDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">建筑结构<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="buildStructureDictId" name="buildStructureDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${buildStructureDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.buildStructureDict}"></option>
+                    </select>
+                </div>
+
+                <label class="col-md-2 control-label">建筑状态<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="buildStateDictId" name="buildStateDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${buildStateDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.buildStateDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">房屋防水等级<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="waterproofLevelDictId" name="waterproofLevelDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${waterproofLevelDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.waterproofLevelDict}"></option>
+                    </select>
+                </div>
+
+                <label class="col-md-2 control-label">抗震烈度<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="seismicLevelDictId" name="seismicLevelDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${seismicLevelDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfo?.seismicLevelDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">门用材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfDoor" id="materialOfDoor1"  value="木门" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfDoor, ''),'木门')}" >
+                        <label for="materialOfDoor1">木门</label>
+                        <input type="checkbox" name="materialOfDoor" id="materialOfDoor2"  value="塑钢门" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfDoor, ''),'塑钢门')}" >
+                        <label for="materialOfDoor2">塑钢门</label>
+                        <input type="checkbox" name="materialOfDoor" id="materialOfDoor3"  value="铝合金门" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfDoor, ''),'铝合金门')}" >
+                        <label for="materialOfDoor3">铝合金门</label>
+                        <input type="checkbox" name="materialOfDoor" id="materialOfDoor4"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfDoor, ''),'其他')}" >
+                        <label for="materialOfDoor4">其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">窗用材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfWindow" id="materialOfWindow1"  value="塑钢窗" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWindow, ''),'塑钢窗')}" >
+                        <label for="materialOfWindow1">塑钢窗</label>
+                        <input type="checkbox" name="materialOfWindow" id="materialOfWindow2"  value="铝合金窗" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWindow, ''),'铝合金窗')}" >
+                        <label for="materialOfWindow2">铝合金窗</label>
+                        <input type="checkbox" name="materialOfWindow" id="materialOfWindow3"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWindow, ''),'其他')}" >
+                        <label for="materialOfWindow3">其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">墙用材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfWall" id="materialOfWall1"  value="涂料" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWall, ''),'涂料')}" >
+                        <label for="materialOfWall1">涂料</label>
+                        <input type="checkbox" name="materialOfWall" id="materialOfWall2"  value="油漆" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWall, ''),'油漆')}" >
+                        <label for="materialOfWall2">油漆</label>
+                        <input type="checkbox" name="materialOfWall" id="materialOfWall3"  value="石材" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWall, ''),'石材')}" >
+                        <label for="materialOfWall3">石材</label>
+                        <input type="checkbox" name="materialOfWall" id="materialOfWall4"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfWall, ''),'其他')}" >
+                        <label for="materialOfWall4">其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">地坪材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor1"  value="木地板" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'木地板')}" >
+                        <label for="materialOfFloor1">木地板</label>
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor2"  value="石材" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'石材')}" >
+                        <label for="materialOfFloor2">石材</label>
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor3"  value="磨石子" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'磨石子')}" >
+                        <label for="materialOfFloor3">磨石子</label>
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor4"  value="水泥" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'水泥')}" >
+                        <label for="materialOfFloor4">水泥</label>
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor5"  value="PVC" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'PVC')}" >
+                        <label for="materialOfFloor5">PVC</label>
+                        <input type="checkbox" name="materialOfFloor" id="materialOfFloor6"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfFloor, ''),'其他')}" >
+                        <label for="materialOfFloor6">其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">外墙材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall1"  value="玻璃幕墙" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'玻璃幕墙')}" >
+                        <label for="materialOfOuterWall1">玻璃幕墙</label>
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall2"  value="石材" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'石材')}" >
+                        <label for="materialOfOuterWall2">石材</label>
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall3"  value="面砖" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'面砖')}" >
+                        <label for="materialOfOuterWall3">面砖</label>
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall4"  value="涂料" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'涂料')}" >
+                        <label for="materialOfOuterWall4">涂料</label>
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall5"  value="马赛克贴面" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'马赛克贴面')}" >
+                        <label for="materialOfOuterWall5">马赛克贴面</label>
+                        <input type="checkbox" name="materialOfOuterWall" id="materialOfOuterWall6"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfOuterWall, ''),'其他')}" >
+                        <label for="materialOfOuterWall6">其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">屋内顶材料</label>
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        <input type="checkbox" name="materialOfRoof" id="materialOfRoof1"  value="涂料" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfRoof, ''),'涂料')}" >
+                        <label for="materialOfRoof1">涂料</label>
+                        <input type="checkbox" name="materialOfRoof" id="materialOfRoof2"  value="石膏板" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfRoof, ''),'石膏板')}" >
+                        <label for="materialOfRoof2">石膏板</label>
+                        <input type="checkbox" name="materialOfRoof" id="materialOfRoof3"  value="矿棉板" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfRoof, ''),'矿棉板')}" >
+                        <label for="materialOfRoof3">矿棉板</label>
+                        <input type="checkbox" name="materialOfRoof" id="materialOfRoof4"  value="铝合金板" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfRoof, ''),'铝合金板')}" >
+                        <label for="materialOfRoof4">铝合金板</label>
+                        <input type="checkbox" name="materialOfRoof" id="materialOfRoof5"  value="其他" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(buildInfo?.materialOfRoof, ''),'其他')}" >
+                        <label for="materialOfRoof5">其他</label>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!--中间层 模板-->
+<script id="buildInfo-floorOfMiddle-list-temp" type="text/x-jquery-tmpl">
+    <input type="checkbox" name="floorOfMiddle" id="floorOfMiddle${index}"  value="${name}" class="magic-checkbox" {{if checked}}checked{{/if}} >
+    <label for="floorOfMiddle${index}">${name}</label>
+</script>
+
+<script th:inline="javascript">
+    var keyId = [[${buildInfo?.id}]];
+    var flowData = {
+        keyId : keyId ? keyId : "create",
+        formId : "form_buildInfo_input"+[[${buildInfo?.id}]],
+        path : "com.hanqian.kepler.core.entity.primary.education.BuildInfo",
+        titleId : "title-duty-name-buildInfo"
+    };
+    var $form = $("#"+flowData.formId);
+
+    $(function(){
+        __flow_duty_handle(flowData);
+        __flow_button_input_handle(flowData, fn_buildInfo_save, fn_buildInfo_commit);
+        fn_buildInfo_input_validate();
+
+        //计算中间层
+        setFloorOfMiddleCheckbox($form.find("#floorUpCount").val(),$form.find("#floorDownCount").val(),[[${buildInfo?.floorOfMiddle}]]);
+
+        __laydate_month(flowData.formId + " #completedDate");
+        __select2(flowData.formId + " #costBasisDictId");
+        __select2(flowData.formId + " #buildUseDictId");
+        __select2(flowData.formId + " #buildStructureDictId");
+        __select2(flowData.formId + " #buildStateDictId");
+        __select2(flowData.formId + " #waterproofLevelDictId");
+        __select2(flowData.formId + " #seismicLevelDictId");
+    });
+
+    //表单验证
+    function fn_buildInfo_input_validate(){
+        __init_validate(flowData.formId, {
+            rules : {
+                buildNo : {required : true},
+                name : {required : true},
+                location : {required : true},
+                buildMeasure : {required : true, number : true},
+                buildHeight : {required : true, number : true},
+                floorUpCount : {required : true, digits : true, max : 100, min : 0},
+                floorDownCount : {required : true, digits : true, max : 100, min : 0},
+                ifHasMiddleFloor : {required : true},
+                completedDate : {required : true},
+                investmentAmount : {required : true, number : true},
+                installCost : {required : true, number : true},
+                costBasisDictId : {required : true},
+                propertyOwner : {required : true},
+                buildUseDictId : {required : true},
+                buildStructureDictId : {required : true},
+                buildStateDictId : {required : true},
+                waterproofLevelDictId : {required : true},
+                seismicLevelDictId : {required : true}
+            }
+        });
+    }
+
+    //保存方法
+    function fn_buildInfo_save(){
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(flowData.formId, "/buildInfo/save", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+    //提交方法
+    function fn_buildInfo_commit(){
+        if(!$("#" + flowData.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save(flowData.formId, "/buildInfo/commit", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+    // ===========================================================================
+
+    //中间层显示隐藏
+    $form.on("click", ":radio[name='ifHasMiddleFloor']", function(){
+        floorOfMiddleDivShow();
+    });
+
+    //中间层显示隐藏
+    function floorOfMiddleDivShow(){
+        var ifHasMiddleFloor = $form.find(":radio[name='ifHasMiddleFloor']:checked").val();
+        if(ifHasMiddleFloor == "1"){
+            $form.find("#floorOfMiddleDiv").show();
+            return true;
+        }else{
+            $form.find("#floorOfMiddleDiv").hide();
+            return false;
+        }
+    }
+
+    //计算中间层
+    $form.on("change", "#floorUpCount,#floorDownCount", function(){
+        var upCount = $form.find("#floorUpCount").val();
+        var downCount = $form.find("#floorDownCount").val();
+        setFloorOfMiddleCheckbox(upCount, downCount,"");
+    });
+
+    //计算中间层
+    function setFloorOfMiddleCheckbox(upCount, downCount, checkedCount){
+        if(upCount && downCount && upCount>=0 && downCount>=0){
+            $form.find("#floorOfMiddleCheckBoxDiv").empty();
+            var start = 0-downCount+0.5;
+            var end = upCount-0.5;
+            var index = 0;
+            for(var i = start; i<=end; i++){
+                index++;
+                var isChecked = false;
+                if(checkedCount && checkedCount.indexOf(i)>=0){
+                    isChecked = true;
+                }
+                $("#buildInfo-floorOfMiddle-list-temp").tmpl({name:i, index:index, checked:isChecked}).appendTo("#"+flowData.formId+" #floorOfMiddleCheckBoxDiv");
+            }
+        }
+    }
+
+</script>
+
+</html>
