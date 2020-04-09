@@ -12,6 +12,9 @@ public enum OP {
 	// like
 	LIKE,
 
+	//not like
+	NOTLIKE,
+
 	// =
 	EQ,
 

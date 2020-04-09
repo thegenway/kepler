@@ -50,7 +50,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-7 col-sm-12">
+        <div class="col-md-6 col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
                     <div class="panel-control">
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div class="col-md-5 col-sm-12">
+        <div class="col-md-3 col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
                     <div class="panel-control">
@@ -117,13 +117,25 @@
                 </div>
                 <div class="panel-body" style="height: 250px" id="index-notice-container">
                     <table class="mar-no table table-hover">
-                        <thead>
-                        <tr>
-                            <th width="70%">标题</th>
-                            <th width="30%">发布时间</th>
-                        </tr>
-                        </thead>
                         <tbody id="index-notice-tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-control">
+                        <button type="button" id="btn-index-remind-more" class="btn" style="margin-top: 10px" title="更多" onclick="window.location.hash='menu/sys/remind'"><i class="fa fa-reorder fa-lg"></i></button>
+                    </div>
+                    <h3 class="panel-title">消息提醒</h3>
+                </div>
+                <div class="panel-body" style="height: 250px" id="index-remind-container">
+                    <table class="mar-no table table-hover">
+                        <tbody id="index-remind-tbody">
 
                         </tbody>
                     </table>
@@ -168,8 +180,14 @@
 <!--公告通知数据模板-->
 <script id="index-notice-list-temp" type="text/x-jquery-tmpl">
 <tr id="${id}" style="cursor: pointer" {{if id!=''}}onclick="__layX_html_read('${id}', '公告通知', '/notice/read?keyId=${id}')"{{/if}}>
-    <td><span class="text-overflow" style="max-width:300px">${name}</span></td>
-    <td>${finishTime}</td>
+    <td title="发布时间：${finishTime}"><span class="text-overflow" style="max-width:350px">${name}</span></td>
+</tr>
+</script>
+
+<!--消息提醒数据模板-->
+<script id="index-remind-list-temp" type="text/x-jquery-tmpl">
+<tr id="${id}" style="cursor: pointer" {{if id!=''}}onclick="__layX_html_read('${id}', '消息提醒', '/remind/read?keyId=${id}')"{{/if}}>
+    <td title="发布时间：${createTime}"><span class="text-overflow" style="max-width:350px">${content}</span></td>
 </tr>
 </script>
 
@@ -191,6 +209,9 @@
 
         //公告通知
         init_index_notice();
+
+        //消息提醒
+        init_index_remind();
 
         //待办事项
         init_index_todo();
@@ -282,8 +303,25 @@
                 if(data.dataRows.length>i){
                     $("#index-notice-list-temp").tmpl(data.dataRows[i]).appendTo("#index-notice-tbody");
                 }else{
-                    var emptyObj = {id : "", name : "", finishTime : "&nbsp"};
+                    var emptyObj = {id : "", name : "&nbsp", finishTime : "&nbsp"};
                     $("#index-notice-list-temp").tmpl(emptyObj).appendTo("#index-notice-tbody");
+                }
+            }
+        })
+    }
+
+    //消息提醒数据
+    function init_index_remind(){
+        __panelOverlay("index-remind-container");
+        __panelOverlay_show("index-remind-container");
+        __ajax_get("/remind/list", {ifPage : true, page: 1, rows : 5}, function(data){
+            __panelOverlay_hide("index-remind-container");
+            for(var i=0;i<5;i++){
+                if(data.dataRows.length>i){
+                    $("#index-remind-list-temp").tmpl(data.dataRows[i]).appendTo("#index-remind-tbody");
+                }else{
+                    var emptyObj = {id : "", content : "&nbsp", createTime : "&nbsp"};
+                    $("#index-remind-list-temp").tmpl(emptyObj).appendTo("#index-remind-tbody");
                 }
             }
         })

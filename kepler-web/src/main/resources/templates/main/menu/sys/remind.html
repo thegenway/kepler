@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">消息提醒</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6 table-toolbar-left">
+                    <div class="btn-group">
+                        <button class="btn btn-primary remind-type-btn active" onclick="readTypeUpdate('0', this)">未读提醒</button>
+                        <button class="btn btn-primary remind-type-btn" onclick="readTypeUpdate('1', this)">全部提醒</button>
+                    </div>
+                </div>
+            </div>
+            <div class="jqGrid_wrapper">
+                <table id="remind_table"></table>
+                <div id="remind_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function(){
+        init_grid_remind();
+    });
+
+    function init_grid_remind(){
+        __init_jqgrid('remind_table', 'remind_page', '/remind/list',
+            ['状态','消息内容', '时间', '操作', 'id', 'keyId','readUrl'],
+            [
+                {name: 'isRead', index: 'isRead', width: 50, sortable: false, searchoptions: {sopt: ['cn']}, search : false, formatter: isReadFormat},
+                {name: 'content', index: 'content', width: 500, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'createTime', index: 'createTime', width: 300, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true},
+                {name: 'keyId', index: 'keyId', width: 100, hidden: true},
+                {name: 'readUrl', index: 'readUrl', width: 100, hidden: true}
+            ],true,{
+                postData : {ifAll : "0"}
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_remind_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    function isReadFormat(cellvalue, options, rowObject) {
+        var isRead = rowObject.isRead;
+        if(isRead == "1"){
+            return '<span class="label label-success">已读</span>';
+        }else{
+            return '<span class="label label-info">未读</span>';
+        }
+    }
+
+    function fn_remind_read(id){
+        __layX_html_read(id, "消息提醒", "/remind/read?keyId="+id);
+    }
+
+    //已读提醒未读提醒
+    function readTypeUpdate(type, ele){
+        $(".remind-type-btn").removeClass("focus");
+        $(".remind-type-btn").removeClass("active");
+        $(ele).addClass("active");
+        __reflash_jqgrid("remind_table", {ifAll : type})
+    }
+</script>
+
+</html>

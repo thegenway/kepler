@@ -116,6 +116,10 @@ public class SpecificationFactory {
 				Expression<String> timeStr = cb.function("str", String.class, path);
 				predicate = cb.like(timeStr, p.getValue().toString());
 				break;
+			case NOTLIKE:
+				Expression<String> notTimeStr = cb.function("str", String.class, path);
+				predicate = cb.notLike(notTimeStr, p.getValue().toString());
+				break;
 			case EQ:
 				predicate = cb.equal(path, p.getValue());
 				break;

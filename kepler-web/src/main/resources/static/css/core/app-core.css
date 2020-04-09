@@ -479,3 +479,7 @@ select:-webkit-autofill {
 .bootstrap-dialog{
     z-index: 999999992 !important;
 }
+
+.btn-primary.active:hover,.btn-primary.active:focus{
+    background-color: #1690f3 !important;
+}

@@ -20,6 +20,7 @@ import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.core.service.flow.ProcessStepService;
 import com.hanqian.kepler.core.service.sys.DepartmentService;
 import com.hanqian.kepler.core.service.sys.NoticeService;
+import com.hanqian.kepler.core.service.sys.RemindService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;
@@ -63,6 +64,8 @@ public class KeplerTest {
 	private ClassesService classesService;
 	@Autowired
 	private NoticeService noticeService;
+	@Autowired
+	private RemindService remindService;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -145,7 +148,16 @@ public class KeplerTest {
 
 	@Test
 	public void enumTest(){
-
+		List<User> users = new ArrayList<>();
+		users.add(userService.get("402880eb703dc3c901703dcaf9da0005"));
+//		users.add(userService.get("4028ab8e7028b83f017028b84ac60000"));
+		users.add(userService.get("4028ab8e7028c133017028cf72db0003"));
+		users.add(userService.get("4028ab8e7028c133017028d14a1a0006"));
+		AjaxResult ajaxResult = remindService.sendRemind(users, "我来测试一下消息提醒没有系统管理员~~~", userService.get("4028ab8e7028b83f017028b84ac60000"), null);
+//		AjaxResult ajaxResult = remindService.sendRemind( "全员消息2！！！~~~", userService.get("4028ab8e7028c133017028d14a1a0006"), null);
+		System.out.println(ajaxResult);
+		System.out.println(ajaxResult.getState());
+		System.out.println(ajaxResult.getMsg());
  	}
 
  	@Test

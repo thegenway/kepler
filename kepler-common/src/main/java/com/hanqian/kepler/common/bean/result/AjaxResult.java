@@ -1,5 +1,6 @@
 package com.hanqian.kepler.common.bean.result;
 
+import cn.hutool.core.convert.Convert;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -200,9 +201,13 @@ public class AjaxResult extends HashMap<String, Object> {
         return new AjaxResult(Type.ERROR, msg, data, 0);
     }
 
-    public Type getType()
-    {
-        return type;
+    public Type getType() {
+        int value = Convert.toInt(super.get(CODE_TAG));
+        switch (value){
+            case 200 : return Type.SUCCESS;
+            case 301 : return Type.WARN;
+            default: return Type.ERROR;
+        }
     }
 
     public void setType(Type type)
@@ -212,7 +217,7 @@ public class AjaxResult extends HashMap<String, Object> {
 
     public int getCode()
     {
-        return code;
+        return Convert.toInt(super.get(CODE_TAG));
     }
 
     public void setCode(int code)
@@ -222,7 +227,7 @@ public class AjaxResult extends HashMap<String, Object> {
 
     public String getMsg()
     {
-        return msg;
+        return Convert.toStr(super.get(MSG_TAG));
     }
 
     public void setMsg(String msg)
@@ -232,7 +237,7 @@ public class AjaxResult extends HashMap<String, Object> {
 
     public Object getData()
     {
-        return data;
+        return super.get(DATA_TAG);
     }
 
     public void setData(Object data)
@@ -241,7 +246,7 @@ public class AjaxResult extends HashMap<String, Object> {
     }
 
     public int getState() {
-        return state;
+        return Convert.toInt(super.get(STATE));
     }
 
     public void setState(int state) {
@@ -249,7 +254,7 @@ public class AjaxResult extends HashMap<String, Object> {
     }
 
     public String getId() {
-        return id;
+        return Convert.toStr(super.get(ID));
     }
 
     public void setId(String id) {

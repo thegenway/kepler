@@ -31,6 +31,10 @@ public class Rule<T> {
 		return new Builder().operator(OP.LIKE).name(name).value("%"+value+"%").build();
 	}
 
+	public static <T> Rule<T> notLike(String name, T value) {
+		return new Builder().operator(OP.NOTLIKE).name(name).value("%"+value+"%").build();
+	}
+
 	public static <T> Rule<T> ne(String name, T value) {
 		return new Builder().operator(OP.NE).name(name).value(value).build();
 	}
