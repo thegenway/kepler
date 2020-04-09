@@ -16,8 +16,8 @@ import java.util.Date;
  * ============================================================================
  */
 @Data
-@Entity
-@Table(name = "AmassetNationalType")
+//@Entity
+//@Table(name = "AmassetNationalType")
 public class AmassetNationalType {
 
 	//id

@@ -14,7 +14,8 @@
 		<module>kepler-web</module>
 		<module>kepler-core</module>
 		<module>kepler-flow</module>
-	</modules>
+        <module>kepler-quartz</module>
+    </modules>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -115,6 +116,12 @@
 			<dependency>
 				<groupId>com.hanqian</groupId>
 				<artifactId>kepler-flow</artifactId>
+				<version>${kepler.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.hanqian</groupId>
+				<artifactId>kepler-quartz</artifactId>
 				<version>${kepler.version}</version>
 			</dependency>
 

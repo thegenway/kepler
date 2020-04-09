@@ -14,8 +14,8 @@ import java.util.Date;
  * ============================================================================
  */
 @Data
-@Entity
-@Table(name = "Amasset")
+//@Entity
+//@Table(name = "Amasset")
 public class Amasset {
 
 	//主键ID

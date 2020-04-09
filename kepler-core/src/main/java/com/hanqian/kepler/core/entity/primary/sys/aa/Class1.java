@@ -16,8 +16,8 @@ import java.util.Date;
  * ============================================================================
  */
 @Data
-@Entity
-@Table(name = "Class1")
+//@Entity
+//@Table(name = "Class1")
 public class Class1 {
 
 	//id

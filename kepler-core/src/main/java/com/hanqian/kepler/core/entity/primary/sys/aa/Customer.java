@@ -16,8 +16,8 @@ import java.util.Date;
  * ============================================================================
  */
 @Data
-@Entity
-@Table(name = "Customer")
+//@Entity
+//@Table(name = "Customer")
 public class Customer {
 
 	//id

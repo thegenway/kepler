@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">定时任务</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-6 table-toolbar-left">
+                    <button id="btn_add_job" class="btn btn-primary btn-sm" onclick="fn_job_input('create')">新增</button>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="job_table"></table>
+                <div id="job_page"></div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        init_grid_job();
+        __panelOverlay("job_table");
+    });
+
+    function init_grid_job(){
+        __init_jqgrid('job_table', 'job_page', '/main/job/list',
+            ['id','任务名称', '任务分组', '调用目标字符串', '执行表达式', '任务状态','创建时间','操作'],
+            [
+                {name: 'id', index: 'id', width: 150, sortable: false, searchoptions: {sopt: ['cn']}, key: true},
+                {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'jobGroup', index: 'jobGroup', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'invokeTarget', index: 'invokeTarget', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'cronExpression', index: 'cronExpression', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'jobStatus', index: 'jobStatus', width: 100, sortable: false, searchoptions: {sopt: ['cn']}, formatter: jobStatusFormat},
+                {name: 'createTime', index: 'createTime', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat}
+            ],true,{
+                loadComplete : function(){
+                    var rows = $("#job_table").getDataIDs();
+                    for(var i=0;i<rows.length;i++){
+                        new Switchery($("#jobStatus-"+rows[i])[0]);
+                    }
+                }
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_job_input(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+        cellvalue += '<button class="btn btn-danger btn-xs" onclick="fn_job_delete(\'' + id + '\');"> 删除</button> ';
+        cellvalue += '<button class="btn btn-primary btn-xs" onclick="fn_job_execute(\'' + id + '\');"> 执行一次</button> ';
+        return cellvalue;
+    }
+
+    function jobStatusFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        if(rowObject.jobStatus ==1){
+            cellvalue = '<input data-content="'+id+'" id="jobStatus-'+id+'" name="jobStatus-'+id+'" type="checkbox" value="1" checked> ';
+        }else{
+            cellvalue = '<input data-content="'+id+'" id="jobStatus-'+id+'" name="jobStatus-'+id+'" type="checkbox" value="1" > ';
+        }
+
+        return cellvalue;
+    }
+
+    //编辑
+    function fn_job_input(id){
+        __layX_html_save(id,"定时任务","/main/job/input?keyId="+id, function(id, button, event){
+            var callback = function(data){
+                if(data && data.state === 1){
+                    __layX_close(id);
+                    __reflash_jqgrid("job_table");
+                }
+            };
+            fn_job_save(callback);
+        })
+    }
+
+    //启动/暂停
+    $("#job_table").on("change", ":checkbox[name^='jobStatus']",function(){
+        __panelOverlay_show("job_table");
+        var keyId = $(this).attr("data-content");
+        var method = "";
+        if($(this)[0].checked){
+            method = "resume"
+        }else{
+            method = "pause"
+        }
+        __ajax_post("/main/job/setState", {keyId : keyId, method : method}, function(data){
+            __panelOverlay_hide("job_table");
+            __toastr(data);
+            if(data && data.state === 1){
+                __reflash_jqgrid("job_table");
+            }
+        })
+    });
+
+    //删除
+    function fn_job_delete(id){
+        __ajax_post("/main/job/setState", {keyId : id, method : "delete"}, function(data){
+            __toastr(data);
+            if(data && data.state === 1){
+                __reflash_jqgrid("job_table");
+            }
+        })
+    }
+
+
+</script>
+
+</html>

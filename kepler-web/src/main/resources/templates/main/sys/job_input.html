@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="job-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">定时任务<span id="title-duty-name-job" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_job_input'+${job?.id}" class="form-horizontal" autocomplete="off">
+            <input type="hidden" id="keyId" name="keyId" th:value="${job?.id}" />
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">任务名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="name" id="name" th:value="${job?.name}" class="form-control" placeholder="任务名称">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">任务名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <select id="jobGroup" name="jobGroup" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="DEFAULT" th:selected="${job?.jobGroup == 'DEFAULT'}">默认</option>
+                        <option value="SYSTEM" th:selected="${job?.jobGroup == 'SYSTEM'}">系统</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">调用目标字符串<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="invokeTarget" id="invokeTarget" th:value="${job?.invokeTarget}" class="form-control" placeholder="调用目标字符串">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">cron表达式<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <input type="text" name="cronExpression" id="cronExpression" th:value="${job?.cronExpression}" class="form-control" placeholder="cron表达式">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">执行策略<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <div class="radio">
+                        <input type="radio" name="misfirePolicy" id="misfirePolicy0" value="0" class="magic-radio" th:checked="${job==null || job?.misfirePolicy == '0'}">
+                        <label for="misfirePolicy0">暂不执行</label>
+                        <input type="radio" name="misfirePolicy" id="misfirePolicy1" value="2" class="magic-radio" th:checked="${job?.misfirePolicy == '1'}">
+                        <label for="misfirePolicy1">只执行一次</label>
+                        <input type="radio" name="misfirePolicy" id="misfirePolicy2" value="1" class="magic-radio" th:checked="${job?.misfirePolicy == '1'}">
+                        <label for="misfirePolicy2">立即执行</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">并发执行<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <div class="radio">
+                        <input type="radio" name="concurrent" id="concurrent0" value="0" class="magic-radio" th:checked="${job==null || job?.concurrent == '0'}">
+                        <label for="concurrent0">禁止</label>
+                        <input type="radio" name="concurrent" id="concurrent1" value="1" class="magic-radio" th:checked="${job?.concurrent == '1'}">
+                        <label for="concurrent1">允许</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">状态<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-7">
+                    <div class="radio">
+                        <input type="radio" name="jobStatus" id="jobStatus0" value="0" class="magic-radio" th:checked="${job==null || job?.jobStatus == '0'}">
+                        <label for="jobStatus0">暂停</label>
+                        <input type="radio" name="jobStatus" id="jobStatus1" value="1" class="magic-radio" th:checked="${job?.jobStatus == '1'}">
+                        <label for="jobStatus1">正常</label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">备注</label>
+                <div class="col-md-7">
+                    <input type="text" name="remark" id="remark" th:value="${job?.remark}" class="form-control" placeholder="备注">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${job?.id}]];
+    var flowData = {
+        keyId : keyId ? keyId : "create",
+        formId : "form_job_input"+[[${job?.id}]]
+    };
+    var $form = $("#"+flowData.formId);
+    
+    $(function(){
+        __select2(flowData.formId + " #jobGroup");
+        fn_job_input_validate();
+    });
+
+    function fn_job_input_validate(){
+        __init_validate(flowData.formId, {
+            rules : {
+                name : {required : true},
+                jobGroup : {required : true},
+                invokeTarget : {required : true},
+                cronExpression : {required : true},
+                jobStatus : {required : true}
+            }
+        });
+    }
+
+    //save
+    function fn_job_save(callback){
+        if(!$("#" + flowData.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(flowData.formId, "/main/job/save", function(data){
+                callback(data);
+            })
+        })
+    }
+
+</script>
+
+</html>

@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         // repository包名
-        basePackages = {PrimaryJpaConfig.REPOSITORY_PACKAGE, PrimaryJpaConfig.REPOSITORY_PACKAGE2},
+        basePackages = {PrimaryJpaConfig.REPOSITORY_PACKAGE, PrimaryJpaConfig.REPOSITORY_PACKAGE2, PrimaryJpaConfig.REPOSITORY_PACKAGE3},
         // 实体管理bean名称
         entityManagerFactoryRef = "primaryEntityManagerFactory",
         // 事务管理bean名称
@@ -44,9 +44,11 @@ import javax.sql.DataSource;
 public class PrimaryJpaConfig {
     static final String REPOSITORY_PACKAGE = "com.hanqian.kepler.core.dao.primary";
     static final String REPOSITORY_PACKAGE2 = "com.hanqian.kepler.flow.dao";
+    static final String REPOSITORY_PACKAGE3 = "com.hanqian.kepler.quartz.dao";
 
     private static final String ENTITY_PACKAGE = "com.hanqian.kepler.core.entity.primary";
     private static final String ENTITY_PACKAGE2 = "com.hanqian.kepler.flow.entity";
+    private static final String ENTITY_PACKAGE3 = "com.hanqian.kepler.quartz.entity";
 
 
     /**
@@ -78,7 +80,7 @@ public class PrimaryJpaConfig {
                 // 设置jpa配置
                 .properties(jpaProperties.getProperties())
                 // 设置实体包名
-                .packages(ENTITY_PACKAGE,ENTITY_PACKAGE2)
+                .packages(ENTITY_PACKAGE,ENTITY_PACKAGE2,ENTITY_PACKAGE3)
                 // 设置持久化单元名，用于@PersistenceContext注解获取EntityManager时指定数据源
                 .persistenceUnit("primaryPersistenceUnit").build();
     }

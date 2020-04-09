@@ -81,6 +81,11 @@
             <artifactId>kepler-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.hanqian</groupId>
+            <artifactId>kepler-quartz</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
