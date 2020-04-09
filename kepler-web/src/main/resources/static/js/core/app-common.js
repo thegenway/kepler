@@ -79,6 +79,17 @@ function loadURL(url, ajax_container) {
                 opacity : '1.0'
             }, 300);
 
+            //解决重复page-content导致padding过大
+            setTimeout(function(){
+                if($("div[id='page-content']").length>=2){
+                    $("div[id='page-content']").each(function(i){
+                        if(i!=0){
+                            $(this).attr("id", "page-content"+i);
+                        }
+                    })
+                }
+            }, 350)
+
         },
         error : function(xhr, ajaxOptions, thrownError) {
             // error

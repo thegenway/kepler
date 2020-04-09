@@ -6,9 +6,7 @@ import com.hanqian.kepler.flow.base.FlowEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -33,7 +31,9 @@ public class Notice extends FlowEntity {
 	/**
 	 * 通知内容
 	 */
-	@Column(length = 6000)
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "Text")
 	private String content;
 
 	/**

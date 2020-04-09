@@ -115,6 +115,11 @@ public class User extends BaseEntity {
 	 */
 	private String loginBrowser;
 
+	/**
+	 * mystery
+	 */
+	private String mystery;
+
 	public String getAvatarId() {
 		return StrUtil.isNotBlank(avatarId) ? "/main/file/"+avatarId : "/static/img/default_header.jpg";
 	}

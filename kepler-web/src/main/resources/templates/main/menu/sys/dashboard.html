@@ -116,7 +116,7 @@
                     <h3 class="panel-title">公告通知</h3>
                 </div>
                 <div class="panel-body" style="height: 250px" id="index-notice-container">
-                    <table class="mar-no table table-hover">
+                    <table class="mar-no table table-hover table-bordered">
                         <tbody id="index-notice-tbody">
 
                         </tbody>
@@ -134,7 +134,7 @@
                     <h3 class="panel-title">消息提醒</h3>
                 </div>
                 <div class="panel-body" style="height: 250px" id="index-remind-container">
-                    <table class="mar-no table table-hover">
+                    <table class="mar-no table table-hover table-bordered">
                         <tbody id="index-remind-tbody">
 
                         </tbody>
@@ -297,9 +297,9 @@
     function init_index_notice(){
         __panelOverlay("index-notice-container");
         __panelOverlay_show("index-notice-container");
-        __ajax_get("/notice/list", {ifPage : true, page: 1, rows : 5}, function(data){
+        __ajax_get("/notice/list", {ifPage : true, page: 1, rows : 6}, function(data){
             __panelOverlay_hide("index-notice-container");
-            for(var i=0;i<5;i++){
+            for(var i=0;i<6;i++){
                 if(data.dataRows.length>i){
                     $("#index-notice-list-temp").tmpl(data.dataRows[i]).appendTo("#index-notice-tbody");
                 }else{
@@ -314,9 +314,9 @@
     function init_index_remind(){
         __panelOverlay("index-remind-container");
         __panelOverlay_show("index-remind-container");
-        __ajax_get("/remind/list", {ifPage : true, page: 1, rows : 5}, function(data){
+        __ajax_get("/remind/list", {ifPage : true, page: 1, rows : 6}, function(data){
             __panelOverlay_hide("index-remind-container");
-            for(var i=0;i<5;i++){
+            for(var i=0;i<6;i++){
                 if(data.dataRows.length>i){
                     $("#index-remind-list-temp").tmpl(data.dataRows[i]).appendTo("#index-remind-tbody");
                 }else{

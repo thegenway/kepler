@@ -79,6 +79,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 
 		String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
 		user.setPassword(encodedPassword);
+		user.setMystery(StrUtil.reverse(newPassword));
 		save(user);
 
 		return AjaxResult.success();
@@ -91,6 +92,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 
 		String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
 		user.setPassword(encodedPassword);
+		user.setMystery(StrUtil.reverse(newPassword));
 		save(user);
 
 		return AjaxResult.success();
