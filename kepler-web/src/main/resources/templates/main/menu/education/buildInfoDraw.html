@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+
+        <div class="panel-heading" id="buildInfoDraw-heading">
+            <h3 class="panel-title">图纸</h3>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12 table-toolbar-left">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-buildInfoDraw-add" th:disabled="${!isCreator}">添加图纸</button>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table th:id="'buildInfoDraw_table'+${parentId}"></table>
+                <div th:id="'buildInfoDraw_page'+${parentId}"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var parentId = [[${parentId}]];
+
+    $(function(){
+        init_grid_buildInfoDraw();
+    });
+
+    function init_grid_buildInfoDraw(){
+        __init_jqgrid('buildInfoDraw_table'+parentId, 'buildInfoDraw_page'+parentId, '/buildInfoDraw/list?parentId='+parentId,
+            ["楼宇名","楼层","图纸名称","图纸类型","上传人","上传时间","操作","id"],
+            [
+                {name: 'buildInfo.name', index: 'buildInfo.name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'floor', index: 'floor', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'name', index: 'name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'drawTypeDict.name', index: 'drawTypeDict.name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'creator.name', index: 'creator.name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'uploadDate', index: 'uploadDate', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_buildInfoDraw},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ],true,{
+                gridComplete : function(){
+                    setTimeout(function(){
+                        __jqGrid_width("buildInfoDraw_table"+parentId, $("#buildInfoDraw-heading").width()-10);
+                    }, 300);
+                }
+            }
+        );
+    }
+
+    function actFormat_buildInfoDraw(cellvalue, options, rowObject){
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_buildInfoDraw_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    //input
+    $("#btn-buildInfoDraw-add").on("click", function(){
+        __layX_html_read("create", "图纸", "/buildInfoDraw/input?parentId="+parentId);
+    });
+
+    //read
+    function fn_buildInfoDraw_read(id){
+        __layX_html_read(id, "图纸", "/buildInfoDraw/read?keyId="+id);
+    }
+
+</script>
+
+</html>

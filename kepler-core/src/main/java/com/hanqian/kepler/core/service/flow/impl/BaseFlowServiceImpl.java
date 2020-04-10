@@ -331,6 +331,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         if(moreIds!=null && moreIds.size()>0){
             ids.addAll(moreIds);
         }
+        if(ids.size() == 0) ids.add("kepler_dzw");
         specification = specification.and(SpecificationFactory.in("id", ids));
 
         return getJqGridContent(specification, pageable);

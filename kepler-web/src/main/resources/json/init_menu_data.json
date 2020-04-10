@@ -118,6 +118,26 @@
         "target": "_self",
         "isManageMenu": "0",
         "children": []
+      },
+      {
+        "name": "消息提醒",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "6",
+        "url": "menu/sys/remind",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },
+      {
+        "name": "定时任务",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "7",
+        "url": "menu/sys/job",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
       }
     ]
   },
@@ -135,7 +155,16 @@
         "menuType": "菜单",
         "iconCode": "",
         "orderNum": "1",
-        "url": "menu/edu/classes",
+        "url": "menu/education/classes",
+        "target": "_self",
+        "isManageMenu": "0",
+        "children": []
+      },{
+        "name": "楼宇基建信息",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "2",
+        "url": "menu/education/buildInfo",
         "target": "_self",
         "isManageMenu": "0",
         "children": []

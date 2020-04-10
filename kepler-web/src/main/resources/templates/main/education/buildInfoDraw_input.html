@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="classes-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">图纸<span id="title-duty-name-buildInfoDraw" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_buildInfoDraw_input'+${buildInfoDraw?.id}" class="form-horizontal" autocomplete="off">
+            <input type="hidden" name="keyId" th:value="${buildInfoDraw?.id}">
+            <input type="hidden" name="parentId" th:value="${buildInfo?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">楼宇名<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input disabled type="text" th:value="${buildInfo?.name}" class="form-control" placeholder="楼宇名">
+                </div>
+
+                <label class="col-md-2 control-label">楼层<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="floor" name="floor" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="floor : ${#strings.arraySplit(buildInfo?.allFloorStr, ',')}" th:id="'floor_'+${floor}" th:value="${floor}" th:text="${floor}" th:selected="${floor == buildInfoDraw?.floor}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">图纸名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input type="text" name="name" id="name" th:value="${buildInfoDraw?.name}" class="form-control" placeholder="图纸名称">
+                </div>
+
+                <label class="col-md-2 control-label">图纸类型<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select id="drawTypeDictId" name="drawTypeDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${drawTypeDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfoDraw?.drawTypeDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">上传日期<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="text" name="uploadDate" id="uploadDate" th:value="${#dates.format(buildInfoDraw?.uploadDate, 'yyyy-MM-dd')}" class="form-control" placeholder="上传日期">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">图纸文件<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input th:id="'drawFileId'+${buildInfoDraw?.id}" name="drawFileId" style="display: none" th:value="${buildInfoDraw?.drawFileId}">
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${buildInfoDraw?.id}]];
+    var flowData = {
+        keyId : keyId ? keyId : "create",
+        formId : "form_buildInfoDraw_input"+[[${buildInfoDraw?.id}]],
+        path : "com.hanqian.kepler.core.entity.primary.education.BuildInfoDraw",
+        titleId : "title-duty-name-buildInfoDraw"
+    };
+    var $form = $("#"+flowData.formId);
+
+    $(function(){
+        __select2(flowData.formId + " #drawTypeDictId", "请选择图纸类型");
+        __select2(flowData.formId + " #floor", "请选择楼层");
+        __laydate_date(flowData.formId + " #uploadDate");
+        __init_dropzone_edit("drawFileId"+keyId);
+
+        __flow_duty_handle(flowData);
+        __flow_button_input_handle(flowData, fn_buildInfoDraw_save, fn_buildInfoDraw_commit);
+        fn_buildInfoDraw_input_validate();
+    });
+
+    //表单验证
+    function fn_buildInfoDraw_input_validate(){
+        __init_validate(flowData.formId, {
+            rules : {
+                floor : {required : true},
+                name : {required : true},
+                drawTypeDictId : {required : true},
+                uploadDate : {required : true},
+                drawFileId : {required : true}
+            }
+        });
+    }
+
+    //保存
+    function fn_buildInfoDraw_save(){
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(flowData.formId, "/buildInfoDraw/save", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+    //提交
+    function fn_buildInfoDraw_commit(){
+        if(!$("#" + flowData.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save(flowData.formId, "/buildInfoDraw/commit", function(data){
+                if(data && data.state === 1){
+                    __layX_close(flowData.keyId)
+                }
+            })
+        })
+    }
+
+</script>
+
+</html>

@@ -12,6 +12,7 @@ import com.hanqian.kepler.core.service.flow.TaskEntityService;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.*;
+import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.utils.FlowUtil;
 import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 import com.hanqian.kepler.flow.vo.FlowParticipantVo;
@@ -90,6 +91,7 @@ public class BaseController implements Serializable {
 
 	/**
 	 * 获得公共jqGrid搜索VO
+	 * @param isEnable 如果为true，则会筛选state='Enable'
 	 */
 	protected List<Rule> getJqGridSearch(JqGridFilter filter, boolean isEnable){
 		List<Rule> rules = new ArrayList<>();
@@ -133,6 +135,12 @@ public class BaseController implements Serializable {
 
 	protected List<Rule> getJqGridSearch(JqGridFilter filter){
 		return getJqGridSearch(filter, true);
+	}
+
+	protected List<Rule> getJqGridSearchWithFlow(JqGridFilter filter){
+		List<Rule> rules = getJqGridSearch(filter);
+		rules.add(Rule.in("processState", new FlowEnum.ProcessState[]{FlowEnum.ProcessState.Running,FlowEnum.ProcessState.Backed,FlowEnum.ProcessState.Finished}));
+		return rules;
 	}
 
 	/**

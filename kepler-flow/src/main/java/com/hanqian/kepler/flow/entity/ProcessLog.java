@@ -36,7 +36,9 @@ public class ProcessLog extends BaseEntity {
     /**
      * 审批意见
      */
-    @Column(length = 2000)
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "Text")
     private String comment;
 
     /**

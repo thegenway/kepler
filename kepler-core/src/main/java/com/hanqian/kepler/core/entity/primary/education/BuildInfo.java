@@ -6,10 +6,7 @@ import com.hanqian.kepler.flow.base.FlowEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -58,6 +55,7 @@ public class BuildInfo extends FlowEntity {
 	private String floorOfMiddle;
 
 	//所有楼层逗号分隔字符串
+	@Column(length = 2000)
 	private String allFloorStr;
 
 	//竣工时间（yyyy-MM）

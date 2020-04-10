@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="buildInfoDraw-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">图纸<span id="title-duty-name-buildInfoDraw" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_buildInfoDraw_input'+${buildInfoDraw?.id}" class="form-horizontal bord-btm">
+
+            <input type="hidden" name="keyId" th:value="${buildInfoDraw?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">楼宇名<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input disabled type="text" th:value="${buildInfoDraw?.buildInfo?.name}" class="form-control" placeholder="楼宇名">
+                </div>
+
+                <label class="col-md-2 control-label">楼层<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input disabled type="text" name="floor" id="floor" th:value="${buildInfoDraw?.floor}" class="form-control" placeholder="楼层">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">图纸名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <input disabled type="text" name="name" id="name" th:value="${buildInfoDraw?.name}" class="form-control" placeholder="图纸名称">
+                </div>
+
+                <label class="col-md-2 control-label">图纸类型<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-3">
+                    <select disabled id="drawTypeDictId" name="drawTypeDictId" class="form-control">
+                        <option value="">请选择</option>
+                        <option th:each="dict : ${drawTypeDictList}" th:id="${dict.id}" th:value="${dict.id}" th:text="${dict.name}" th:selected="${dict == buildInfoDraw?.drawTypeDict}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">上传日期<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="uploadDate" id="uploadDate" th:value="${#dates.format(buildInfoDraw?.uploadDate, 'yyyy-MM-dd')}" class="form-control" placeholder="上传日期">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">图纸文件<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input th:id="'drawFileId'+${buildInfoDraw?.id}" name="drawFileId" style="display: none" th:value="${buildInfoDraw?.drawFileId}">
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${buildInfoDraw?.id}]];
+    var flowData = {
+        keyId : keyId ? keyId : "create",
+        formId : "form_buildInfoDraw_input"+[[${buildInfoDraw?.id}]],
+        path : "com.hanqian.kepler.core.entity.primary.education.BuildInfoDraw",
+        titleId : "title-duty-name-buildInfoDraw"
+    };
+    var $form = $("#"+flowData.formId);
+
+    $(function(){
+        __select2(flowData.formId + " #drawTypeDictId", "请选择图纸类型");
+        __init_dropzone_read("drawFileId"+keyId);
+
+        __flow_duty_handle(flowData);
+        __flow_button_read_handle(flowData, fn_buildInfoDraw_approve, fn_buildInfoDraw_back, fn_buildInfoDraw_deny, fn_buildInfoDraw_edit);
+    });
+
+    function fn_buildInfoDraw_approve(){
+        __confirm_dialog("", "确定通过审批吗？", function(dialogRef){
+            __form_save(flowData.formId, "/buildInfoDraw/approve", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
+                }
+            })
+        });
+    }
+
+    function fn_buildInfoDraw_back(){
+        __confirm_dialog("", "确定退回吗？", function(dialogRef){
+            __form_save(flowData.formId, "/buildInfoDraw/back", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
+                }
+            })
+        });
+    }
+
+    function fn_buildInfoDraw_deny(){
+        __confirm_dialog("", "确定否决吗？", function(dialogRef){
+            __form_save(flowData.formId, "/buildInfoDraw/deny", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __layX_close(flowData.keyId);
+                }
+            })
+        });
+    }
+
+    function fn_buildInfoDraw_edit(){
+        __layX_close(flowData.keyId);
+        __layX_html_read(flowData.keyId, "图纸", "/buildInfoDraw/input?keyId="+flowData.keyId);
+    }
+    
+</script>
+
+</html>

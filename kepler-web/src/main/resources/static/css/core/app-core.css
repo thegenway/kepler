@@ -483,3 +483,7 @@ select:-webkit-autofill {
 .btn-primary.active:hover,.btn-primary.active:focus{
     background-color: #1690f3 !important;
 }
+
+.select2-container{
+    z-index: 9999999999;
+}
