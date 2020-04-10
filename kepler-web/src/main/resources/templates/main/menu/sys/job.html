@@ -106,11 +106,20 @@
 
     //删除
     function fn_job_delete(id){
-        __ajax_post("/main/job/setState", {keyId : id, method : "delete"}, function(data){
+        __confirm_dialog("提示","确定要删除吗？", function(){
+            __ajax_post("/main/job/setState", {keyId : id, method : "delete"}, function(data){
+                __toastr(data);
+                if(data && data.state === 1){
+                    __reflash_jqgrid("job_table");
+                }
+            })
+        })
+    }
+
+    //执行一次
+    function fn_job_execute(id){
+        __ajax_post("/main/job/runJob", {keyId : id}, function(data){
             __toastr(data);
-            if(data && data.state === 1){
-                __reflash_jqgrid("job_table");
-            }
         })
     }
 

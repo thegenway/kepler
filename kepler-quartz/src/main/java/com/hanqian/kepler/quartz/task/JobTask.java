@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * newFile
+ * 可配置定时任务
  * ============================================================================
  * author : dzw
  * createDate:  2020/4/9 。

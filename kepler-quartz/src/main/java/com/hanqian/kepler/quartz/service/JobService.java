@@ -35,4 +35,9 @@ public interface JobService extends BaseService<Job, String> {
 	 */
 	AjaxResult deleteJob(Job job) throws SchedulerException;
 
+	/**
+	 * 立即执行一次
+	 */
+	AjaxResult runJob(Job job) throws SchedulerException;
+
 }

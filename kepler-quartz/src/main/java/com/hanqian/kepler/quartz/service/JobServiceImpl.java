@@ -10,6 +10,7 @@ import com.hanqian.kepler.quartz.dao.JobDao;
 import com.hanqian.kepler.quartz.entity.Job;
 import com.hanqian.kepler.quartz.util.ScheduleUtils;
 import com.hanqian.kepler.quartz.util.TaskException;
+import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -91,6 +92,15 @@ public class JobServiceImpl extends BaseServiceImpl<Job, String> implements JobS
 		job = save(job);
 
 		scheduler.deleteJob(ScheduleUtils.getJobKey(job.getId(), job.getJobGroup()));
+		return AjaxResult.success();
+	}
+
+	@Override
+	public AjaxResult runJob(Job job) throws SchedulerException {
+		if(job == null) return AjaxResult.error("job is null");
+		JobDataMap dataMap = new JobDataMap();
+		dataMap.put(ScheduleConstants.TASK_PROPERTIES, job);
+		scheduler.triggerJob(ScheduleUtils.getJobKey(job.getId(), job.getJobGroup()), dataMap);
 		return AjaxResult.success();
 	}
 

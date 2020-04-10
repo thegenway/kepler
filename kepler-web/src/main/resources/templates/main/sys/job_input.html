@@ -31,7 +31,7 @@
             <div class="form-group">
                 <label class="col-md-3 control-label">调用目标字符串<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-7">
-                    <input type="text" name="invokeTarget" id="invokeTarget" th:value="${job?.invokeTarget}" class="form-control" placeholder="调用目标字符串">
+                    <input type="text" name="invokeTarget" id="invokeTarget" th:value="${job?.invokeTarget}" class="form-control" placeholder="调用目标字符串【jobTask.methodName('param')】">
                 </div>
             </div>
 
@@ -113,9 +113,38 @@
             rules : {
                 name : {required : true},
                 jobGroup : {required : true},
-                invokeTarget : {required : true},
-                cronExpression : {required : true},
+                invokeTarget : {
+                    required : true,
+                    remote : {
+                        delay : 500,
+                        type: 'post',
+                        url: '/main/job/validate/invokeTarget',
+                        data: {
+                            invokeTarget: function() {return $form.find('#invokeTarget').val()},
+                            keyId : function(){return $form.find('#keyId').val()}
+                        }
+                    }
+                },
+                cronExpression : {
+                    required : true,
+                    remote : {
+                        delay : 500,
+                        type: 'post',
+                        url: '/main/job/validate/cron',
+                        data: {
+                            cron: function() {return $form.find('#cronExpression').val()}
+                        }
+                    }
+                },
                 jobStatus : {required : true}
+            },
+            messages : {
+                invokeTarget : {
+                    remote : "已经存在此目标了"
+                },
+                cronExpression : {
+                    remote : "cron表达式不正确"
+                }
             }
         });
     }
