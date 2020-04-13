@@ -274,35 +274,35 @@
 </script>
 
 <script th:inline="javascript">
-    var keyId = [[${buildInfo?.id}]];
-    var flowData = {
-        keyId : keyId ? keyId : "create",
+    var keyId_buildInfo = [[${buildInfo?.id}]];
+    var flowData_buildInfo = {
+        keyId : keyId_buildInfo ? keyId_buildInfo : "create",
         formId : "form_buildInfo_input"+[[${buildInfo?.id}]],
         path : "com.hanqian.kepler.core.entity.primary.education.BuildInfo",
         titleId : "title-duty-name-buildInfo"
     };
-    var $form = $("#"+flowData.formId);
+    var $form = $("#"+flowData_buildInfo.formId);
 
     $(function(){
-        __flow_duty_handle(flowData);
-        __flow_button_input_handle(flowData, fn_buildInfo_save, fn_buildInfo_commit);
+        __flow_duty_handle(flowData_buildInfo);
+        __flow_button_input_handle(flowData_buildInfo, fn_buildInfo_save, fn_buildInfo_commit);
         fn_buildInfo_input_validate();
 
         //计算中间层
         setFloorOfMiddleCheckbox($form.find("#floorUpCount").val(),$form.find("#floorDownCount").val(),[[${buildInfo?.floorOfMiddle}]]);
 
-        __laydate_month(flowData.formId + " #completedDate");
-        __select2(flowData.formId + " #costBasisDictId");
-        __select2(flowData.formId + " #buildUseDictId");
-        __select2(flowData.formId + " #buildStructureDictId");
-        __select2(flowData.formId + " #buildStateDictId");
-        __select2(flowData.formId + " #waterproofLevelDictId");
-        __select2(flowData.formId + " #seismicLevelDictId");
+        __laydate_month(flowData_buildInfo.formId + " #completedDate");
+        __select2(flowData_buildInfo.formId + " #costBasisDictId");
+        __select2(flowData_buildInfo.formId + " #buildUseDictId");
+        __select2(flowData_buildInfo.formId + " #buildStructureDictId");
+        __select2(flowData_buildInfo.formId + " #buildStateDictId");
+        __select2(flowData_buildInfo.formId + " #waterproofLevelDictId");
+        __select2(flowData_buildInfo.formId + " #seismicLevelDictId");
     });
 
     //表单验证
     function fn_buildInfo_input_validate(){
-        __init_validate(flowData.formId, {
+        __init_validate(flowData_buildInfo.formId, {
             rules : {
                 buildNo : {required : true},
                 name : {required : true},
@@ -329,9 +329,9 @@
     //保存方法
     function fn_buildInfo_save(){
         __confirm_dialog("", "确认保存吗？", function(){
-            __form_save(flowData.formId, "/buildInfo/save", function(data){
+            __form_save(flowData_buildInfo.formId, "/buildInfo/save", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    __flow_close_layx(flowData_buildInfo);
                 }
             })
         })
@@ -339,13 +339,13 @@
 
     //提交方法
     function fn_buildInfo_commit(){
-        if(!$("#" + flowData.formId).valid()){
+        if(!$("#" + flowData_buildInfo.formId).valid()){
             return false;
         }
         __confirm_dialog("", "确认提交吗？", function(){
-            __form_save(flowData.formId, "/buildInfo/commit", function(data){
+            __form_save(flowData_buildInfo.formId, "/buildInfo/commit", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    __flow_close_layx(flowData_buildInfo);
                 }
             })
         })
@@ -390,7 +390,7 @@
                 if(checkedCount && checkedCount.indexOf(i)>=0){
                     isChecked = true;
                 }
-                $("#buildInfo-floorOfMiddle-list-temp").tmpl({name:i, index:index, checked:isChecked}).appendTo("#"+flowData.formId+" #floorOfMiddleCheckBoxDiv");
+                $("#buildInfo-floorOfMiddle-list-temp").tmpl({name:i, index:index, checked:isChecked}).appendTo("#"+flowData_buildInfo.formId+" #floorOfMiddleCheckBoxDiv");
             }
         }
     }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="buildInfoMore-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">更多信息<span id="title-duty-name-buildInfoMore" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_buildInfoMore_input'+${buildInfoMore?.id}" class="form-horizontal bord-btm">
+            <input type="hidden" name="keyId" th:value="${buildInfoMore?.id}">
+            <input type="hidden" name="parentId" th:value="${buildInfo?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">楼宇名<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" th:value="${buildInfo?.name}" class="form-control" placeholder="楼宇名">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">建筑投资<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="number" name="investment" id="investment" th:value="${buildInfoMore?.investment}" class="form-control" placeholder="建筑投资">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">开工时间<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="startDate" id="startDate" th:value="${#dates.format(buildInfoMore?.startDate, 'yyyy-MM-dd')}" class="form-control" placeholder="开工时间">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">建筑负责人</label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="principalName" id="principalName" th:value="${buildInfoMore?.principal?.name}" class="form-control" placeholder="建筑负责人">
+                    <input type="hidden" name="principalId" id="principalId" th:value="${buildInfoMore?.principal?.id}" class="form-control" placeholder="建筑负责人">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">相关文件<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled th:id="'aboutFileId'+${buildInfoMore?.id}" name="aboutFileId" style="display: none" th:value="${buildInfoMore?.aboutFileId}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">备注</label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="remark" id="remark" th:value="${buildInfoMore?.remark}" class="form-control" placeholder="备注">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var keyId_buildInfoMore = [[${buildInfoMore?.id}]];
+    var flowData_buildInfoMore = {
+        keyId : keyId_buildInfoMore ? keyId_buildInfoMore : "create",
+        parentId : [[${buildInfo?.id}]],
+        formId : "form_buildInfoMore_input"+[[${buildInfoMore?.id}]],
+        path : "com.hanqian.kepler.core.entity.primary.education.BuildInfoMore",
+        titleId : "title-duty-name-buildInfoMore"
+    };
+    var $form = $("#"+flowData_buildInfoMore.formId);
+
+    $(function(){
+        __init_dropzone_read("aboutFileId"+keyId_buildInfoMore);
+
+        __flow_duty_handle(flowData_buildInfoMore);
+        __flow_button_read_handle(flowData_buildInfoMore, fn_buildInfoMore_approve, fn_buildInfoMore_back, fn_buildInfoMore_deny, fn_buildInfoMore_edit);
+    });
+
+    //审批通过
+    function fn_buildInfoMore_approve(){
+        __confirm_dialog("", "确定通过审批吗？", function(dialogRef){
+            __form_save(flowData_buildInfoMore.formId, "/buildInfoMore/approve", function(data){
+                dialogRef.close();
+                if(data && data.state === 1){
+                    __flow_close_layx(flowData_buildInfoMore);
+                }
+            })
+        });
+    }
+
+    //审批退回
+    function fn_buildInfoMore_back(){
+        __confirm_dialog("", "确定退回吗？", function(dialogRef){
+            __form_save(flowData_buildInfoMore.formId, "/buildInfoMore/back", function(data){
+                dialogRef.close();
+                if(data && data.state === 1){
+                    __flow_close_layx(flowData_buildInfoMore);
+                }
+            })
+        });
+    }
+
+    //审批否决
+    function fn_buildInfoMore_deny(){
+        __confirm_dialog("", "确定否决吗？", function(dialogRef){
+            __form_save(flowData_buildInfoMore.formId, "/buildInfoMore/deny", function(data){
+                dialogRef.close();
+                if(data && data.state === 1){
+                    __flow_close_layx(flowData_buildInfoMore);
+                }
+            })
+        });
+    }
+
+    //编辑
+    function fn_buildInfoMore_edit(){
+        __flow_close_layx(flowData_buildInfoMore);
+        __layX_html_read(flowData_buildInfoMore.keyId, "楼宇基建更多信息", "/buildInfoMore/input?keyId="+flowData_buildInfoMore.keyId);
+    }
+</script>
+
+</html>

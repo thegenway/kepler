@@ -494,12 +494,14 @@ function __confirm_dialog_input(title, hint, value, confirm, cancel, opt) {
  * @param colNames jqgrid表头
  * @param colModel jqgrid表体
  * @param selectedId
+ * @param selectedName
  * @param callback
  * @param opt
  */
-function __common_dialog_select(id, title, dataUrl, colNames, colModel, selectedId, callback, opt){
+function __common_dialog_select(id, title, dataUrl, colNames, colModel, selectedId, selectedName, callback, opt){
     setCookie("jqGrid_common_layX_id", id);
     setCookie("jqGrid_common_selectIds", selectedId);
+    setCookie("jqGrid_common_selectNames", selectedName);
     setCookie("jqGrid_common_url", dataUrl);
     setCookie("jqGrid_common_colNames", JSON.stringify(colNames));
     setCookie("jqGrid_common_colModel", JSON.stringify(colModel));
@@ -550,6 +552,19 @@ function __users_dialog_select(dialogId, selectedIds, selectedNames, callback, o
         {name: 'id', index: 'id', key: true, hidden: true}
     ];
     __common_dialog_selects(dialogId, "成员选择", dataUrl, colNames, colModel, selectedIds, selectedNames, callback, opt);
+}
+
+/**
+ * 选择成员单选
+ */
+function __user_dialog_select(dialogId, selectedId, selectedName, callback, opt){
+    var dataUrl = "/main/member/list";
+    var colNames = ["姓名","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_select(dialogId, "成员选择", dataUrl, colNames, colModel, selectedId, selectedName, callback, opt);
 }
 
 /**
@@ -1158,7 +1173,7 @@ function __layX(dialogId, title, type, content, buttons, onloadAfter, opt){
         opacity : 1,
 
         //窗口阻隔、遮罩 设置true窗口以外的区域将不能操作，支持传入0-1浮点范围数值，用来设置阻隔透明度
-        shadable : false,
+        shadable : 0.5,
 
         //设置true点击空白地方将关闭窗口
         shadeDestroy : false,
@@ -1173,7 +1188,7 @@ function __layX(dialogId, title, type, content, buttons, onloadAfter, opt){
         stickMenu : false,
 
         //最小化按钮
-        minMenu : true,
+        minMenu : false,
 
         //最大化按钮
         maxMenu : true,
@@ -1399,12 +1414,13 @@ function __flow_duty_handle(entityData){
     var dataUrl = "/main/duty/findDutiesOfProcess";
     var param = {path : entityData.path, keyId : keyId};
     __ajax_get(dataUrl, param, function(data){
+        var $layx = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? $("#layx-"+entityData.parentId) : $layx = $("#layx-"+entityData.keyId);
         if(data && data.dataRows.length>0){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.dataRows[0].id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.dataRows[0].name);
-            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $layx.find($("#"+entityData.titleId)).text(" | " + data.dataRows[0].name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
         }else{
-            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | 没有符合的职责");
+            $layx.find($("#"+entityData.titleId)).text(" | 没有符合的职责");
         }
     })
 }
@@ -1420,12 +1436,13 @@ function __flow_duty_select(entityData){
         {name: 'id', index: 'id', key: true, hidden: true}
     ];
     setCookie("jqGrid_common_page", "false");
-    __common_dialog_select("flow_duty_select", "职权选择", dataUrl, colNames, colModel, "", function(data){
+    __common_dialog_select("flow_duty_select", "职权选择", dataUrl, colNames, colModel, "","", function(data){
         if(data && data.id){
             $("#"+entityData.formId).find("input[name='flowDutyId']").val(data.id);
             $("#"+entityData.formId).find("input[name='flowDutyName']").val(data.name);
+            var $layx = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? $("#layx-"+entityData.parentId) : $layx = $("#layx-"+entityData.keyId);
             // $("#"+entityData.layxId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
-            $("#layx-"+entityData.keyId).find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
+            $layx.find($("#"+entityData.titleId)).text(" | " + data.name).append('<button class="btn btn-xs btn-default mar-lft" onclick="__flow_duty_select('+ JSON.stringify(entityData).replace(/"/g, '&quot;') +')">重新选择</button>');
             __layX_close("flow_duty_select");
         }else{
             __toastr_warning("未选择职责")
@@ -1451,11 +1468,20 @@ function __flow_button_input_handle(entityData, save, commit){
             return false;
         }
 
-        var flag = "layx-"+entityData.keyId;
+        var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
+        var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
         var btn_save = '<button class="btn btn-success" title="保存" id="'+flag+'-button-save">保存</button>';
         var btn_submit = '<button class="btn btn-primary" title="提交" id="'+flag+'-button-submit">提交</button>';
         var btn_reSubmit = '<button class="btn btn-primary" title="再提交" id="'+flag+'-button-submit">再提交</button>';
 
+        //先把按钮组清空，并直接添加一个关闭按钮
+        $("#"+flag).find("div.layx-buttons").empty();
+        $("#"+flag).find("div.layx-buttons").prepend(btn_close);
+        $("#"+flag+"-button-close").on("click", function(){
+            __layX_close($("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? entityData.parentId : entityData.keyId);
+        });
+
+        //再添加流程所需按钮
         for(var i=0;i<data.flowButtonList.length;i++){
             if(data.flowButtonList[i].name == "save"){
                 $("#"+flag).find("div.layx-buttons").prepend(btn_save);
@@ -1501,12 +1527,21 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
         };
 
         //设置按钮组
-        var flag = "layx-"+entityData.keyId;
+        var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
+        var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
         var btn_approve = '<button class="btn btn-primary" title="通过" id="'+flag+'-button-approve">通过</button>';
         var btn_back = '<button class="btn btn-warning" title="退回" id="'+flag+'-button-back">退回</button>';
         var btn_deny = '<button class="btn btn-danger" title="否决" id="'+flag+'-button-deny">否决</button>';
         var btn_edit = '<button class="btn btn-default" title="编辑" id="'+flag+'-button-edit">编辑</button>';
 
+        //先把按钮组清空，并直接添加一个关闭按钮
+        $("#"+flag).find("div.layx-buttons").empty();
+        $("#"+flag).find("div.layx-buttons").prepend(btn_close);
+        $("#"+flag+"-button-close").on("click", function(){
+            __layX_close($("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? entityData.parentId : entityData.keyId);
+        });
+
+        //再添加流程所需按钮
         for(var i=0;i<data.flowButtonList.length;i++){
             if(data.flowButtonList[i].name == "deny"){
                 $("#"+flag).find("div.layx-buttons").prepend(btn_deny);
@@ -1536,4 +1571,29 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
         }
 
     })
+}
+
+/**
+ * 清除layx弹框下的所有按钮，并保留一个关闭按钮
+ * @param entityData 实体信息
+ */
+function __flow_button_clean_handle(entityData){
+    if(!entityData.keyId){entityData.keyId = ""};
+
+    var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
+    var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
+
+    $("#"+flag).find("div.layx-buttons").empty();
+    $("#"+flag).find("div.layx-buttons").prepend(btn_close);
+    $("#"+flag+"-button-close").on("click", function(){
+        __layX_close($("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? entityData.parentId : entityData.keyId);
+    });
+}
+
+/**
+ * 使用流程的文档关闭layx弹窗
+ */
+function __flow_close_layx(entityData){
+    var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? entityData.parentId : entityData.keyId;
+    __layX_close(flag);
 }

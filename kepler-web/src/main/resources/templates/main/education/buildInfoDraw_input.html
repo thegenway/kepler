@@ -63,29 +63,29 @@
 
 <script th:inline="javascript">
 
-    var keyId = [[${buildInfoDraw?.id}]];
-    var flowData = {
-        keyId : keyId ? keyId : "create",
+    var keyId_buildInfoDraw = [[${buildInfoDraw?.id}]];
+    var flowData_buildInfoDraw = {
+        keyId : keyId_buildInfoDraw ? keyId_buildInfoDraw : "create",
         formId : "form_buildInfoDraw_input"+[[${buildInfoDraw?.id}]],
         path : "com.hanqian.kepler.core.entity.primary.education.BuildInfoDraw",
         titleId : "title-duty-name-buildInfoDraw"
     };
-    var $form = $("#"+flowData.formId);
+    var $form_buildInfoDraw = $("#"+flowData_buildInfoDraw.formId);
 
     $(function(){
-        __select2(flowData.formId + " #drawTypeDictId", "请选择图纸类型");
-        __select2(flowData.formId + " #floor", "请选择楼层");
-        __laydate_date(flowData.formId + " #uploadDate");
-        __init_dropzone_edit("drawFileId"+keyId);
+        __select2(flowData_buildInfoDraw.formId + " #drawTypeDictId", "请选择图纸类型");
+        __select2(flowData_buildInfoDraw.formId + " #floor", "请选择楼层");
+        __laydate_date(flowData_buildInfoDraw.formId + " #uploadDate");
+        __init_dropzone_edit("drawFileId"+keyId_buildInfoDraw);
 
-        __flow_duty_handle(flowData);
-        __flow_button_input_handle(flowData, fn_buildInfoDraw_save, fn_buildInfoDraw_commit);
+        __flow_duty_handle(flowData_buildInfoDraw);
+        __flow_button_input_handle(flowData_buildInfoDraw, fn_buildInfoDraw_save, fn_buildInfoDraw_commit);
         fn_buildInfoDraw_input_validate();
     });
 
     //表单验证
     function fn_buildInfoDraw_input_validate(){
-        __init_validate(flowData.formId, {
+        __init_validate(flowData_buildInfoDraw.formId, {
             rules : {
                 floor : {required : true},
                 name : {required : true},
@@ -99,9 +99,9 @@
     //保存
     function fn_buildInfoDraw_save(){
         __confirm_dialog("", "确认保存吗？", function(){
-            __form_save(flowData.formId, "/buildInfoDraw/save", function(data){
+            __form_save(flowData_buildInfoDraw.formId, "/buildInfoDraw/save", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    __layX_close(flowData_buildInfoDraw.keyId)
                 }
             })
         })
@@ -109,13 +109,13 @@
 
     //提交
     function fn_buildInfoDraw_commit(){
-        if(!$("#" + flowData.formId).valid()){
+        if(!$("#" + flowData_buildInfoDraw.formId).valid()){
             return false;
         }
         __confirm_dialog("", "确认提交吗？", function(){
-            __form_save(flowData.formId, "/buildInfoDraw/commit", function(data){
+            __form_save(flowData_buildInfoDraw.formId, "/buildInfoDraw/commit", function(data){
                 if(data && data.state === 1){
-                    __layX_close(flowData.keyId)
+                    __layX_close(flowData_buildInfoDraw.keyId)
                 }
             })
         })
