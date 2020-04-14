@@ -6,11 +6,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.hanqian.kepler.common.bean.other.ServerInfo;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.utils.RedisUtil;
 import com.hanqian.kepler.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +66,17 @@ public class IndexController extends BaseController {
 		}
 
 		return JSONUtil.parseObj(re);
+	}
+
+	/**
+	 * 跳转至服务器信息
+	 */
+	@GetMapping("server")
+	public String server(Model model) throws Exception {
+		ServerInfo server = new ServerInfo();
+		server.copyTo();
+		model.addAttribute("server", server);
+		return "main/sys/serverInfo";
 	}
 
 }

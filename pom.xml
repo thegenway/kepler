@@ -102,6 +102,13 @@
 				<version>1.4.7</version>
 			</dependency>
 
+            <!-- 获取系统信息 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>3.9.1</version>
+            </dependency>
+
 
 
 			<dependency>

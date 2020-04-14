@@ -148,6 +148,16 @@
         "target": "_self",
         "isManageMenu": "1",
         "children": []
+      },
+      {
+        "name": "服务器信息",
+        "menuType": "菜单",
+        "iconCode": "",
+        "orderNum": "9",
+        "url": "/common/index/server",
+        "target": "_self",
+        "isManageMenu": "1",
+        "children": []
       }
     ]
   },
