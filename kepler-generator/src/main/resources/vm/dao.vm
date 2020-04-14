@@ -1,0 +1,17 @@
+#set($selfPackage = ${packageName})
+#set($selfPackage = $selfPackage.replace('entity','dao'))
+package $selfPackage;
+
+import ${path};
+import com.hanqian.kepler.flow.base.dao.BaseFlowDao;
+
+/**
+* ${description} dao with generator
+* ============================================================================
+* author : ${author}
+* createDate:  ${nowTime} 。
+* ============================================================================
+*/
+public interface ${classNameU}Dao extends BaseFlowDao<${classNameU}> {
+
+}

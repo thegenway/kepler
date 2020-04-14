@@ -12,6 +12,7 @@ public enum DictEnum {
     buildInfo_waterproofLevel("楼宇信息登记-房屋防水等级"),
     buildInfo_seismicLevel("楼宇信息登记-抗震烈度"),
     buildInfo_draw_drawType("楼宇信息登记-图纸-图纸类型"),
+    energy_energyType("能源账单-账单类型"),
 
     SysDictDemo("系统字典实例");
 

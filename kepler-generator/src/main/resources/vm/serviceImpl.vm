@@ -1,0 +1,32 @@
+#set($selfPackage = ${packageName})
+#set($selfPackage = $selfPackage.replace('entity','service'))
+#set($selfPackage = $selfPackage.replace('.primary',''))
+package ${selfPackage}.impl;
+
+import ${packageName.replace('entity','dao')}.${classNameU}Dao;
+import ${path};
+import ${selfPackage}.${classNameU}Service;
+import com.hanqian.kepler.core.service.flow.impl.BaseFlowServiceImpl;
+import com.hanqian.kepler.flow.base.dao.BaseFlowDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+* ${description} serviceImpl with generator
+* ============================================================================
+* author : ${author}
+* createDate:  ${nowTime} 。
+* ============================================================================
+*/
+@Service
+public class ${classNameU}ServiceImpl extends BaseFlowServiceImpl<${classNameU}> implements ${classNameU}Service {
+
+    @Autowired
+    private ${classNameU}Dao ${classNameL}Dao;
+
+    @Override
+    public BaseFlowDao<${classNameU}> getBaseFlowDao() {
+        return ${classNameL}Dao;
+    }
+
+}

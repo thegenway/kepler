@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">基本信息-能源账单</h3>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12 table-toolbar-left">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-energyBill-add" th:disabled="${!isCreator}">新建</button>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="energyBill_table"></table>
+                <div id="energyBill_page"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function(){
+        init_grid_energyBill();
+    });
+
+    function init_grid_energyBill(){
+        __init_jqgrid('energyBill_table', 'energyBill_page', '/energyBill/list',
+                ["账单月份","账单类型","状态","操作","id"],
+                [
+                    {name: 'billDate', index: 'billDate', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'energyTypeDict.name', index: 'energyTypeDict.name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_energyBill},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+                ]
+        );
+    }
+
+    function actFormat_energyBill(cellvalue, options, rowObject){
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_energyBill_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    //input
+    $("#btn-energyBill-add").on("click", function(){
+        __layX_html_read("create", "基本信息-能源账单", "/energyBill/input");
+    });
+
+    //read
+    function fn_energyBill_read(id){
+        __layX_html_read(id, "基本信息-能源账单", "/energyBill/read?keyId="+id);
+    }
+
+</script>
+
+</html>

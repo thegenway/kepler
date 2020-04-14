@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="${classNameL}-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">${description}<span id="title-duty-name-${classNameL}" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_${classNameL}_input'+${${classNameL}?.id}" class="form-horizontal" autocomplete="off">
+            <input type="hidden" name="keyId" th:value="${${classNameL}?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="text" name="name" id="name" th:value="${${classNameL}?.name}" class="form-control" placeholder="名称">
+                </div>
+            </div>
+
+        #foreach($item in $entityFields)
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">${item.originalName}<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    #if($item.type == "Date")<input type="text" name="${item.name}" id="${item.name}" th:value="${#dates.format(${classNameL}?.${item.originalName}, 'yyyy-MM-dd')}" class="form-control" placeholder="${item.originalName}">
+                    #elseif($item.name.indexOf("FileId")!=-1)<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}" style="display: none">
+                    #else<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}">
+                #end</div>
+            </div>
+        #end
+
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var keyId_${classNameL} = [[${${classNameL}?.id}]];
+    var flowData_${classNameL} = {
+        keyId : keyId_${classNameL} ? keyId_${classNameL} : "create",
+        formId : "form_${classNameL}_input"+[[${${classNameL}?.id}]],
+        path : "${path}",
+        titleId : "title-duty-name-${classNameL}"
+    };
+    var $form = $("#"+flowData_${classNameL}.formId);
+
+    $(function(){
+#foreach($item in $entityFields)
+#if($item.type == "Date")        __laydate_date(flowData_${classNameL}.formId + " #${item.name}");#end
+#if($item.name.indexOf("FileId")!=-1)        __init_dropzone_edit("${item.name}"+keyId_${classNameL});#end
+#end
+
+        __flow_duty_handle(flowData_${classNameL});
+        __flow_button_input_handle(flowData_${classNameL}, fn_${classNameL}_save, fn_${classNameL}_commit);
+        fn_${classNameL}_input_validate();
+
+    });
+
+    //表单验证
+    function fn_${classNameL}_input_validate(){
+        __init_validate(flowData_${classNameL}.formId, {
+            rules : {
+                name : {required : true}#foreach($item in $entityFields),
+                $item.name : {required : true#if($item.type=='BigDecimal'), number : true#end#if($item.type=='int' || $item.type=='Integer'), digits : true#end}#end
+
+            }
+        });
+    }
+
+    //保存方法
+    function fn_${classNameL}_save(){
+        __confirm_dialog("", "确认保存吗？", function(){
+            __form_save(flowData_${classNameL}.formId, "/${classNameL}/save", function(data){
+                if(data && data.state === 1){
+                    __flow_close_layx(flowData_${classNameL});
+                }
+            })
+        })
+    }
+
+    //提交方法
+    function fn_${classNameL}_commit(){
+        if(!$("#" + flowData_${classNameL}.formId).valid()){
+            return false;
+        }
+        __confirm_dialog("", "确认提交吗？", function(){
+            __form_save(flowData_${classNameL}.formId, "/${classNameL}/commit", function(data){
+                if(data && data.state === 1){
+                    __flow_close_layx(flowData_${classNameL});
+                }
+            })
+        })
+    }
+
+</script>
+
+</html>

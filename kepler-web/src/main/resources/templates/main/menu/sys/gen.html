@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">代码生成</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="jqGrid_wrapper">
+                <table id="gen_table"></table>
+                <div id="gen_page"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    // TODO gen页面
+
+    $(function(){
+        init_grid_gen();
+        __ajax_get("/gen/findAllEntityInfo", {}, function(data){
+
+        })
+    });
+
+    function init_grid_gen(){
+        __init_jqgrid('gen_table', null, '/gen/findAllEntityInfo',
+            ["描述","path","表名","包名","操作"],
+            [
+                {name: 'description', index: 'description', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'path', index: 'path', width: 150, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'classNameU', index: 'classNameU', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'packageName', index: 'packageName', width: 150, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 50, sortable: false, search: false, formatter: actFormat_gen}
+            ],false
+        );
+    }
+
+    function actFormat_gen(cellvalue, options, rowObject){
+        var path = rowObject.path;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_gen_gen(\'' + path + '\');"><i class="fa fa-pencil-square-o"> </i> 生成</button> ';
+        return cellvalue;
+    }
+
+    //执行生成
+    function fn_gen_gen(path){
+        location.href = "/gen/genCode?path="+path;
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,164 @@
+#set($servicePackage = ${packageName})
+#set($servicePackage = $servicePackage.replace('entity','service'))
+#set($servicePackage = $servicePackage.replace('.primary',''))
+package ${packageName.replace('core.entity.primary','web.controller')};
+
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
+import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.DictEnum;
+import com.hanqian.kepler.common.jpa.specification.Rule;
+import ${path};
+import ${servicePackage}.${classNameU}Service;
+import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.flow.vo.ProcessLogVo;
+import com.hanqian.kepler.security.annotation.CurrentUser;
+import com.hanqian.kepler.web.annotation.RequestJsonParam;
+import com.hanqian.kepler.web.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+/**
+ * ${description} controller with generator
+ * ============================================================================
+ * author : ${author}
+ * createDate:  ${nowTime}  。
+ * ============================================================================
+ */
+@Controller
+@RequestMapping("/${classNameL}")
+public class ${classNameU}Controller extends BaseController {
+
+    @Autowired
+    private ${classNameU}Service ${classNameL}Service;
+
+    /**
+     * list
+     */
+    @GetMapping("list")
+    @ResponseBody
+    public JqGridReturn list(@CurrentUser User user, JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters){
+        Pageable pageable = getJqGridPageable(pager);
+        List<Rule> rules = getJqGridSearchWithFlow(filters);
+        JqGridContent<${classNameU}> jqGridContent = ${classNameL}Service.getJqGridContentWithFlow(rules, pageable, user);
+
+        List<Map<String, Object>> dataRows = new ArrayList<>();
+        jqGridContent.getList().forEach(entity -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", entity.getId());
+            map.put("name", StrUtil.nullToDefault(entity.getName(), ""));
+            // TODO 补充list表格字段
+            map.put("processState", entity.getProcessState()!=null ? entity.getProcessState().value() : "");
+            dataRows.add(map);
+        });
+        return getJqGridReturn(dataRows, jqGridContent.getPage());
+    }
+
+    /**
+     * read页面
+     */
+    @GetMapping("read")
+    public String read(String keyId, Model model){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(keyId);
+        model.addAttribute("${classNameL}", ${classNameL});
+
+        return "main/${moduleName}/${classNameL}_read";
+    }
+
+     /**
+        * input页面
+        */
+     @GetMapping("input")
+     public String input(String keyId, Model model){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(keyId);
+        model.addAttribute("${classNameL}", ${classNameL});
+
+        return "main/${moduleName}/${classNameL}_input";
+     }
+
+    /**
+     * 赋值
+     */
+    private ${classNameU} setData(User user, String keyId#foreach($item in $entityFields),String ${item.name}#end){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(keyId);
+        if(${classNameL} == null){
+            ${classNameL} = new ${classNameU}();
+            ${classNameL}.setCreator(user);
+        }
+
+         return ${classNameL};
+     }
+
+    /**
+     * 保存
+     */
+    @PostMapping("save")
+    @ResponseBody
+    public AjaxResult save(@CurrentUser User user, ProcessLogVo processLogVo#foreach($item in $entityFields),String ${item.name}#end){
+        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId()#foreach($item in $entityFields),${item.name}#end);
+
+        if(StrUtil.isBlank(${classNameL}.getId())){
+            return ${classNameL}Service.draft(${classNameL});
+        } else {
+            ${classNameL}Service.save(${classNameL});
+            return AjaxResult.success("保存成功");
+        }
+    }
+
+    /**
+     * 提交
+     */
+    @PostMapping("commit")
+    @ResponseBody
+    public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo#foreach($item in $entityFields),String ${item.name}#end){
+        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId()#foreach($item in $entityFields),${item.name}#end);
+        return ${classNameL}Service.commit(${classNameL}, processLogVo);
+    }
+
+    /**
+     * 审批
+     */
+    @PostMapping("approve")
+    @ResponseBody
+    public AjaxResult approve(@CurrentUser User user, ProcessLogVo processLogVo){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(processLogVo.getKeyId());
+        return ${classNameL}Service.approve(${classNameL}, processLogVo);
+    }
+
+    /**
+     * 退回
+     */
+    @PostMapping("back")
+    @ResponseBody
+    public AjaxResult back(@CurrentUser User user, ProcessLogVo processLogVo){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(processLogVo.getKeyId());
+        return ${classNameL}Service.back(${classNameL}, processLogVo);
+    }
+
+    /**
+     * 否决
+     */
+    @PostMapping("deny")
+    @ResponseBody
+    public AjaxResult deny(@CurrentUser User user, ProcessLogVo processLogVo){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(processLogVo.getKeyId());
+        return ${classNameL}Service.deny(${classNameL}, processLogVo);
+    }
+
+}

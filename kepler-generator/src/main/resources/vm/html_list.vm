@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div id="page-content">
+    <div class="panel">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">${description}</h3>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-sm-12 table-toolbar-left">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-${classNameL}-add" th:disabled="${!isCreator}">新建</button>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="${classNameL}_table"></table>
+                <div id="${classNameL}_page"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function(){
+        init_grid_${classNameL}();
+    });
+
+    function init_grid_${classNameL}(){
+        __init_jqgrid('${classNameL}_table', '${classNameL}_page', '/${classNameL}/list',
+                ["名称","状态","操作","id"],
+                [
+                    {name: 'name', index: 'name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_${classNameL}},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+                ]
+        );
+    }
+
+    function actFormat_${classNameL}(cellvalue, options, rowObject){
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_${classNameL}_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        return cellvalue;
+    }
+
+    //input
+    $("#btn-${classNameL}-add").on("click", function(){
+        __layX_html_read("create", "${description}", "/${classNameL}/input");
+    });
+
+    //read
+    function fn_${classNameL}_read(id){
+        __layX_html_read(id, "${description}", "/${classNameL}/read?keyId="+id);
+    }
+
+</script>
+
+</html>

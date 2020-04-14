@@ -1,0 +1,19 @@
+#set($selfPackage = ${packageName})
+#set($selfPackage = $selfPackage.replace('entity','service'))
+#set($selfPackage = $selfPackage.replace('.primary',''))
+package $selfPackage;
+
+
+import ${path};
+import com.hanqian.kepler.core.service.flow.BaseFlowService;
+
+/**
+* ${description} service with generator
+* ============================================================================
+* author : ${author}
+* createDate:  ${nowTime}  。
+* ============================================================================
+*/
+public interface ${classNameU}Service extends BaseFlowService<${classNameU}> {
+
+}
