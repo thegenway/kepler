@@ -28,5 +28,6 @@ public interface ProcessLogService extends BaseService<ProcessLog, String> {
      * 根据人员查找和自己有关的文档id
      */
     List<String> findKeyIdsOfUserOption(User user, String path);
+    List<String> findKeyIdsOfUserOption(User user);
 
 }

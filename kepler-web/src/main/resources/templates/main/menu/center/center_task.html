@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel-body">
+    <h1 class="page-header text-overflow pad-btm bord-btm mar-btm">我的文档</h1>
+
+    <div class="row">
+        <div class="col-sm-6 table-toolbar-left"></div>
+        <div class="col-sm-6 table-toolbar-right">
+            <div class="btn-group">
+                <button data-content="1" class="myTaskByn btn btn-primary active">我创建的</button>
+                <button data-content="2" class="myTaskByn btn btn-primary">我参与过审批的</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="jqGrid_wrapper">
+        <table id="my_taskEntity_table"></table>
+        <div id="my_taskEntity_page"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function(){
+        init_grid_my_taskEntity();
+    });
+
+    function init_grid_my_taskEntity(){
+        __init_jqgrid('my_taskEntity_table', 'my_taskEntity_page', '/flow/taskEntity/list_my',
+            ['keyId','processState','所属模块', '操作表','创建者','创建时间', '操作', 'id', 'readUrl'],
+            [
+                {name: 'keyId', index: 'keyId', width: 100, sortable: false, searchoptions: {sopt: ['cn']},hidden:true},
+                {name: 'processState', index: 'processState', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'module', index: 'module', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'tableName', index: 'tableName', width: 100, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'creator.name', index: 'creator.name', width: 100, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'createTime', index: 'createTime', width: 150, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 60, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true},
+                {name: 'readUrl', index: 'readUrl', width: 100, hidden: true}
+            ],true,{
+                postData : {
+                    ifPage : true,
+                    type : "1"
+                }
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button type="button" class="btn btn-primary btn-xs" onclick="fn_my_taskEntity_read(\'' + id + '\');">查看</button>';
+        return cellvalue;
+    }
+    
+    function fn_my_taskEntity_read(id){
+        var rowDatas = $("#my_taskEntity_table").jqGrid('getRowData', id);
+        __layX_html_read(rowDatas.keyId, rowDatas.tableName, "../"+rowDatas.readUrl);
+    }
+
+    //更新状态
+    $(".myTaskByn").on("click", function(){
+        var type = $(this).attr("data-content");
+        __reflash_jqgrid("my_taskEntity_table", {ifPage : true, type : type});
+
+        $(".myTaskByn").removeClass("active");
+        $(this).addClass("active");
+    });
+    
+</script>
+
+</html>

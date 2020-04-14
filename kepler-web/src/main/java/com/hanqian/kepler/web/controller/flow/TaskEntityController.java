@@ -145,6 +145,29 @@ public class TaskEntityController extends BaseController {
         return getJqGridReturn(dataRows, jqGridContent.getPage());
     }
 
+    /**
+     * 个人中心文档管理 list
+     * @param type 1我创建的 2我参与过审批的
+     */
+    @GetMapping("list_my")
+    @ResponseBody
+    public JqGridReturn list_my(@CurrentUser User user, JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters, String type){
+        Pageable pageable = getJqGridPageable(pager);
+        List<Rule> rules = getJqGridSearchWithFlow(filters);
+        if(StrUtil.equals("1", type)){
+            rules.add(Rule.eq("creator.id", user.getId()));
+        }
+        if(StrUtil.equals("2", type)){
+            rules.add(Rule.ne("creator.id", user.getId()));
+            rules.add(Rule.in("keyId", processLogService.findKeyIdsOfUserOption(user)));
+        }
+        JqGridContent<TaskEntity> jqGridContent = taskEntityService.getJqGridContent(rules, pageable);
+
+        List<Map<String, Object>> dataRows = new ArrayList<>();
+        jqGridContent.getList().forEach(taskEntity -> dataRows.add(getTaskEntityMap(taskEntity)));
+        return getJqGridReturn(dataRows, jqGridContent.getPage());
+    }
+
     //公共封装taskEntity map
     private Map<String, Object> getTaskEntityMap(TaskEntity taskEntity){
         Map<String, Object> map = new HashMap<>();
@@ -158,7 +181,7 @@ public class TaskEntityController extends BaseController {
         map.put("nextUserNames", taskEntity.getNextUserNames());
         map.put("readUrl", StrUtil.lowerFirst(StrUtil.subAfter(taskEntity.getPath(), ".", true))+"/read?keyId="+taskEntity.getKeyId());
 
-        map.put("processState", taskEntity.getProcessState()!=null ? taskEntity.getProcessState().name() : "");
+        map.put("processState", taskEntity.getProcessState()!=null ? taskEntity.getProcessState().value() : "");
         map.put("state", taskEntity.getState()!=null ? taskEntity.getState().name() : "");
         map.put("path", taskEntity.getPath());
         map.put("creator.name", taskEntity.getCreator()!=null ? taskEntity.getCreator().getName() : "");
