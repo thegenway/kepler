@@ -882,33 +882,33 @@ function __city_picker(elem, province, city, district, opt){
 
 function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) {
     var defaults = {
-        url: url,
-        loadonce:ifPage!=null ? !ifPage : false,
-        datatype: 'json',
+        url : url,
+        loadonce : ifPage!=null ? !ifPage : false,
+        datatype : 'json',
         height : 'auto',
         autowidth : true,
         colNames : colNames,
         colModel : colModel,
-        pager : '#'+page_id,
+        pager : page_id!=null ? '#'+page_id : false,
         sortorder : 'desc',
-        rowList: [10, 30, 50, 100],
-        rowNum: page_id!=null&&page_id!=='' ? 10 : -1,
-        rownumbers: true,
-        jsonReader: {
-            root: 'dataRows',
-            repeatitems: false
+        rowList : [10, 30, 50, 100],
+        rowNum : page_id!=null&&page_id!== '' ? 10 : 10000,
+        rownumbers : true,
+        jsonReader : {
+            root : 'dataRows',
+            repeatitems : false
         },
-        prmNames: {
-            search:'search'
+        prmNames : {
+            search : 'search'
         },
         postData : {
             ifPage : ifPage!=null ? ifPage : true
         },
-        gridview: true,
-        viewrecords: true,
-        viewsortcols: [true, 'vertical', true],
+        gridview : true,
+        viewrecords : true,
+        viewsortcols : [true, 'vertical', true],
         subGrid : false,
-        subGridOptions: {
+        subGridOptions : {
             plusicon : "ace-icon fa fa-plus center bigger-110 blue", //展开图标
             minusicon : "ace-icon fa fa-minus center bigger-110 blue", //收缩图标
             openicon : "ace-icon fa fa-chevron-right center orange", //打开时左侧图标
@@ -918,7 +918,7 @@ function __init_jqgrid(table_id, page_id, url, colNames, colModel, ifPage, opt) 
         loadComplete : function(){
             $.minimalTips(); //增加tip提示工具
         },
-        resizeStart:function(event, index){
+        resizeStart : function(event, index){
             $('#'+table_id).closest(".ui-jqgrid-bdiv").css({"overflow-x":"auto"})
         }
     };

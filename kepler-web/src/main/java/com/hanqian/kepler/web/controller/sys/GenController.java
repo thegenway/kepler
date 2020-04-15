@@ -55,6 +55,10 @@ public class GenController implements Serializable {
 
 		Map<String, Object> data = new HashMap<>();
 		data.put("dataRows", entityInfoList);
+		data.put("page", 0);
+		data.put("records", entityInfoList.size());
+		data.put("rows", 0);
+		data.put("total", 0);
 		return data;
 	}
 

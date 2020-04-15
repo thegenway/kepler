@@ -19,23 +19,18 @@
 
 <script th:inline="javascript">
 
-    // TODO gen页面
-
     $(function(){
         init_grid_gen();
-        __ajax_get("/gen/findAllEntityInfo", {}, function(data){
-
-        })
     });
 
     function init_grid_gen(){
         __init_jqgrid('gen_table', null, '/gen/findAllEntityInfo',
             ["描述","path","表名","包名","操作"],
             [
-                {name: 'description', index: 'description', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'path', index: 'path', width: 150, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'classNameU', index: 'classNameU', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'packageName', index: 'packageName', width: 150, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'description', index: 'description', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'path', index: 'path', width: 150, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'classNameU', index: 'classNameU', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'packageName', index: 'packageName', width: 150, sortable: false, searchoptions: {sopt: ['cn']}},
                 {name: 'act', index: 'act', width: 50, sortable: false, search: false, formatter: actFormat_gen}
             ],false
         );

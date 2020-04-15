@@ -26,13 +26,13 @@
     });
 
     function init_grid_group(){
-        __init_jqgrid("group_table", null, "/main/group/list",
+        __init_jqgrid("group_table", "group_page", "/main/group/list",
             ['群组名称', '描述', '成员人数', '组建时间','群成员', '操作', '群成员id', 'id'],
             [
-                {name: 'name', index: 'name', width: 100, sortable: true, search: false, searchoptions: {sopt: ['cn']}},
-                {name: 'description', index: 'description', width: 100, sortable: true, search: false, searchoptions: {sopt: ['cn']}},
-                {name: 'count', index: 'count', width: 100, sortable: true, search: false, searchoptions: {sopt: ['eq']}},
-                {name: 'createTime', index: 'createTime', width: 100, sortable: true, search: false, searchoptions: {sopt: ['eq']}},
+                {name: 'name', index: 'name', width: 100, sortable: true, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'description', index: 'description', width: 100, sortable: true, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'count', index: 'count', width: 100, sortable: true, search: true, searchoptions: {sopt: ['eq']}},
+                {name: 'createTime', index: 'createTime', width: 100, sortable: true, search: true, searchoptions: {sopt: ['eq']}},
                 {name: 'memberBtn', index: 'memberBtn', width: 100, sortable: false, search: false, formatter: memberBtnFormat},
                 {name: 'act', index: 'act', width: 100, sortable: false, search: false, formatter: actFormat},
                 {name: 'userIds', index: 'userIds', width: 100, sortable: true, search: false, hidden: true},
@@ -50,7 +50,7 @@
         __init_jqgrid(subgrid_table_id, null,"/main/group/listMember?keyId="+row_id,
             ["姓名","id"],
                 [
-                {name:'name', index:'name', width:100, search:false, sortable:false, searchoptions: {sopt: ['cn']}},
+                {name:'name', index:'name', width:100, search:true, sortable:false, searchoptions: {sopt: ['cn']}},
                 {name:'id',index:'id',search:false,hidden:true}
             ], false
         );
