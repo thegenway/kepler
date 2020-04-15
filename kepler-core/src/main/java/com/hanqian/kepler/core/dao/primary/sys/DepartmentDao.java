@@ -40,4 +40,10 @@ public interface DepartmentDao extends BaseDao<Department, String> {
 	 */
 	List<Department> findDepartmentsByStateEqualsAndParentIs(BaseEnumManager.StateEnum stateEnum, Department parent);
 
+	/**
+	 * 查询我所存在的部门id
+	 */
+	@Query(value = "select DISTINCT power.department_id from sys_power power where power.state='Enable' and power.id in (select duty.power_id from sys_duty duty where duty.state='Enable' and duty.user_id=:userId)", nativeQuery = true)
+	List<String> findMyDepartmentIds(@Param("userId") String userId);
+
 }

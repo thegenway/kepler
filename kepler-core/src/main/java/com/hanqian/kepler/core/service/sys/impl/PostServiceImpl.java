@@ -7,6 +7,7 @@ import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.core.dao.primary.sys.PostDao;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
 import com.hanqian.kepler.core.service.sys.PostService;
+import com.hanqian.kepler.flow.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post, String> implements Po
 	@Override
 	public List<Post> findPostsByDepartmentNoPower(String departmentId) {
 		return StrUtil.isNotBlank(departmentId) ? postDao.findPostsByDepartmentNoPower(departmentId) : new ArrayList<>();
+	}
+
+	@Override
+	public List<String> findMyPostIds(User user) {
+		return user!=null ? postDao.findMyPostIds(user.getId()) : new ArrayList<>();
 	}
 }

@@ -101,4 +101,9 @@ public class PowerServiceImpl extends BaseServiceImpl<Power, String> implements 
     public Power getParentPowerByProcessLogKeyId(String keyId) {
         return StrUtil.isNotBlank(keyId) ? powerDao.getParentPowerByProcessLogKeyId(keyId) : null;
     }
+
+    @Override
+    public List<String> findMyPowerIds(User user) {
+        return user!=null ? powerDao.findMyPowerIds(user.getId()) : new ArrayList<>();
+    }
 }

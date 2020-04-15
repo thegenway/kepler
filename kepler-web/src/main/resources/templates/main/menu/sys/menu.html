@@ -85,16 +85,15 @@
     }
 
     function fn_menu_addOrUpdate(keyId, parentId){
-        __open_dialog_form("添加菜单", "/main/menu/input?keyId="+keyId+"&parentId="+parentId, function(dialogRef){
+        __layX_html_save(keyId ? keyId : "create", "菜单", "/main/menu/input?keyId="+keyId+"&parentId="+parentId, function(id, button, event){
             var callback = function(data){
-                dialogRef.enableButtons();
                 if(data && data.state === 1){
-                    dialogRef.close();
-                    $("#menu_table").setGridParam({datatype:'json', postData: {}}).trigger('reloadGrid');
+                    __layX_close(id);
+                    __reflash_jqgrid("menu_table");
                 }
             };
             fn_menu_save(callback);
-        });
+        })
     }
 
     //添加菜单

@@ -77,4 +77,9 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department, String> i
 
 		return AjaxResult.success();
 	}
+
+	@Override
+	public List<String> findMyDepartmentIds(User user) {
+		return user!=null ? departmentDao.findMyDepartmentIds(user.getId()) : new ArrayList<>();
+	}
 }

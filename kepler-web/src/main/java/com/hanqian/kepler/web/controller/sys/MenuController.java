@@ -15,6 +15,9 @@ import com.hanqian.kepler.core.entity.primary.sys.Menu;
 import com.hanqian.kepler.core.service.flow.ProcessBriefService;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.MenuService;
+import com.hanqian.kepler.flow.utils.FlowUtil;
+import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
+import com.hanqian.kepler.flow.vo.FlowParticipantVo;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +117,12 @@ public class MenuController extends BaseController {
 	public String input(Model model, String keyId, String parentId){
 
 		if(StrUtil.isNotBlank(keyId)){
-			model.addAttribute("menu", menuService.get(keyId));
+			Menu menu = menuService.get(keyId);
+			model.addAttribute("menu", menu);
+			//查看权限vo
+			if(JSONUtil.isJsonObj(menu.getReadAuthInfoJson())){
+				model.addAttribute("readAuth", FlowUtil.getFlowParticipantInputVo(JSONUtil.toBean(menu.getReadAuthInfoJson(), FlowParticipantVo.class)));
+			}
 		}else if(StrUtil.isNotBlank(parentId)){
 			model.addAttribute("parentMenu", menuService.get(parentId));
 		}
@@ -127,7 +135,8 @@ public class MenuController extends BaseController {
 	 */
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	@ResponseBody
-	public Object save(@CurrentUser User user, String keyId, String parentId, String menuType, String name, String url, String target, String iconCode, Integer orderNum, Integer isManageMenu){
+	public Object save(@CurrentUser User user, String keyId, String parentId, String menuType, String name, String url, String target, String iconCode, Integer orderNum
+			, Integer isManageMenu, Integer ifAllRead, String readAuthInputJson){
 		Menu menu = menuService.get(keyId);
 		if(menu == null){
 			menu = new Menu();
@@ -143,6 +152,13 @@ public class MenuController extends BaseController {
 		menu.setOrderNum(orderNum!=null ? orderNum : 999);
 		menu.setLevel(parent!=null ? parent.getLevel() + 1 : 1);
 		menu.setIsManageMenu(isManageMenu!=null ? isManageMenu : 0);
+
+		if(menu.getIsManageMenu()==0){
+			menu.setIfAllRead(ifAllRead!=null ? ifAllRead : 0);
+			FlowParticipantInputVo readAuthVo = JSONUtil.toBean(readAuthInputJson, FlowParticipantInputVo.class);
+			FlowParticipantVo flowParticipantVo = toFlowParticipantVo(readAuthVo);
+			menu.setReadAuthInfoJson(JSONUtil.toJsonStr(flowParticipantVo));
+		}
 
 		menuService.save(menu);
 
@@ -238,6 +254,7 @@ public class MenuController extends BaseController {
 			menu.setTarget(menuObject.getStr("target"));
 			menu.setLevel(parent!=null ? parent.getLevel() + 1 : 1);
 			menu.setIsManageMenu(Convert.toInt(menuObject.getStr("isManageMenu")));
+			menu.setIfAllRead(1);
 			if(parent != null){
 				menu.setParent(parent);
 			}

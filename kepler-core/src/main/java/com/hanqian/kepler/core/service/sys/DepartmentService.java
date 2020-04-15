@@ -37,4 +37,9 @@ public interface DepartmentService extends BaseService<Department, String> {
      */
     AjaxResult saveUpdateDepartment(Department department);
 
+    /**
+     * 查询我所存在的部门id
+     */
+    List<String> findMyDepartmentIds(User user);
+
 }

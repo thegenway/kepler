@@ -41,4 +41,10 @@ public interface PowerDao extends BaseDao<Power, String> {
             nativeQuery = true)
     Power getParentPowerByProcessLogKeyId(@Param("keyId")String keyId);
 
+    /**
+     * 查询我所存在的职权id
+     */
+    @Query(value = "select DISTINCT power.id from sys_power power where power.state='Enable' and power.id in (select duty.power_id from sys_duty duty where duty.state='Enable' and duty.user_id=:userId)", nativeQuery = true)
+    List<String> findMyPowerIds(@Param("userId") String userId);
+
 }

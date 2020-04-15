@@ -18,4 +18,9 @@ public interface GroupService extends BaseService<Group, String> {
      */
     List<User> findUsersByGroup(Group group);
 
+    /**
+     * 查询我所存在的群组id
+     */
+    List<String> findMyGroupIds(User user);
+
 }

@@ -79,16 +79,19 @@ public interface UserService extends BaseService<User, String> {
 	 */
 	List<User> getUserListByGroup(String[] groupIdArr);
 
-
 	/**
 	 * 获取当前流程操作人员
 	 */
 	Set<User> getUserListOfFlow(TaskEntity taskEntity);
 
-
 	/**
 	 * 根据配置获取所有用户
 	 */
 	List<User> getUserListByFlowConfig(String[] departmentIds, String[] postIds, String[] powerIds, String[] groupIds, String[] userIds);
+
+	/**
+	 * 查询当前用户的岗位/部门/职权/群组 所有id一起显示
+	 */
+	List<String> findPostDeptPowerGroupAllIds(User user);
 
 }

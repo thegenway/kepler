@@ -22,6 +22,11 @@ public interface MenuService extends BaseService<Menu, String> {
 	List<Map<String, Object>> getMenuTree(String[] typeArr, User user);
 
 	/**
+	 * 加载首页菜单栏（根据当前用户的菜单栏权限）
+	 */
+	List<Map<String, Object>> getMenuTreeByUser(User user);
+
+	/**
 	 * 获取map
 	 */
 	Map<String, Object> getMenuMap(Menu menu);
@@ -35,5 +40,10 @@ public interface MenuService extends BaseService<Menu, String> {
 	 * 根据父及获取子菜单
 	 */
 	List<Menu> getMenuListByParent(Menu parentMenu);
+
+	/**
+	 * 根据查看权限配置查出我能看到的菜单栏
+	 */
+	List<String> findMyMenuIdsByAuth(User user);
 
 }

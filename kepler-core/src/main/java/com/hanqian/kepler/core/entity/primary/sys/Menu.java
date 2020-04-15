@@ -78,4 +78,15 @@ public class Menu extends BaseEntity {
 	 */
 	private int isManageMenu;
 
+	/**
+	 * 是否所有人可查看
+	 */
+	private int ifAllRead;
+
+	/**
+	 * 查看权限信息
+	 */
+	@Column(length = 2000)
+	private String readAuthInfoJson;
+
 }

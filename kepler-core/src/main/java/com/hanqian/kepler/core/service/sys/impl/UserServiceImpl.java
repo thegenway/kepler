@@ -261,4 +261,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 				userIds!=null && userIds.length>0 ? userIds : emptyArr
 		);
 	}
+
+	@Override
+	public List<String> findPostDeptPowerGroupAllIds(User user) {
+		return user!=null ? userDao.findPostDeptPowerGroupAllIds(user.getId(), "%"+user.getId()+"%") : new ArrayList<>();
+	}
 }

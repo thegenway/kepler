@@ -13,6 +13,7 @@ import com.hanqian.kepler.core.service.sys.MenuService;
 import com.hanqian.kepler.core.service.sys.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,6 +56,43 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, String> implements Me
 
 		Sort sort = new Sort(Sort.Direction.ASC, "orderNum");
 		List<Menu> allMenuList = findAll(SpecificationFactory.where(rules), sort);
+
+		//先获取第一级
+		for(Menu menu : allMenuList){
+			if(menu.getParent()==null){
+				menuTree.add(getMenuMap(menu));
+			}
+		}
+
+		for(Map<String, Object> rootMap : menuTree){
+			rootMap.put("children", getChild(rootMap.get("id").toString(), allMenuList));
+		}
+
+		return menuTree;
+	}
+
+	@Override
+	public List<Map<String, Object>> getMenuTreeByUser(User user) {
+		List<Map<String, Object>> menuTree = new ArrayList<Map<String, Object>>();
+		Sort sort = new Sort(Sort.Direction.ASC, "orderNum");
+		Specification specification;
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+
+		if(userService.isManager(user)){
+			//系统管理员直接返回所有
+			specification = SpecificationFactory.where(rules);
+		}else{
+			//根据菜单查看权限查询
+			rules.add(Rule.eq("isManageMenu", 0));
+			List<String> userOrgAllIds = userService.findPostDeptPowerGroupAllIds(user);
+			userOrgAllIds.add(user.getId());
+			List<Rule> authRules = new ArrayList<>();
+			userOrgAllIds.forEach(id -> authRules.add(Rule.like("readAuthInfoJson", id)));
+			specification = SpecificationFactory.where(rules).and(SpecificationFactory.where(Rule.eq("ifAllRead", 1)).or(SpecificationFactory.or(authRules)));
+		}
+
+		List<Menu> allMenuList = findAll(specification, sort);
 
 		//先获取第一级
 		for(Menu menu : allMenuList){
@@ -120,5 +158,10 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, String> implements Me
 		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
 		rules.add(Rule.eq("parent", parentMenu));
 		return findAll(SpecificationFactory.where(rules), new Sort(Sort.Direction.ASC, "orderNum"));
+	}
+
+	@Override
+	public List<String> findMyMenuIdsByAuth(User user) {
+		return null;
 	}
 }

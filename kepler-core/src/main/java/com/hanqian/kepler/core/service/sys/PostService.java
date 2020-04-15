@@ -2,6 +2,7 @@ package com.hanqian.kepler.core.service.sys;
 
 import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.core.entity.primary.sys.Post;
+import com.hanqian.kepler.flow.entity.User;
 
 import java.util.List;
 
@@ -23,5 +24,10 @@ public interface PostService extends BaseService<Post, String> {
      * 根据部门，获取此部门下还没有配置职权的岗位
      */
     List<Post> findPostsByDepartmentNoPower(String departmentId);
+
+    /**
+     * 查询我所存在的岗位id
+     */
+    List<String> findMyPostIds(User user);
 
 }

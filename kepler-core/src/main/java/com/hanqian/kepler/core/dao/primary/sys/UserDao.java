@@ -85,4 +85,15 @@ public interface UserDao extends BaseDao<User, String> {
 									   @Param("groupIds") String[] groupIds,
 									   @Param("userIds") String[] userIds);
 
+	/**
+	 * 查询当前用户的岗位/部门/职权/群组 所有id一起显示
+	 */
+	@Query(value = "select DISTINCT power.post_id from sys_power power where power.state='Enable' and power.id in (select duty.power_id from sys_duty duty where duty.state='Enable' and duty.user_id=:userId) UNION ALL\n" +
+			"\n" +
+			"select DISTINCT power.department_id from sys_power power where power.state='Enable' and power.id in (select duty.power_id from sys_duty duty where duty.state='Enable' and duty.user_id=:userId) UNION ALL\n" +
+			"\n" +
+			"select DISTINCT power.id from sys_power power where power.state='Enable' and power.id in (select duty.power_id from sys_duty duty where duty.state='Enable' and duty.user_id=:userId) UNION ALL\n" +
+			" \n" +
+			"select DISTINCT gro.id from sys_group gro where gro.state='Enable' and gro.userIds like :likeUserId", nativeQuery = true)
+	List<String> findPostDeptPowerGroupAllIds(@Param("userId") String userId, @Param("likeUserId") String likeUserId);
 }

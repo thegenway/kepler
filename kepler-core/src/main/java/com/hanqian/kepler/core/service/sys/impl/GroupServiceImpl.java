@@ -55,4 +55,9 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, String> implements 
         }
         return userList;
     }
+
+    @Override
+    public List<String> findMyGroupIds(User user) {
+        return user!=null ? groupDao.findMyGroupIds("%"+user.getId()+"%") : new ArrayList<>();
+    }
 }

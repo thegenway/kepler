@@ -42,4 +42,9 @@ public interface PowerService extends BaseService<Power, String> {
      */
     Power getParentPowerByProcessLogKeyId(String keyId);
 
+    /**
+     * 查询我所存在的职权id
+     */
+    List<String> findMyPowerIds(User user);
+
 }

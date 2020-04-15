@@ -1,90 +1,165 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<body>
 
-<form id="form_menu_input" class="form-horizontal" autocomplete="off">
-    <input type="hidden" name="keyId" id="keyId" th:value="${menu?.id}"/>
+<div class="panel">
+    <div id="notice-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">菜单管理<span id="title-menu-name-notice" class="text-muted"> | </span></h3>
+    </div>
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">管理员菜单<i class="fa fa-asterisk txt-color-red"></i></label>
-        <div class="col-md-8">
-            <div class="radio">
-                <input type="radio" name="isManageMenu" id="isManageMenu1" value="0" class="magic-radio" th:checked="${menu==null || menu?.isManageMenu==0}" >
-                <label for="isManageMenu1">否</label>
-                <input type="radio" name="isManageMenu" id="isManageMenu2" value="1" class="magic-radio" th:checked="${menu?.isManageMenu==1}" >
-                <label for="isManageMenu2">是</label>
+    <div class="panel-body">
+        <form id="form_menu_input" class="form-horizontal" autocomplete="off">
+            <input type="hidden" name="keyId" id="keyId" th:value="${menu?.id}"/>
+            <input type="hidden" id="readAuthInputJson" name="readAuthInputJson" value="" />
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">管理员菜单<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <input type="radio" name="isManageMenu" id="isManageMenu1" value="0" class="magic-radio" th:checked="${menu==null || menu?.isManageMenu==0}" >
+                        <label for="isManageMenu1">否</label>
+                        <input type="radio" name="isManageMenu" id="isManageMenu2" value="1" class="magic-radio" th:checked="${menu?.isManageMenu==1}" >
+                        <label for="isManageMenu2">是</label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">父及</label>
-        <div class="col-md-8">
-            <input type="text" name="parentName" id="parentName" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.name : parentMenu?.name}" class="form-control">
-            <input type="hidden" name="parentId" id="parentId" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.id : parentMenu?.id}" class="form-control">
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-md-2 control-label">类型<i class="fa fa-asterisk txt-color-red"></i></label>
-        <div class="col-md-8">
-            <div class="radio">
-                <input type="radio" name="menuType" id="menuType1" value="目录" class="magic-radio" th:checked="${menu?.menuType} eq '目录'" >
-                <label for="menuType1">目录</label>
-                <input type="radio" name="menuType" id="menuType2" value="菜单" class="magic-radio" th:checked="${menu?.menuType} eq '菜单'" >
-                <label for="menuType2">菜单</label>
+            <div class="form-group">
+                <label class="col-md-2 control-label">父及</label>
+                <div class="col-md-8">
+                    <input type="text" name="parentName" id="parentName" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.name : parentMenu?.name}" class="form-control">
+                    <input type="hidden" name="parentId" id="parentId" placeholder="顶级"   th:value="${menu!=null ? menu?.parent?.id : parentMenu?.id}" class="form-control">
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">名称<i class="fa fa-asterisk txt-color-red"></i></label>
-        <div class="col-md-8">
-            <input type="text" name="name" id="name" placeholder="请输入名称"   th:value="${menu?.name}" class="form-control">
-        </div>
-    </div>
-
-    <div id="div-url" class="form-group" th:hidden="${menu?.menuType=='目录'}">
-        <label class="col-md-2 control-label">连接地址<i class="fa fa-asterisk txt-color-red"></i></label>
-        <div class="col-md-8">
-            <input type="text" name="url" id="url" placeholder="连接地址"   th:value="${menu?.url}" class="form-control">
-        </div>
-    </div>
-
-    <div id="div-target" class="form-group" th:hidden="${menu?.menuType=='目录'}">
-        <label class="col-md-2 control-label">打开方式<i class="fa fa-asterisk txt-color-red"></i></label>
-        <div class="col-md-8">
-            <div class="radio">
-                <input type="radio" name="target" id="target1" value="_self" class="magic-radio" th:checked="${menu?.target==null || menu?.target=='_self'}" >
-                <label for="target1">_self</label>
-                <input type="radio" name="target" id="target2" value="_blank" class="magic-radio" th:checked="${menu?.target=='_blank'}" >
-                <label for="target2">_blank</label>
-                <input type="radio" name="target" id="target3" value="_top" class="magic-radio" th:checked="${menu?.target=='_top'}" >
-                <label for="target3">_top</label>
+            <div class="form-group">
+                <label class="col-md-2 control-label">类型<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <input type="radio" name="menuType" id="menuType1" value="目录" class="magic-radio" th:checked="${menu?.menuType} eq '目录'" >
+                        <label for="menuType1">目录</label>
+                        <input type="radio" name="menuType" id="menuType2" value="菜单" class="magic-radio" th:checked="${menu?.menuType} eq '菜单'" >
+                        <label for="menuType2">菜单</label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">图标代码</label>
-        <div class="col-md-8">
-            <div class="input-group mar-btm">
-                <input type="text" name="iconCode" id="iconCode" placeholder="图标代码"   th:value="${menu?.iconCode}" class="form-control">
-                <span class="input-group-btn"><a href="menu/file/icons-font-awesome" target="_blank" class="btn btn-success">查看代码</a></span>
+            <div class="form-group">
+                <label class="col-md-2 control-label">名称<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="text" name="name" id="name" placeholder="请输入名称"   th:value="${menu?.name}" class="form-control">
+                </div>
             </div>
-        </div>
+
+            <div id="div-url" class="form-group" th:hidden="${menu?.menuType=='目录'}">
+                <label class="col-md-2 control-label">连接地址<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input type="text" name="url" id="url" placeholder="连接地址"   th:value="${menu?.url}" class="form-control">
+                </div>
+            </div>
+
+            <div id="div-target" class="form-group" th:hidden="${menu?.menuType=='目录'}">
+                <label class="col-md-2 control-label">打开方式<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <input type="radio" name="target" id="target1" value="_self" class="magic-radio" th:checked="${menu?.target==null || menu?.target=='_self'}" >
+                        <label for="target1">_self</label>
+                        <input type="radio" name="target" id="target2" value="_blank" class="magic-radio" th:checked="${menu?.target=='_blank'}" >
+                        <label for="target2">_blank</label>
+                        <input type="radio" name="target" id="target3" value="_top" class="magic-radio" th:checked="${menu?.target=='_top'}" >
+                        <label for="target3">_top</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">图标代码</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" name="iconCode" id="iconCode" placeholder="图标代码"   th:value="${menu?.iconCode}" class="form-control">
+                        <span class="input-group-btn"><a href="menu/file/icons-font-awesome" target="_blank" class="btn btn-success">查看代码</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">自定义排序</label>
+                <div class="col-md-8">
+                    <input type="number" name="orderNum" id="orderNum" placeholder="请输入自定义排序"   th:value="${menu?.orderNum}" class="form-control">
+                </div>
+            </div>
+
+            <!-- ======================== 查看权限区域START ======================== -->
+            <div class="panel-heading header"><h3 class="panel-title">查看权限</h3></div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否所有人可查看<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <input type="radio" name="ifAllRead" id="ifAllRead0" value="0"  class="magic-radio" th:checked="${menu?.ifAllRead == 0}" />
+                        <label for="ifAllRead0">否</label>
+                        <input type="radio" name="ifAllRead" id="ifAllRead1" value="1" class="magic-radio" th:checked="${menu==null || menu?.ifAllRead == 1}"  />
+                        <label for="ifAllRead1">是</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="readAuthDiv" th:hidden="${menu==null || menu?.ifAllRead == 1}">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        <a href="javascript:void(0);" class="btn-link text-semibold" onclick="department_select_brief('read')">部门</a>
+                    </label>
+                    <div class="col-md-8">
+                        <input readonly type="text" id="departmentNames" class="form-control" th:value="${readAuth?.departmentNames}" />
+                        <input type="hidden" id="departmentIds" name="departmentIds" th:value="${readAuth?.departmentIds}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        <a href="javascript:void(0);" class="btn-link text-semibold" onclick="post_select_brief('read')">岗位</a>
+                    </label>
+                    <div class="col-md-8">
+                        <input readonly type="text" id="postNames" class="form-control" th:value="${readAuth?.postNames}"/>
+                        <input type="hidden" id="postIds" name="postIds" th:value="${readAuth?.postIds}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        <a href="javascript:void(0);" class="btn-link text-semibold" onclick="power_select_brief('read')">职权</a>
+                    </label>
+                    <div class="col-md-8">
+                        <input readonly type="text" id="powerNames" class="form-control" th:value="${readAuth?.powerNames}" />
+                        <input type="hidden" id="powerIds" name="powerIds" th:value="${readAuth?.powerIds}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        <a href="javascript:void(0);" class="btn-link text-semibold" onclick="group_select_brief('read')">群组</a>
+                    </label>
+                    <div class="col-md-8">
+                        <input readonly type="text" id="groupNames" class="form-control" th:value="${readAuth?.groupNames}" />
+                        <input type="hidden" id="groupIds" name="groupIds" th:value="${readAuth?.groupIds}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        <a href="javascript:void(0);" class="btn-link text-semibold" onclick="user_select_brief('read')">用户</a>
+                    </label>
+                    <div class="col-md-8">
+                        <input readonly type="text" id="userNames" class="form-control" th:value="${readAuth?.userNames}" />
+                        <input type="hidden" id="userIds" name="userIds" th:value="${readAuth?.userIds}" />
+                    </div>
+                </div>
+
+            </div>
+            <!-- ======================== 查看权限区域END ======================== -->
+
+        </form>
     </div>
-
-    <div class="form-group">
-        <label class="col-md-2 control-label">自定义排序</label>
-        <div class="col-md-8">
-            <input type="number" name="orderNum" id="orderNum" placeholder="请输入自定义排序"   th:value="${menu?.orderNum}" class="form-control">
-        </div>
-    </div>
-
-</form>
-
-</body>
+</div>
 
 <script th:inline="javascript">
     $(function(){
@@ -137,12 +212,99 @@
     //保存
     function fn_menu_save(callback){
         if($("#form_menu_input").valid()){
+            createAuthInputJson("read");
             __form_save("form_menu_input", "/main/menu/save", function(data){
                 callback(data);
             })
         }else{
             callback();
         }
+    }
+
+    //查看权限信息显示隐藏
+    $(":radio[name='ifAllRead']").on("click", function(){
+        if($(this).val() == 1){
+            $("#readAuthDiv").hide();
+        }else{
+            $("#readAuthDiv").show();
+        }
+    });
+
+    function department_select_brief(type){
+        var deptIds = $("#form_menu_input #"+type+"AuthDiv #departmentIds").val();
+        __departments_dialog_select("menu_input_department_select", deptIds, function(data){
+            __layX_close("menu_input_department_select");
+            $("#form_menu_input #"+type+"AuthDiv #departmentNames").val(data.name);
+            $("#form_menu_input #"+type+"AuthDiv #departmentIds").val(data.id);
+        })
+    }
+
+    function post_select_brief(type){
+        var postIds = $("#form_menu_input #"+type+"AuthDiv #postIds").val();
+        var postNames = $("#form_menu_input #"+type+"AuthDiv #postNames").val();
+        __posts_dialog_select("menu_input_post_select", postIds, postNames, function(data){
+            $("#form_menu_input #"+type+"AuthDiv #postNames").val(data.names);
+            $("#form_menu_input #"+type+"AuthDiv #postIds").val(data.ids);
+            __layX_close("menu_input_post_select");
+        });
+    }
+
+    function power_select_brief(type){
+        var powerIds = $("#form_menu_input #"+type+"AuthDiv #powerIds").val();
+        var powerNames = $("#form_menu_input #"+type+"AuthDiv #powerNames").val();
+        __powers_dialog_select("menu_input_power_select", powerIds, powerNames, function(data){
+            $("#form_menu_input #"+type+"AuthDiv #powerNames").val(data.names);
+            $("#form_menu_input #"+type+"AuthDiv #powerIds").val(data.ids);
+            __layX_close("menu_input_power_select");
+        });
+    }
+
+    function group_select_brief(type){
+        var groupIds = $("#form_menu_input #"+type+"AuthDiv #groupIds").val();
+        var groupNames = $("#form_menu_input #"+type+"AuthDiv #groupNames").val();
+        __groups_dialog_select("menu_input_group_select", groupIds, groupNames, function(data){
+            $("#form_menu_input #"+type+"AuthDiv #groupNames").val(data.names);
+            $("#form_menu_input #"+type+"AuthDiv #groupIds").val(data.ids);
+            __layX_close("menu_input_group_select");
+        });
+    }
+
+    function user_select_brief(type){
+        var userIds = $("#form_menu_input #"+type+"AuthDiv #userIds").val();
+        var userNames = $("#form_menu_input #"+type+"AuthDiv #userNames").val();
+        __users_dialog_select("menu_input_user_select", userIds, userNames, function(data){
+            $("#form_menu_input #"+type+"AuthDiv #userNames").val(data.names);
+            $("#form_menu_input #"+type+"AuthDiv #userIds").val(data.ids);
+            __layX_close("menu_input_user_select");
+        });
+    }
+
+    function createAuthInputJson(type){
+        var deptIds = $("#form_menu_input #"+type+"AuthDiv #departmentIds").val();
+        var deptNames = $("#form_menu_input #"+type+"AuthDiv #departmentNames").val();
+        var postIds = $("#form_menu_input #"+type+"AuthDiv #postIds").val();
+        var postNames = $("#form_menu_input #"+type+"AuthDiv #postNames").val();
+        var powerIds = $("#form_menu_input #"+type+"AuthDiv #powerIds").val();
+        var powerNames = $("#form_menu_input #"+type+"AuthDiv #powerNames").val();
+        var groupIds = $("#form_menu_input #"+type+"AuthDiv #groupIds").val();
+        var groupNames = $("#form_menu_input #"+type+"AuthDiv #groupNames").val();
+        var userIds = $("#form_menu_input #"+type+"AuthDiv #userIds").val();
+        var userNames = $("#form_menu_input #"+type+"AuthDiv #userNames").val();
+        var variable = $("#form_menu_input #"+type+"AuthDiv #variable option:selected").val();
+
+        var obj = {};
+        obj.departmentIds = deptIds ? deptIds : "";
+        obj.departmentNames = deptNames ? deptNames : "";
+        obj.postIds = postIds ? postIds : "";
+        obj.postNames = postNames ? postNames : "";
+        obj.powerIds = powerIds ? powerIds : "";
+        obj.powerNames = powerNames ? powerNames : "";
+        obj.groupIds = groupIds ? groupIds : "";
+        obj.groupNames = groupNames ? groupNames : "";
+        obj.userIds = userIds ? userIds : "";
+        obj.userNames = userNames ? userNames : "";
+        obj.variable = variable ? variable : "";
+        $("#form_menu_input #readAuthInputJson").val(JSON.stringify(obj));
     }
 </script>
 
