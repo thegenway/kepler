@@ -75,3 +75,11 @@ justauth:
       client-id: 101844927
       client-secret: 379aa29a4dd45272b6519cd61bead521
       redirect-uri: http://bamboo.free.idcfengye.com/security/oauth/qq/callback
+
+wx:
+  mp:
+    configs:
+      - appId: wx9e2ca8be6d7e98e3
+        secret: 8625917c65dfccb572934da4aaededc2
+        token: jingtianhuaWX
+        aesKey:

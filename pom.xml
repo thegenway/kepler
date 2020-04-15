@@ -88,6 +88,13 @@
 				<version>1.9.22</version>
 			</dependency>
 
+			<!--WxJava 微信开发SDK-->
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-mp</artifactId>
+				<version>3.7.0</version>
+			</dependency>
+
 			<!-- 第三方登录工具类 -->
 			<dependency>
 				<groupId>com.xkcoding.justauth</groupId>

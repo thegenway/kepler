@@ -74,6 +74,12 @@
             <artifactId>mail</artifactId>
         </dependency>
 
+        <!--WxJava 微信开发SDK-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+        </dependency>
+
 
 
         <dependency>
