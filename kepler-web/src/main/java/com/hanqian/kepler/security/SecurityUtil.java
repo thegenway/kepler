@@ -47,4 +47,11 @@ public class SecurityUtil {
 		return bCryptPasswordEncoder.encode(password);
 	}
 
+	/**
+	 * 判断当前状态是否已经登陆
+	 */
+	public static boolean checkIfLogin(){
+		return getCurrentUserPrincipal()!=null;
+	}
+
 }

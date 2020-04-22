@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('登录中 请稍后')" />
+</head>
+<body>
+
+<div class="mui-card">
+    <div class="mui-card-content" style="text-align: center; padding: 20px 0">
+        <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
+        <h4>
+            正在登录中
+            <span th:text="${wxMpUser?.nickname}"></span>
+        </h4>
+    </div>
+</div>
+
+</body>
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+    var openId = [[${wxMpUser?.openId}]];
+    var nickname = [[${wxMpUser?.nickname}]];
+    $(function(){
+        if(openId){
+            __ajax_post("/mp/login", {openId : openId}, function(data){
+                if(data && data.code === 200){
+                    location.href = "/mp/index";
+                }else{
+                    if(data.msg == "此微信还未绑定"){
+                        __mui_toast_short(data.msg);
+                        location.href = "/mp/reg?openId="+openId+"&nickname="+nickname;
+                    }else{
+                        __mui_alert(data.msg);
+                    }
+                }
+            })
+        }else{
+            __mui_alert("获取openId失败");
+        }
+    });
+</script>
+</html>

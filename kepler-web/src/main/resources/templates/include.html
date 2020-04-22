@@ -1,0 +1,191 @@
+<!-- ============================================== 通用CSS ============================================== -->
+<head th:fragment=header(title)>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title th:text="${title}"></title>
+
+    <!--Open Sans Font [ OPTIONAL ] -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
+
+    <link th:href="@{/static/css/nifty-demo.min.css}" rel="stylesheet" type="text/css">
+
+    <!--Bootstrap Stylesheet [ REQUIRED ]-->
+    <link th:href="@{/static/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+
+    <!--Nifty Stylesheet [ REQUIRED ]-->
+    <link th:href="@{/static/css/nifty.min.css}" rel="stylesheet" type="text/css">
+
+    <!--Page Load Progress Bar [ OPTIONAL ]-->
+    <link th:href="@{/static/plugins/pace/css/pace.min.css}" rel="stylesheet">
+
+    <!--Magic Checkbox [ OPTIONAL ]-->
+    <link th:href="@{/static/plugins/magic-check/css/magic-check.min.css}" rel="stylesheet">
+
+    <!-- bootstrap-select -->
+    <link th:href="@{/static/plugins/bootstrap-select/1.10.0/css/bootstrap-select.min.css}" rel="stylesheet">
+
+    <!-- dialog -->
+    <link th:href="@{/static/plugins/bootstrap-dialog/1.35.2/css/bootstrap-dialog.min.css}" rel="stylesheet">
+
+    <!--bootstrap-tagsinput-->
+
+    <!-- jqGrid -->
+    <link th:href="@{/static/plugins/jqGrid/5.1.1/css/ui.jqgrid-bootstrap.css}" rel="stylesheet">
+
+    <!--fontawesome-->
+    <link th:href="@{/static/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+
+    <link th:href="@{/static/plugins/premium/line-icons/premium-line-icons.min.css}" rel="stylesheet">
+    <link th:href="@{/static/plugins/premium/solid-icons/premium-solid-icons.min.css}" rel="stylesheet">
+
+    <!-- ztree -->
+    <link th:href="@{/static/plugins/ztree/3.5.24/css/metroStyle/metroStyle.css}" rel="stylesheet">
+
+    <!--Select2 [ OPTIONAL ]-->
+    <link th:href="@{/static/plugins/select2/css/select2.min.css}" rel="stylesheet">
+
+    <!--Full Calendar [ OPTIONAL ]-->
+    <link th:href="@{/static/plugins/fullcalendar/fullcalendar.min.css}" rel="stylesheet">
+    <link th:href="@{/static/plugins/fullcalendar/nifty-skin/fullcalendar-nifty.min.css}" rel="stylesheet">
+
+    <!--Summernote [ OPTIONAL ]-->
+    <link th:href="@{/static/plugins/summernote/summernote.min.css}" rel="stylesheet">
+
+    <!--app core-->
+    <link th:href="@{/static/css/core/app-core.css?v=1.2.8}" rel="stylesheet">
+
+    <!--def css-->
+    <link th:href="@{/static/css/form.css?v=0.0.4}" rel="stylesheet">
+
+    <!--地区选择-->
+    <link th:href="@{/static/plugins/city-picker/css/city-picker.css}" rel="stylesheet">
+
+    <!--tip工具-->
+    <link th:href="@{/static/plugins/minimalTips/jquery.minimalTips.css}" rel="stylesheet">
+
+    <!--开关样式checkbox-->
+    <link th:href="@{/static/plugins/switchery/switchery.min.css}" rel="stylesheet">
+
+    <!--layX窗口插件-->
+    <link th:href="@{/static/plugins/layX/layx.min.css}" rel="stylesheet">
+
+    <!--animate-css-->
+    <link th:href="@{/static/plugins/animate-css/animate.min.css}" rel="stylesheet">
+</head>
+
+<!-- ============================================== 通用JS ============================================== -->
+<div th:fragment="footer">
+    <!--jQuery [ REQUIRED ]-->
+    <script th:src="@{/static/js/jquery-2.2.4.min.js}"></script>
+
+    <!--BootstrapJS [ RECOMMENDED ]-->
+    <script th:src="@{/static/js/bootstrap.min.js}"></script>
+
+    <!--Nifty Admin [ RECOMMENDED ]-->
+    <script th:src="@{/static/js/nifty.min.js}"></script>
+    <script th:src="@{/static/js/nifty-demo.min.js}"></script>
+
+    <!--Page Load Progress Bar [ OPTIONAL ]-->
+    <script th:src="@{/static/plugins/pace/js/pace.min.js}"></script>
+
+    <!--Bootstrap Select [ OPTIONAL ]-->
+    <script th:src="@{/static/plugins/bootstrap-select/1.10.0/js/bootstrap-select.min.js}"></script>
+    <script th:src="@{/static/plugins/bootstrap-select/1.10.0/js/i18n/defaults-zh_CN.min.js}"></script>
+
+    <!-- jsrender -->
+    <script th:src="@{/static/plugins/jsview/0.9.8/jsrender.min.js}"></script>
+
+    <!-- dialog -->
+    <script th:src="@{/static/plugins/bootstrap-dialog/1.35.2/js/bootstrap-dialog.min.js}"></script>
+    <script th:src="@{/static/plugins/bootstrap-dialog/1.35.2/js/i18n/defaults-zh_CN.js}"></script>
+
+    <!-- jqGrid -->
+    <script th:src="@{/static/plugins/jqGrid/5.1.1/js/jquery.jqGrid.min.js}"></script>
+    <script th:src="@{/static/plugins/jqGrid/5.1.1/js/i18n/grid.locale-cn.js}"></script>
+
+    <!-- validation -->
+    <script th:src="@{/static/plugins/jquery-validation/1.15.0/jquery.validate.min.js}"></script>
+    <script th:src="@{/static/plugins/jquery-validation/1.15.0/i18n/messages_zh.min.js}"></script>
+
+    <!-- ztree -->
+    <script th:src="@{/static/plugins/ztree/3.5.24/js/jquery.ztree.all.min.js}"></script>
+
+    <!--wizard-->
+    <script th:src="@{/static/plugins/bootstrap-wizard/1.4.2/jquery.bootstrap.wizard.min.js}"></script>
+
+    <!--Select2 [ OPTIONAL ]-->
+    <script th:src="@{/static/plugins/select2/js/select2.min.js}"></script>
+
+    <!--Full Calendar [ OPTIONAL ]-->
+    <script th:src="@{/static/plugins/fullcalendar/lib/moment.min.js}"></script>
+    <script th:src="@{/static/plugins/fullcalendar/lib/jquery-ui.custom.min.js}"></script>
+    <script th:src="@{/static/plugins/fullcalendar/fullcalendar.js}"></script>
+
+    <!--Summernote [ OPTIONAL ]-->
+    <script th:src="@{/static/plugins/summernote/summernote.min.js}"></script>
+    <script th:src="@{/static/plugins/summernote/lang/summernote-zh-CN.js}"></script>
+
+    <!-- easy-pie-chart -->
+    <script th:src="@{/static/plugins/easy-pie-chart/jquery.easypiechart.min.js}"></script>
+
+    <!--math-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/math/math.min.js}"> </script>
+
+    <!--地区选择-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/city-picker/js/city-picker.data.min.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/city-picker/js/city-picker.min.js}"></script>
+
+    <!--附件上传-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/dropzone/js/dropzone.js}"></script>
+
+    <!--tip工具-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/minimalTips/jquery.minimalTips.js?v=0.0.3}"></script>
+
+    <!--时间选择-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/laydate/laydate.js}"></script>
+
+    <!--开关样式checkbox-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/switchery/switchery.min.js}"></script>
+
+    <!--jquery模板引擎-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/jquery-tmpl/jquery.tmpl.js}"></script>
+
+    <!--layX窗口插件-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/layX/layx.min.js}"></script>
+
+    <!--天气图标-->
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/skycons/skycons.min.js}"></script>
+
+    <!--app core-->
+    <script th:src="@{/static/js/core/app-core.js?v=0.1.3}"></script>
+    <script th:src="@{/static/js/core/app-config.js}"></script>
+    <script th:src="@{/static/js/core/app-common.js?v=2.2.6}"></script>
+
+    <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
+</div>
+
+
+
+
+<!-- ============================================== 手机端通用CSS ============================================== -->
+<head th:fragment=header_mp(title)>
+    <title th:text="${title}"></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link th:href="@{/static/plugins/mui/css/mui.min.css}" rel="stylesheet">
+    <link th:href="@{/static/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+</head>
+
+<!-- ============================================== 手机端通用JS ============================================== -->
+<div th:fragment="footer_mp">
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/mui/js/mui.min.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/js/core/app-common-wx.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/jquery-2.2.4.min.js}"></script>
+    <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
+</div>

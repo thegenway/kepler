@@ -45,6 +45,11 @@ public interface UserService extends BaseService<User, String> {
 	User findUsersByMail(String mail);
 
 	/**
+	 * 根据openId获取user
+	 */
+	User getUserByOpenId(String openId);
+
+	/**
 	 * 判断用户是否是系统管理员
 	 */
 	boolean isManager(User user);

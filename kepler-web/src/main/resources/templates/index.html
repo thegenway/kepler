@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<header th:replace="~{common/head :: header}"></header>
-<link th:href="@{../static/css/nifty-demo.min.css}" rel="stylesheet" type="text/css">
-
+<head>
+    <th:block th:include="include :: header('KEPLER')" />
+</head>
 
 <body id="top-body">
 <div id="container" class="effect aside-float aside-bright mainnav-lg">
@@ -384,49 +384,6 @@
                                     </li>
                                 </th:block>
 
-
-                                <!--Menu list item-->
-                                <li>
-                                    <a href="#">
-                                        <i class="psi-tactic"></i>
-                                        <span class="menu-title">Menu Level</span>
-                                        <i class="arrow"></i>
-                                    </a>
-
-                                    <!--Submenu-->
-                                    <ul class="collapse">
-                                        <li><a href="#">Second Level Item</a></li>
-                                        <li><a href="#">Second Level Item</a></li>
-                                        <li><a href="#">Second Level Item</a></li>
-                                        <li class="list-divider"></li>
-                                        <li>
-                                            <a href="#">Third Level<i class="arrow"></i></a>
-
-                                            <!--Submenu-->
-                                            <ul class="collapse">
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level<i class="arrow"></i></a>
-
-                                            <!--Submenu-->
-                                            <ul class="collapse">
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li class="list-divider"></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                                <li><a href="#">Third Level Item</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
                                 <li class="list-divider"></li>
 
                             </ul>
@@ -449,17 +406,12 @@
     <!-- FOOTER -->
     <!--===================================================-->
     <footer id="footer">
-
-        <!-- Visible when footer positions are fixed -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <div class="show-fixed pull-right">
             You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending action.</a>
         </div>
 
-
         <div class="hide-fixed pull-right pad-rgt">14GB of <strong>512GB</strong> Free.</div>
         <p class="pad-lft">&#0169; 2020 Your Company</p>
-
     </footer>
     <!--===================================================-->
     <!-- END FOOTER -->
@@ -472,8 +424,6 @@
     </button>
     <!--===================================================-->
 
-
-
 </div>
 <!--===================================================-->
 <!-- END OF CONTAINER -->
@@ -481,97 +431,10 @@
 
 </body>
 
-
 <!--===================================================-->
 <!-- END OF CONTAINER -->
 
-
-
-<!--jQuery [ REQUIRED ]-->
-<script th:src="@{../static/js/jquery-2.2.4.min.js}"></script>
-
-<!--BootstrapJS [ RECOMMENDED ]-->
-<script th:src="@{../static/js/bootstrap.min.js}"></script>
-
-<!--Nifty Admin [ RECOMMENDED ]-->
-<script th:src="@{../static/js/nifty.min.js}"></script>
-<script th:src="@{../static/js/nifty-demo.min.js}"></script>
-
-<!--Page Load Progress Bar [ OPTIONAL ]-->
-<script th:src="@{../static/plugins/pace/js/pace.min.js}"></script>
-
-<!--Bootstrap Select [ OPTIONAL ]-->
-<script th:src="@{../static/plugins/bootstrap-select/1.10.0/js/bootstrap-select.min.js}"></script>
-<script th:src="@{../static/plugins/bootstrap-select/1.10.0/js/i18n/defaults-zh_CN.min.js}"></script>
-
-<!-- jsrender -->
-<script th:src="@{../static/plugins/jsview/0.9.8/jsrender.min.js}"></script>
-
-<!-- dialog -->
-<script th:src="@{../static/plugins/bootstrap-dialog/1.35.2/js/bootstrap-dialog.min.js}"></script>
-<script th:src="@{../static/plugins/bootstrap-dialog/1.35.2/js/i18n/defaults-zh_CN.js}"></script>
-
-<!-- jqGrid -->
-<script th:src="@{../static/plugins/jqGrid/5.1.1/js/jquery.jqGrid.min.js}"></script>
-<script th:src="@{../static/plugins/jqGrid/5.1.1/js/i18n/grid.locale-cn.js}"></script>
-
-<!-- validation -->
-<script th:src="@{../static/plugins/jquery-validation/1.15.0/jquery.validate.min.js}"></script>
-<script th:src="@{../static/plugins/jquery-validation/1.15.0/i18n/messages_zh.min.js}"></script>
-
-<!-- ztree -->
-<script th:src="@{../static/plugins/ztree/3.5.24/js/jquery.ztree.all.min.js}"></script>
-
-<!--wizard-->
-<script th:src="@{../static/plugins/bootstrap-wizard/1.4.2/jquery.bootstrap.wizard.min.js}"></script>
-
-<!--Select2 [ OPTIONAL ]-->
-<script th:src="@{../static/plugins/select2/js/select2.min.js}"></script>
-
-<!--Full Calendar [ OPTIONAL ]-->
-<script th:src="@{../static/plugins/fullcalendar/lib/moment.min.js}"></script>
-<script th:src="@{../static/plugins/fullcalendar/lib/jquery-ui.custom.min.js}"></script>
-<script th:src="@{../static/plugins/fullcalendar/fullcalendar.js}"></script>
-
-<!--Summernote [ OPTIONAL ]-->
-<script th:src="@{../static/plugins/summernote/summernote.min.js}"></script>
-<script th:src="@{../static/plugins/summernote/lang/summernote-zh-CN.js}"></script>
-
-<!-- easy-pie-chart -->
-<script th:src="@{../static/plugins/easy-pie-chart/jquery.easypiechart.min.js}"></script>
-
-<!--math-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/math/math.min.js}"> </script>
-
-<!--地区选择-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/city-picker/js/city-picker.data.min.js}"></script>
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/city-picker/js/city-picker.min.js}"></script>
-
-<!--附件上传-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/dropzone/js/dropzone.js}"></script>
-
-<!--tip工具-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/minimalTips/jquery.minimalTips.js?v=0.0.3}"></script>
-
-<!--时间选择-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/laydate/laydate.js}"></script>
-
-<!--开关样式checkbox-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/switchery/switchery.min.js}"></script>
-
-<!--jquery模板引擎-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/jquery-tmpl/jquery.tmpl.js}"></script>
-
-<!--layX窗口插件-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/layX/layx.min.js}"></script>
-
-<!--天气图标-->
-<script type="text/javascript" charset="utf-8" th:src="@{../static/plugins/skycons/skycons.min.js}"></script>
-
-<!--app core-->
-<script th:src="@{../static/js/core/app-core.js?v=0.1.3}"></script>
-<script th:src="@{../static/js/core/app-config.js}"></script>
-<script th:src="@{../static/js/core/app-common.js?v=2.2.6}"></script>
+<th:block th:include="include :: footer" />
 
 </html>
 

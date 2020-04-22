@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('账号绑定')" />
+</head>
+<body>
+
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">[[${nickname}]]</h1>
+</header>
+<div class="mui-content">
+    <form id='wx-login-form' class="mui-input-group">
+        <input type="hidden" id="openId" name="openId" th:value="${openId}" />
+        <div class="mui-input-row">
+            <label>账号</label>
+            <input id='account' name="account" type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+        </div>
+        <div class="mui-input-row">
+            <label>密码</label>
+            <input id='password' name="password" type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+        </div>
+    </form>
+
+    <div class="mui-content-padded">
+        <button id='doBind' data-loading-text="绑定中" class="mui-btn mui-btn-block mui-btn-primary">绑定</button>
+    </div>
+</div>
+</div>
+
+</body>
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+
+    $("#doBind").on("click", function(){
+        __mui_button_loading($("#doBind"));
+        __form_save("wx-login-form", ctx + "mp/bind", function(data){
+            __mui_button_reset($("#doBind"));
+            __mui_toast_long(data.msg);
+            if(data && data.state === 1){
+                location.href = "/mp/index";
+            }
+        })
+    });
+
+</script>
+
+
+</html>

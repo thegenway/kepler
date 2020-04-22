@@ -236,4 +236,12 @@ public class BaseController implements Serializable {
 		return dictService.findDictList(dictEnum);
 	}
 
+	/**
+	 * 判断当前请求是否为微信端
+	 */
+	protected boolean isWeiXin(){
+		String userAgent = request.getHeader("user-agent").toLowerCase();
+		return StrUtil.containsAny(userAgent, "micromessenger");
+	}
+
 }

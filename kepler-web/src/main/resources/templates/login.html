@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<header th:replace="~{common/head :: header}"></header>
+<head>
+    <th:block th:include="include :: header('KEPLER 登录')" />
+</head>
 
 <script th:src="@{../static/plugins/pace/js/pace.min.js}"></script>
 <script th:src="@{../static/js/jquery-2.2.4.min.js}"></script>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('KEPLER首页')" />
+</head>
+<body>
+
+<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+
+    <!--侧滑菜单部分-->
+    <aside id="offCanvasSide" class="mui-off-canvas-left">
+        <div id="offCanvasSideScroll" class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div class="title">侧滑导航</div>
+                <div class="content">
+                    这是可拖动式侧滑菜单示例，你可以在这里放置任何内容；关闭侧滑菜单有多种方式： 1.在手机屏幕任意位置向左拖动(drag)；2.点击本侧滑菜单页之外的任意位置; 3.点击如下红色按钮
+                    <p style="margin: 10px 15px;">
+                        <button id="offCanvasHide" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;">关闭侧滑菜单</button>
+                    </p>
+
+                </div>
+                <div class="title" style="margin-bottom: 25px;">侧滑列表示例</div>
+                <ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted">
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 1
+                        </a>
+                    </li>
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 2
+                        </a>
+                    </li>
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 3
+                        </a>
+                    </li>
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 4
+                        </a>
+                    </li>
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 5
+                        </a>
+                    </li>
+                    <li class="mui-table-view-cell">
+                        <a class="mui-navigate-right">
+                            Item 6
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!--主界面部分-->
+    <div class="mui-inner-wrap">
+        <header class="mui-bar mui-bar-nav">
+            <a id="offCanvasShow" class="mui-icon mui-icon-bars mui-icon-left-nav mui-pull-left"></a>
+            <h1 class="mui-title">[[${session?.CURRENT_USER?.name}]]</h1>
+        </header>
+
+        <div class="mui-content">
+
+            <div class="mui-slider" style="height: 245px">
+                <div class="mui-slider-group mui-slider-loop">
+                    <!--支持循环，需要重复图片节点-->
+                    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="https://picsum.photos/500/300?v=3" /></a></div>
+                    <div class="mui-slider-item"><a href="#"><img src="https://picsum.photos/500/300?v=1" /></a></div>
+                    <div class="mui-slider-item"><a href="#"><img src="https://picsum.photos/500/300?v=2" /></a></div>
+                    <div class="mui-slider-item"><a href="#"><img src="https://picsum.photos/500/300?v=3" /></a></div>
+                    <!--支持循环，需要重复图片节点-->
+                    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="https://picsum.photos/500/300?v=1" /></a></div>
+                </div>
+
+                <div class="mui-slider-indicator">
+                    <div class="mui-indicator mui-active"></div>
+                    <div class="mui-indicator"></div>
+                    <div class="mui-indicator"></div>
+                </div>
+            </div>
+
+            <ul id="index-ul" class="mui-table-view mui-grid-view mui-grid-9">
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="../main/menu/education/buildInfo">
+                        <span class="fa fa-file-word-o mui-icon"></span>
+                        <div class="mui-media-body">楼宇基建</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-futbol-o mui-icon"><span class="mui-badge">5</span></span>
+                        <div class="mui-media-body">Email</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-ban mui-icon"></span>
+                        <div class="mui-media-body">ban</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-bicycle mui-icon"></span>
+                        <div class="mui-media-body">bicycle</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-flag-checkered mui-icon"></span>
+                        <div class="mui-media-body">flag-checkered</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-gamepad mui-icon"></span>
+                        <div class="mui-media-body">gamepad</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-bluetooth mui-icon"></span>
+                        <div class="mui-media-body">bluetooth</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-camera mui-icon"></span>
+                        <div class="mui-media-body">camera</div>
+                    </a>
+                </li>
+
+                <li class="mui-table-view-cell mui-media mui-col-xs-4">
+                    <a href="#">
+                        <span class="fa fa-frown-o mui-icon"></span>
+                        <div class="mui-media-body">frown-o</div>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- off-canvas backdrop -->
+        <div class="mui-off-canvas-backdrop"></div>
+    </div>
+
+</div>
+
+</body>
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    //滚动图
+    var gallery = mui('.mui-slider');
+    gallery.slider({
+        interval:2000//自动轮播周期，若为0则不自动播放，默认为0；
+    });
+
+    //侧滑容器父节点
+    var offCanvasWrapper = mui('#offCanvasWrapper');
+    //主界面‘显示侧滑菜单’按钮的点击事件
+    document.getElementById('offCanvasShow').addEventListener('tap', function() {
+        offCanvasWrapper.offCanvas('show');
+    });
+    //菜单界面，‘关闭侧滑菜单’按钮的点击事件
+    document.getElementById('offCanvasHide').addEventListener('tap', function() {
+        offCanvasWrapper.offCanvas('close');
+    });
+    //主界面和侧滑菜单界面均支持区域滚动；
+    mui('#offCanvasSideScroll').scroll();
+    mui('#offCanvasContentScroll').scroll();
+    //实现ios平台原生侧滑关闭页面；
+    if (mui.os.plus && mui.os.ios) {
+        mui.plusReady(function() { //5+ iOS暂时无法屏蔽popGesture时传递touch事件，故该demo直接屏蔽popGesture功能
+            plus.webview.currentWebview().setStyle({
+                'popGesture': 'none'
+            });
+        });
+    }
+
+    $("#index-ul li").on("tap", function(e){
+        e.preventDefault();
+        var href = $(this).find('a').eq(0).attr("href");
+        if(href=='#'){
+            var text = $(this).find("div").eq(0).text();
+            __mui_alert(text, function(){
+                __mui_toast_short("end..");
+            })
+        }else{
+            window.location.href = href;
+        }
+    });
+</script>
+</html>

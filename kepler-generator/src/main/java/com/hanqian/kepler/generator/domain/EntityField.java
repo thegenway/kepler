@@ -19,7 +19,7 @@ public class EntityField {
 	//原始字段名
 	private String originalName;
 
-	//代码中字段名（比如多对一的情况：原始字段名是drawTypeDict，那么在代码中的字段名应该是原始字段名是drawTypeDictId）
+	//代码中字段名（比如多对一的情况：原始字段名是drawTypeDict，那么在代码中的字段名应该是drawTypeDictId）
 	private String name;
 
 	//字段类型

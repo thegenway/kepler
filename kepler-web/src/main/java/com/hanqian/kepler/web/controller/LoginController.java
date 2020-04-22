@@ -34,12 +34,18 @@ public class LoginController extends BaseController {
 
 	@RequestMapping("login-view")
 	public String loginView(){
+		if(isWeiXin()){
+			return "redirect:../mp/wxLogin";
+		}
 		return "login";
 	}
 
 	@RequestMapping("index")
 	public String index(@CurrentUser User user,  Model model){
 		model.addAttribute("menuTree",menuService.getMenuTreeByUser(user));
+		if(isWeiXin()){
+			return "redirect:../mp/index";
+		}
 		return "index";
 	}
 

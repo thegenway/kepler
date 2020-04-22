@@ -8,6 +8,7 @@ import com.hanqian.kepler.security.social.mail.MailValidateCodeFilter;
 import com.hanqian.kepler.security.social.sms.SmsCodeAuthenticationFilter;
 import com.hanqian.kepler.security.social.sms.SmsCodeAuthenticationSecurityConfig;
 import com.hanqian.kepler.security.social.sms.SmsValidateCodeFilter;
+import com.hanqian.kepler.security.social.weixin.WeixinCodeAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 	@Autowired
 	private MailCodeAuthenticationSecurityConfig mailCodeAuthenticationSecurityConfig;
+	@Autowired
+	private WeixinCodeAuthenticationSecurityConfig weixinCodeAuthenticationSecurityConfig;
 
 	@Value("${kepler.formAuthUrl}")
 	private String formAuthUrl;
@@ -88,6 +91,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.apply(mailCodeAuthenticationSecurityConfig)
 				.and()
 
+				//串联微信登录配置
+				.apply(weixinCodeAuthenticationSecurityConfig)
+				.and()
+
 				//手机验证码校验过滤器
 				.addFilterBefore(smsValidateCodeFilter, UsernamePasswordAuthenticationFilter.class)
 
@@ -121,6 +128,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/main/login-view",
 						"/main/forgetPassword",
 						"/wx/portal/auth",
+						"/mp/**",
 						"/favicon.ico").permitAll()
 				.anyRequest()
 				.authenticated()
