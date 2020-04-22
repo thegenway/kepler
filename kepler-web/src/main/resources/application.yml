@@ -84,3 +84,12 @@ wx:
         secret: 8625917c65dfccb572934da4aaededc2
         token: jingtianhuaWX
         aesKey:
+
+#配置mysql、mongodb的安装目录和备份文件目录
+backups:
+  mysql:
+    installDir: C:\Program Files\MySQL\MySQL Server 5.5\bin
+    exportDir: D:\kepler_d\backups\mysql
+  mongodb:
+    installDir: D:\Program Files\mongodb\bin
+    exportDir: D:\kepler_d\backups\mongodb
