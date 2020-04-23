@@ -6,6 +6,7 @@ import com.hanqian.kepler.common.base.service.BaseService;
 import com.mongodb.client.gridfs.model.GridFSFile;
 
 import java.io.InputStream;
+import java.util.List;
 
 public interface FileManageService extends BaseService<FileManage, String> {
 
@@ -19,6 +20,11 @@ public interface FileManageService extends BaseService<FileManage, String> {
      */
     GridFSFile getFile(String fileId);
     GridFSFile getFileByGrid(String grid);
+
+    /**
+     * 根据附件名称获取附件
+     */
+    List<FileManage> getFileManageByName(String name);
 
     /**
      * 真 · 删除附件

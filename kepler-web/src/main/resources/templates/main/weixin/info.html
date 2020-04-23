@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div id="page-content">
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">二维码</h3>
+        </div>
+        <div class="panel-body">
+            <img th:src="'/main/file/'+${qrImgId}" width="200" height="200" />
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">config</h3>
+        </div>
+        <div class="panel-body">
+            <div class="list-group bord-no">
+                <a class="list-group-item" href="javascript:void(0)" th:text="'AppId : '+${wxMpConfig.appId}">AppId</a>
+                <!--<a class="list-group-item" href="javascript:void(0)" th:text="'Secret : '+${wxMpConfig.secret}">Secret</a>-->
+                <a class="list-group-item" href="javascript:void(0)" th:text="'Token : '+${wxMpConfig.token}">Token</a>
+                <a class="list-group-item" href="javascript:void(0)" th:text="'AesKey : '+${wxMpConfig.aesKey}">AesKey</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">粉丝</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>headImg</th>
+                    <th>openId</th>
+                    <th>nickname</th>
+                    <th>location</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${wxMpUsers}">
+                    <td><img th:src="${user.headImgUrl}" width="30" height="30" /></td>
+                    <td th:text="${user.openId}"></td>
+                    <td th:text="${user.nickname}"></td>
+                    <td th:text="${user.country}+${user.province}+${user.city}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

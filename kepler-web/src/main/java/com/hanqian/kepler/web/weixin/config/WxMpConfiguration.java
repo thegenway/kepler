@@ -60,6 +60,7 @@ public class WxMpConfiguration {
                 configStorage.setAesKey(a.getAesKey());
                 return configStorage;
             }).collect(Collectors.toMap(WxMpDefaultConfigImpl::getAppId, a -> a, (o, n) -> o)));
+        System.out.println("============ 微信配置成功 ============");
         return service;
     }
 

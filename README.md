@@ -17,6 +17,7 @@
 - ~~【已完成】mysql、mongodb数据定时备份~~
 - ~~【已完成】多标签页情况下的页面排版~~
 - ~~【已完成】个人中心我创建的文档、我参与过的文档~~
+- 【未完成】增加微信模板和素材管理
 - 【未完成】编写Kepler项目完整开发文档
 
 ### 后台使用到的框架或插件
@@ -24,11 +25,11 @@
 | :------------: | :------------: | :------------: |
 | SpringBoot JPA | orm |  |
 | Spring Security  |  安全框架 |  |
+| Quartz | 定时任务 |  |
 | hutool | 封装各种工具类 | https://www.hutool.club/docs/#/ |
 | justauth | 第三方登陆 | https://docs.justauth.whnb.wang/#/ |
 | WxJava | 微信 | https://gitee.com/binary/weixin-java-tools |
 | velocity | 代码生成模板 | https://blog.csdn.net/tttzzztttzzz/article/details/90720877 |
-| Quartz | 定时任务 |  |
 | kkFileView | 附件预览 | https://gitee.com/kekingcn/file-online-preview |
 
 ### 前台使用到的框架或插件

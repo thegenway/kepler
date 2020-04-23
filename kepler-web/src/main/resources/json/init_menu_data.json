@@ -158,6 +158,37 @@
         "target": "_self",
         "isManageMenu": "1",
         "children": []
+      },
+      {
+        "name": "微信管理",
+        "menuType": "目录",
+        "iconCode": "fa fa-weixin",
+        "orderNum": "10",
+        "url": "",
+        "target": "",
+        "isManageMenu": "1",
+        "children": [
+          {
+            "name": "菜单栏管理",
+            "menuType": "菜单",
+            "iconCode": "",
+            "orderNum": "1",
+            "url": "../wx/manage/menu",
+            "target": "_self",
+            "isManageMenu": "1",
+            "children": []
+          },
+          {
+            "name": "公众号信息",
+            "menuType": "菜单",
+            "iconCode": "",
+            "orderNum": "2",
+            "url": "../wx/manage/info",
+            "target": "_self",
+            "isManageMenu": "1",
+            "children": []
+          },
+        ]
       }
     ]
   },
