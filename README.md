@@ -9,7 +9,7 @@
 - ~~【已完成】可配置定时任务（参考【若依】项目）~~
 - 【未完成】第三方账号绑定
 - 【未完成】第三方登录（QQ登录、微信登录）
-- 【未完成】微信公众号配置页面（参考https://gitee.com/joolun/JooLun-wx/issues）
+- 【未完成】微信公众号配置页面（参考https://gitee.com/qingfengtaizi/wxmp
 - ~~【已完成】各个菜单的查看权限（权限配置就和流程查看权限一样）~~
 - ~~【已完成】系统管理中增加服务器信息以及项目信息（参考【若依】项目）~~
 - ~~【已完成】代码自动生成（根据实体类属性）~~
@@ -29,6 +29,7 @@
 | WxJava | 微信 | https://gitee.com/binary/weixin-java-tools |
 | velocity | 代码生成模板 | https://blog.csdn.net/tttzzztttzzz/article/details/90720877 |
 | Quartz | 定时任务 |  |
+| kkFileView | 附件预览 | https://gitee.com/kekingcn/file-online-preview |
 
 ### 前台使用到的框架或插件
 |  name |  description | page |
@@ -44,3 +45,11 @@
 | laydate | 时间选择器 | https://www.layui.com/doc/modules/laydate.html |
 | jquery-tmpl | 模板引擎 | https://blog.csdn.net/u010142437/article/details/84399222 |
 | layX | 弹窗插件 | https://gitee.com/monksoul/LayX |
+
+### 本项目的搭建参考了以下开源项目
+|  name | page |
+| :------------: | :------------: |
+| RuoYi | https://gitee.com/y_project/RuoYi |
+| weixin-java-mp-demo-springboot | https://gitee.com/binary/weixin-java-mp-demo-springboot |
+| spring-boot-demo | https://github.com/xkcoding/spring-boot-demo |
+| SmartWx | https://gitee.com/qingfengtaizi/wxmp |
