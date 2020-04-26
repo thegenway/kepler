@@ -8,6 +8,7 @@ import com.hanqian.kepler.common.base.dao.BaseDao;
 import com.hanqian.kepler.common.base.service.BaseServiceImpl;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.jpa.specification.Rule;
 import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
 import com.hanqian.kepler.core.service.flow.*;
@@ -66,7 +67,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
             return AjaxResult.error("实体对象为空");
         }
 
-        if(entity.getProcessState()!=null && !FlowEnum.ProcessState.Draft.equals(entity.getProcessState())){
+        if(entity.getProcessState()!=null && !FlowEnum.ProcessState.Draft.equals(entity.getProcessState()) && !FlowEnum.ProcessState.Withdraw.equals(entity.getProcessState())){
             return AjaxResult.error("此流程已经开始，无法再次保存草稿");
         }
 
@@ -77,12 +78,12 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         }
 
 
-        entity.setProcessState(FlowEnum.ProcessState.Draft);
+        entity.setProcessState(ObjectUtil.equal(FlowEnum.ProcessState.Withdraw,entity.getProcessState()) ? FlowEnum.ProcessState.Withdraw : FlowEnum.ProcessState.Draft);
         entity.setCreator(user);
         entity = save(entity);
 
         TaskEntity taskEntity = taskEntityService.saveTaskEntity(
-                FlowEnum.ProcessState.Draft,
+                entity.getProcessState(),
                 user,
                 entity.getId(),
                 path,
@@ -135,7 +136,7 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
             processLogService.createLog(FlowEnum.ProcessOperate.submit, user, processLogVo, taskEntity);
         }else{
             processLogService.createLog(
-                    ObjectUtil.equal(FlowEnum.ProcessState.Backed, taskEntity.getProcessState()) ? FlowEnum.ProcessOperate.reSubmit : FlowEnum.ProcessOperate.submit,
+                    ObjectUtil.equal(FlowEnum.ProcessState.Backed, taskEntity.getProcessState())||ObjectUtil.equal(FlowEnum.ProcessState.Withdraw, taskEntity.getProcessState()) ? FlowEnum.ProcessOperate.reSubmit : FlowEnum.ProcessOperate.submit,
                     user,
                     processLogVo,
                     taskEntity);
@@ -178,12 +179,10 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
 
         TaskEntity taskEntity = taskEntityService.getTaskEntityByKeyId(entity.getId());
 
-        //流程记录
-        processLogService.createLog(FlowEnum.ProcessOperate.approve, user, processLogVo, taskEntity);
-
         //下一步流程处理
         taskEntity.setLastUser(user);
 	    ProcessStep currProcessStep = processStepService.getCurrStep(taskEntity);
+	    if(currProcessStep == null) return AjaxResult.error("找不到当前流程");
 
 	    if(currProcessStep.getJointlySing() == 1){
 		    //如果是会签
@@ -217,6 +216,9 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         }
         save(entity);
 
+        //流程记录
+        processLogService.createLog(FlowEnum.ProcessOperate.approve, user, processLogVo, taskEntity);
+
         return AjaxResult.successWithId("操作成功", entity.getId());
     }
 
@@ -236,14 +238,17 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         }
 
         TaskEntity taskEntity = taskEntityService.getTaskEntityByKeyId(entity.getId());
+        ProcessStep nextProcessStep = processStepService.getBackStep(taskEntity);
+        if(nextProcessStep == null){
+            return AjaxResult.error("流程配置有误，找不到下一步操作");
+        }
 
         //流程记录
-        String path = ClassUtil.getClassName(entity, false);
         processLogService.createLog(FlowEnum.ProcessOperate.back, user, processLogVo, taskEntity);
 
         //下一步流程处理
         taskEntity.setLastUser(user);
-        ProcessStep nextProcessStep = processStepService.getBackStep(taskEntity);
+
         taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.back, taskEntity, nextProcessStep);
 
         entity.setProcessState(taskEntity.getProcessState());
@@ -276,6 +281,46 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         taskEntityService.save(taskEntity);
 
         entity.setProcessState(FlowEnum.ProcessState.Deny);
+        entity = save(entity);
+
+        return AjaxResult.successWithId("操作成功", entity.getId());
+    }
+
+    @Override
+    public AjaxResult withdraw(T entity, ProcessLogVo processLogVo) {
+        User currentUser = FlowUtil.getCurrentUser();
+        return withdraw(entity, processLogVo, currentUser);
+    }
+
+    @Override
+    public AjaxResult withdraw(T entity, ProcessLogVo processLogVo, User user) {
+        if(entity == null || StrUtil.isBlank(entity.getId())){
+            return AjaxResult.error("实体对象为空");
+        }
+        if(!FlowEnum.ProcessState.Running.equals(entity.getProcessState())){
+            return AjaxResult.error("只有在流转中状态才能撤回");
+        }
+
+
+        String path = ClassUtil.getClassName(entity, false);
+        List<Rule> rules = new ArrayList<>();
+        rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+        rules.add(Rule.eq("processBrief.path", path));
+        rules.add(Rule.eq("step", 1));
+        ProcessStep nextProcessStep = processStepService.getFirstOne(SpecificationFactory.where(rules));
+        if(nextProcessStep == null){
+            return AjaxResult.error("找不到流程第一步了...撤回失败");
+        }
+
+        //流程记录
+        TaskEntity taskEntity = taskEntityService.getTaskEntityByKeyId(entity.getId());
+        processLogService.createLog(FlowEnum.ProcessOperate.withdraw, user, processLogVo, taskEntity);
+
+        //下一步流程处理
+        taskEntity.setLastUser(user);
+        taskEntity = taskEntityService.executeFlowHandle(FlowEnum.ProcessOperate.withdraw, taskEntity, nextProcessStep);
+
+        entity.setProcessState(taskEntity.getProcessState());
         entity = save(entity);
 
         return AjaxResult.successWithId("操作成功", entity.getId());

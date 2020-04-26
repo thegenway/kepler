@@ -121,7 +121,7 @@ public class TaskEntityController extends BaseController {
     public JqGridReturn list_draft(@CurrentUser User user, JqGridPager pager, @RequestJsonParam("filters") JqGridFilter filters){
         Pageable pageable = getJqGridPageable(pager);
         List<Rule> rules = getJqGridSearch(filters);
-        rules.add(Rule.eq("processState", FlowEnum.ProcessState.Draft));
+        rules.add(Rule.in("processState", new FlowEnum.ProcessState[]{FlowEnum.ProcessState.Draft, FlowEnum.ProcessState.Withdraw}));
         rules.add(Rule.eq("creator", user));
         JqGridContent<TaskEntity> jqGridContent = taskEntityService.getJqGridContent(rules, pageable);
 

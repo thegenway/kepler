@@ -298,7 +298,7 @@
         $form.find("input,select").attr("disabled", true);
 
         __flow_duty_handle(flowData_buildInfo);
-        __flow_button_read_handle(flowData_buildInfo, fn_buildInfo_approve, fn_buildInfo_back, fn_buildInfo_deny, fn_buildInfo_edit);
+        __flow_button_read_handle(flowData_buildInfo, fn_buildInfo_approve, fn_buildInfo_back, fn_buildInfo_deny, fn_buildInfo_edit, fn_buildInfo_withdraw);
 
         __select2(flowData_buildInfo.formId + " #costBasisDictId");
         __select2(flowData_buildInfo.formId + " #buildUseDictId");
@@ -344,6 +344,17 @@
     function fn_buildInfo_edit(){
         __flow_close_layx(flowData_buildInfo);
         __layX_html_read(flowData_buildInfo.keyId, "班级管理", "/buildInfo/input?keyId="+flowData_buildInfo.keyId);
+    }
+
+    function fn_buildInfo_withdraw(){
+        __confirm_dialog("", "确定撤回吗？", function(dialogRef){
+            __form_save(flowData_buildInfo.formId, "/buildInfo/withdraw", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __flow_close_layx(flowData_buildInfo);
+                }
+            })
+        });
     }
 
     //切换标签页要清理流程按钮组

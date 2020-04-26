@@ -10,6 +10,7 @@ public class  FlowEnum {
         Backed("退回中"),
         Finished("已归档"),
         Deny("被否决"),
+        Withdraw("撤回中"),
         Draft("草稿");
 
         private final String value;
@@ -54,7 +55,8 @@ public class  FlowEnum {
         reSubmit("再提交"),
         approve("同意"),
         back("退回"),
-        deny("否决");
+        deny("否决"),
+        withdraw("撤回");
 
         private final String value;
 

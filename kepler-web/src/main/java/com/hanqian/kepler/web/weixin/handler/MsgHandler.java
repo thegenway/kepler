@@ -1,5 +1,9 @@
 package com.hanqian.kepler.web.weixin.handler;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.web.weixin.builder.TextBuilder;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -39,10 +43,24 @@ public class MsgHandler extends AbstractHandler {
         }
 
         //TODO 组装回复消息
-        String content = "收到信息内容：" + JSONUtil.toJsonStr(wxMessage);
+        //一个例子，对对联，输入上联返回下联
+	    String baseUrl = "https://v1.alapi.cn/api/couplet?keyword=";
+        String content = wxMessage.getContent();
+        String returnContent = "";
+        try{
+	        String re = HttpUtil.get(baseUrl+content);
+	        JSONObject jsonObject = JSONUtil.parseObj(re);
+	        if(!StrUtil.equals("200", jsonObject.getStr("code"))){
+		        returnContent = "您输入的是【"+content+"】，但接口返回错误";
+	        }else{
+	        	JSONObject data = jsonObject.getJSONObject("data");
+		        returnContent = "上联：【"+data.getStr("keyword")+"】\n下联：【"+data.getStr("text")+"】";
+	        }
+        }catch (Exception e){
+	        returnContent = "您输入的是【"+content+"】，但是接口已挂";
+        }
 
-        return new TextBuilder().build(content, wxMessage, weixinService);
-
+        return new TextBuilder().build(returnContent, wxMessage, weixinService);
     }
 
 }

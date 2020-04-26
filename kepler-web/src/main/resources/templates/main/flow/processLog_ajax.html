@@ -30,6 +30,7 @@
                                     <div class="timeline-icon bg-success" th:if="${log?.operateType?.name()=='approve'}"><i class="fa fa-smile-o fa-lg"></i></div>
                                     <div class="timeline-icon bg-warning" th:if="${log?.operateType?.name()=='back'}"><i class="fa fa-reply-all fa-lg"></i></div>
                                     <div class="timeline-icon bg-danger" th:if="${log?.operateType?.name()=='deny'}"><i class="fa fa-power-off fa-lg"></i></div>
+                                    <div class="timeline-icon bg-warning" th:if="${log?.operateType?.name()=='withdraw'}"><i class="fa fa-level-down fa-lg"></i></div>
                                     <div class="timeline-time">
                                         <span th:text="${#dates.format(log?.createTime, 'yyyy-MM-dd HH:mm')}"></span>
                                     </div>

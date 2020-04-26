@@ -205,6 +205,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 			return userSet;
 		}
 
+		// 如果当前是撤回中状态，返回创建人
+		if(FlowEnum.ProcessState.Withdraw.equals(taskEntity.getProcessState())){
+			userSet.add(taskEntity.getCreator());
+			return userSet;
+		}
+
 		ProcessStep processStep = processStepService.getCurrStep(taskEntity);
 
 		if(processStep==null || !JSONUtil.isJsonObj(processStep.getParticipantJson())) return new HashSet<>();

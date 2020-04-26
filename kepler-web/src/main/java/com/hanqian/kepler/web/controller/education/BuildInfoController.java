@@ -242,4 +242,14 @@ public class BuildInfoController extends BaseController {
 		return buildInfoService.deny(buildInfo, processLogVo);
 	}
 
+	/**
+	 * 撤回
+	 */
+	@PostMapping("withdraw")
+	@ResponseBody
+	public AjaxResult withdraw(@CurrentUser User user, ProcessLogVo processLogVo){
+		BuildInfo buildInfo = buildInfoService.get(processLogVo.getKeyId());
+		return buildInfoService.withdraw(buildInfo, processLogVo);
+	}
+
 }

@@ -100,6 +100,9 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
         }else if(ObjectUtil.equal(operate, FlowEnum.ProcessOperate.deny)){
             taskEntity.setStep(-1);
             taskEntity.setProcessState(FlowEnum.ProcessState.Deny);
+        }else if(ObjectUtil.equal(operate, FlowEnum.ProcessOperate.withdraw)){
+            taskEntity.setStep(1);
+            taskEntity.setProcessState(FlowEnum.ProcessState.Withdraw);
         }
 
         //设置下一步操作人
@@ -120,17 +123,30 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     public List<FlowEnum.ProcessOperate> getFlowButtonList(TaskEntity taskEntity, User currUser) {
         if(taskEntity == null){
             return Arrays.asList(FlowEnum.ProcessOperate.submit, FlowEnum.ProcessOperate.save);
+
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Draft,taskEntity.getProcessState())){
             return Arrays.asList(FlowEnum.ProcessOperate.submit, FlowEnum.ProcessOperate.save);
+
+        }else if(ObjectUtil.equal(FlowEnum.ProcessState.Withdraw,taskEntity.getProcessState())){
+            if(taskEntity.getCreator()!=null&&StrUtil.equals(currUser.getId(),taskEntity.getCreator().getId())){
+                return Arrays.asList(FlowEnum.ProcessOperate.reSubmit, FlowEnum.ProcessOperate.save);
+            }else{
+                return new ArrayList<>();
+            }
+
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Backed,taskEntity.getProcessState())){
             if(currUser!=null && StrUtil.equals(currUser.getId(), taskEntity.getCreator().getId())){
                 return Collections.singletonList(FlowEnum.ProcessOperate.reSubmit);
             }else{
                 return new ArrayList<>();
             }
+
         }else if(ObjectUtil.equal(FlowEnum.ProcessState.Running,taskEntity.getProcessState())){
             List<FlowEnum.ProcessOperate> list = new ArrayList<>();
             ProcessStep processStep = processStepService.getCurrStep(taskEntity);
+            if(taskEntity.getCreator()!=null&&StrUtil.equals(currUser.getId(),taskEntity.getCreator().getId())){
+                list.add(FlowEnum.ProcessOperate.withdraw);
+            }
             if(processStep!=null){
                 if(StrUtil.isNotBlank(processStep.getActionType()) && processStep.getActionType().contains("2")){
                     list.add(FlowEnum.ProcessOperate.deny);
@@ -139,8 +155,8 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
                     list.add(FlowEnum.ProcessOperate.back);
                 }
             }
-
             list.add(FlowEnum.ProcessOperate.approve);
+
             return list;
         }else{
             return new ArrayList<>();
@@ -155,7 +171,7 @@ public class TaskEntityServiceImpl extends BaseServiceImpl<TaskEntity, String> i
     @Override
     public FlowInfoVo getFlowInfo(TaskEntity taskEntity, User currUser) {
         List<FlowEnum.ProcessOperate> operates = new ArrayList<>();
-        if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState())){
+        if(taskEntity==null || FlowEnum.ProcessState.Draft.equals(taskEntity.getProcessState()) || FlowEnum.ProcessState.Withdraw.equals(taskEntity.getProcessState())){
             operates = getFlowButtonList(taskEntity, currUser);
         }else{
             String[] ids = StrUtil.split(taskEntity.getNextUserIds(), ",");

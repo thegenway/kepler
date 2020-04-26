@@ -1504,8 +1504,9 @@ function __flow_button_input_handle(entityData, save, commit){
  * @param back 退回方法fun
  * @param deny 否决方法fun
  * @param edit 编辑按钮方法fun
+ * @param withdraw 撤回按钮方法fun
  */
-function __flow_button_read_handle(entityData, approve, back, deny, edit){
+function __flow_button_read_handle(entityData, approve, back, deny, edit, withdraw){
     var url = "/flow/taskEntity/getFlowInfo";
     var p = {keyId : entityData.keyId};
     __ajax_get(url, p, function(data){
@@ -1533,6 +1534,7 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
         var btn_back = '<button class="btn btn-warning" title="退回" id="'+flag+'-button-back">退回</button>';
         var btn_deny = '<button class="btn btn-danger" title="否决" id="'+flag+'-button-deny">否决</button>';
         var btn_edit = '<button class="btn btn-default" title="编辑" id="'+flag+'-button-edit">编辑</button>';
+        var btn_withdraw = '<button class="btn btn-default" title="编辑" id="'+flag+'-button-withdraw">撤回</button>';
 
         //先把按钮组清空，并直接添加一个关闭按钮
         $("#"+flag).find("div.layx-buttons").empty();
@@ -1552,9 +1554,14 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit){
             }else if(data.flowButtonList[i].name == "back"){
                 $("#"+flag).find("div.layx-buttons").prepend(btn_back);
                 $("#"+flag+"-button-back").on("click", back)
+            }else if(data.flowButtonList[i].name == "withdraw"){
+                $("#"+flag).find("div.layx-buttons").prepend(btn_withdraw);
+                $("#"+flag+"-button-withdraw").on("click", withdraw)
             }else if(data.flowButtonList[i].name == "reSubmit" || data.flowButtonList[i].name == "save"){
-                $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
-                $("#"+flag+"-button-edit").on("click", edit)
+                if($("#"+flag+"-button-edit").size() == 0){
+                    $("#"+flag).find("div.layx-buttons").prepend(btn_edit);
+                    $("#"+flag+"-button-edit").on("click", edit);
+                }
             }
         }
 

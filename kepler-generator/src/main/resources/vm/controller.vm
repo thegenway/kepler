@@ -161,4 +161,14 @@ public class ${classNameU}Controller extends BaseController {
         return ${classNameL}Service.deny(${classNameL}, processLogVo);
     }
 
+    /**
+     * 撤回
+     */
+    @PostMapping("withdraw")
+    @ResponseBody
+    public AjaxResult withdraw(@CurrentUser User user, ProcessLogVo processLogVo){
+        ${classNameU} ${classNameL} = ${classNameL}Service.get(processLogVo.getKeyId());
+        return ${classNameL}Service.withdraw(${classNameL}, processLogVo);
+    }
+
 }

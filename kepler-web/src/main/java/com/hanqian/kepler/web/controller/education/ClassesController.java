@@ -142,4 +142,14 @@ public class ClassesController extends BaseController {
         return classesService.deny(classes, processLogVo);
     }
 
+    /**
+     * 撤回
+     */
+    @PostMapping("withdraw")
+    @ResponseBody
+    public AjaxResult withdraw(@CurrentUser User user, ProcessLogVo processLogVo){
+        Classes classes = classesService.get(processLogVo.getKeyId());
+        return classesService.withdraw(classes, processLogVo);
+    }
+
 }

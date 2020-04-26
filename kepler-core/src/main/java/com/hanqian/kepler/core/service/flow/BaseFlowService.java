@@ -46,6 +46,12 @@ public interface BaseFlowService<T extends FlowEntity> extends BaseService<T, St
     AjaxResult deny(T entity, ProcessLogVo processLogVo, User user);
 
     /**
+     * 撤回
+     */
+    AjaxResult withdraw(T entity, ProcessLogVo processLogVo);
+    AjaxResult withdraw(T entity, ProcessLogVo processLogVo, User user);
+
+    /**
      * 判断用户是否有查看【全部】的权限
      */
     boolean checkIfReadAll(User user);

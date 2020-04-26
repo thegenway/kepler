@@ -71,7 +71,7 @@
 
     $(function(){
         __flow_duty_handle(flowData);
-        __flow_button_read_handle(flowData, fn_classes_approve, fn_classes_back, fn_classes_deny, fn_classes_edit);
+        __flow_button_read_handle(flowData, fn_classes_approve, fn_classes_back, fn_classes_deny, fn_classes_edit, fn_buildInfo_withdraw);
     });
 
     function fn_classes_approve(){
@@ -110,6 +110,17 @@
     function fn_classes_edit(){
         __layX_close(flowData.keyId);
         __layX_html_read(flowData.keyId, "班级管理", "/classes/input?keyId="+flowData.keyId);
+    }
+
+    function fn_buildInfo_withdraw(){
+        __confirm_dialog("", "确定撤回吗？", function(dialogRef){
+            __form_save(flowData.formId, "/classes/withdraw", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __flow_close_layx(flowData);
+                }
+            })
+        });
     }
 
 </script>

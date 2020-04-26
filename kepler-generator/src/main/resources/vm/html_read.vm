@@ -53,7 +53,7 @@
 #end
 
         __flow_duty_handle(flowData_${classNameL});
-        __flow_button_read_handle(flowData_${classNameL}, fn_${classNameL}_approve, fn_${classNameL}_back, fn_${classNameL}_deny, fn_${classNameL}_edit);
+        __flow_button_read_handle(flowData_${classNameL}, fn_${classNameL}_approve, fn_${classNameL}_back, fn_${classNameL}_deny, fn_${classNameL}_edit, fn_${classNameL}_withdraw);
     });
 
     function fn_${classNameL}_approve(){
@@ -92,6 +92,17 @@
     function fn_${classNameL}_edit(){
         __flow_close_layx(flowData_${classNameL});
         __layX_html_read(flowData.keyId, "${description}", "/${classNameL}/input?keyId="+flowData_${classNameL}.keyId);
+    }
+
+    function fn_${classNameL}_withdraw(){
+        __confirm_dialog("", "确定撤回吗？", function(dialogRef){
+            __form_save(flowData_${classNameL}.formId, "/${classNameL}/withdraw", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __flow_close_layx(flowData_${classNameL});
+                }
+            })
+        });
     }
 
 </script>

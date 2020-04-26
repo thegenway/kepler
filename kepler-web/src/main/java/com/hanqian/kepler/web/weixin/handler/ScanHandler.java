@@ -1,5 +1,6 @@
 package com.hanqian.kepler.web.weixin.handler;
 
+import com.hanqian.kepler.web.weixin.builder.TextBuilder;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -19,6 +20,6 @@ public class ScanHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
                                     WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
         // 扫码事件处理
-        return null;
+        return new TextBuilder().build("扫码进来了，好神奇！", wxMpXmlMessage, wxMpService);
     }
 }
