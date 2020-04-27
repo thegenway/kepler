@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div id="page-content">
     <div class="panel">
@@ -11,8 +11,14 @@
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-sm-12 table-toolbar-left">
+                <div class="col-sm-6 table-toolbar-left">
                     <button type="button" class="btn btn-primary btn-sm" id="btn-energyBill-add" th:disabled="${!isCreator}">新建</button>
+                </div>
+
+                <div class="col-sm-6 table-toolbar-right">
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=EnergyBill&headArr=账单类型,账单月份,单价,使用量,总金额,条形码,备注', '_blank')">下载导入模板</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-export" onclick="window.open(ctx+'energyBill/export', '_blank')">导出</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-import" onclick="__excel_import_view('energyBill/importData')">导入</button>
                 </div>
             </div>
 
@@ -33,14 +39,13 @@
 
     function init_grid_energyBill(){
         __init_jqgrid('energyBill_table', 'energyBill_page', '/energyBill/list',
-                ["账单月份","账单类型","状态","操作","id"],
-                [
-                    {name: 'billDate', index: 'billDate', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                    {name: 'energyTypeDict.name', index: 'energyTypeDict.name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                    {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                    {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_energyBill},
-                    {name: 'id', index: 'id', width: 100, key: true, hidden: true}
-                ]
+            ["名称","状态","操作","id"],
+            [
+                {name: 'name', index: 'name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_energyBill},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ]
         );
     }
 

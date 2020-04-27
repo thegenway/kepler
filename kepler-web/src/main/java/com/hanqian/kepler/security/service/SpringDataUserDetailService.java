@@ -36,7 +36,7 @@ public class SpringDataUserDetailService implements UserDetailsService {
 			throw new BadCredentialsException(String.format("用户'%s'暂时已被禁用", account));
 		}
 
-		return UserPrincipal.create(user);
+		return UserPrincipal.create(user, user.getAccountType()!=null ? user.getAccountType().name() : "");
 	}
 
 }

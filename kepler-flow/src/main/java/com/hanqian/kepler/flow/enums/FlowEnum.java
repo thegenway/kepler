@@ -2,6 +2,8 @@ package com.hanqian.kepler.flow.enums;
 
 public class  FlowEnum {
 
+    public final static FlowEnum.ProcessState[] FLOW_DATA_LIST_ENUMS = new FlowEnum.ProcessState[]{ProcessState.Backed,ProcessState.Running,ProcessState.Finished};
+
     /**
      * 流程配置的状态
      */

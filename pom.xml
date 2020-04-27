@@ -61,6 +61,13 @@
 				<version>${hutool.version}</version>
 			</dependency>
 
+			<!--excel导入导出-->
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>3.17</version>
+			</dependency>
+
 			<!--io常用工具类 -->
 			<dependency>
 				<groupId>commons-io</groupId>
@@ -115,6 +122,13 @@
                 <artifactId>oshi-core</artifactId>
                 <version>3.9.1</version>
             </dependency>
+
+			<!--thymeleaf springsecurity 标签-->
+			<dependency>
+				<groupId>org.thymeleaf.extras</groupId>
+				<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+				<version>3.0.4.RELEASE</version>
+			</dependency>
 
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div id="page-content">
     <div class="panel">
@@ -11,8 +11,14 @@
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-sm-12 table-toolbar-left">
+                <div class="col-sm-6 table-toolbar-left">
                     <button type="button" class="btn btn-primary btn-sm" id="btn-${classNameL}-add" th:disabled="${!isCreator}">新建</button>
+                </div>
+
+                <div class="col-sm-6 table-toolbar-right">
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=${classNameU}&headArr=名称,第二个名称', '_blank')">下载导入模板</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-export" onclick="window.open(ctx+'${classNameL}/export', '_blank')">导出</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-import" onclick="__excel_import_view('${classNameL}/importData')">导入</button>
                 </div>
             </div>
 

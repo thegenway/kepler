@@ -1,8 +1,12 @@
 package com.hanqian.kepler.web.controller.sys;
 
 import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.entity.primary.sys.FileManage;
 import com.hanqian.kepler.core.service.sys.FileManageService;
@@ -137,10 +141,46 @@ public class FileController extends BaseController {
     /**
      * 单独针对图片类型的预览
      */
-    @RequestMapping(value = "imgView", method = RequestMethod.GET)
+    @GetMapping(value = "imgView")
     public String imgView(Model model, String fileId){
         model.addAttribute("fileId", fileId);
         return "main/common/file_img_view";
+    }
+
+    /**
+     * 进入公共excel导入页面
+     */
+    @GetMapping(value = "excelImportView")
+    public String excelImportView(){
+        return "main/common/excel_import_view";
+    }
+
+    /**
+     * 下载excel导入模板
+     * @param name 下载文件的名称
+     * @param headArr 表头，用逗号分隔
+     */
+    @GetMapping("importTemp")
+    @ResponseBody
+    public void importTemp(String name, String headArr) throws IOException {
+        if(StrUtil.isBlank(name)) name="未知模板";
+        List<String> row1 = CollUtil.newArrayList(StrUtil.split(headArr, ","));
+
+        List<List<String>> rows = CollUtil.newArrayList();
+        rows.add(row1);
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        writer.write(rows);
+        for(int i=0;i<writer.getColumnCount();i++){
+            writer.setColumnWidth(i, 16);
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String((name + ".xlsx").getBytes(), "iso-8859-1"));
+
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out, true);
+        writer.close();
+        IoUtil.close(out);
     }
 
 }

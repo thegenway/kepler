@@ -30,4 +30,10 @@ public interface DictService extends BaseService<Dict, String> {
      */
     List<Dict> findAllDictList(DictEnum dictEnum);
 
+    /**
+     * 根据名字获取字典项
+     */
+    Dict getDictByName(DictEnum dictEnum, String name);
+    Dict getDictByNameIfNullJustCreate(DictEnum dictEnum, String name);
+
 }

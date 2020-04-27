@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div id="page-content">
     <div class="panel">
@@ -11,8 +11,13 @@
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-sm-12 table-toolbar-left">
+                <div class="col-sm-6 table-toolbar-left">
                     <button type="button" class="btn btn-primary btn-sm" id="btn-buildInfo-add" th:disabled="${!isCreator}">新建楼宇基建信息表</button>
+                </div>
+                <div class="col-sm-6 table-toolbar-right">
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-buildInfo-importTemp" onclick="window.open(ctx+'buildInfo/importTemp', '_blank')">下载导入模板</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-buildInfo-export" onclick="window.open(ctx+'buildInfo/export', '_blank')">导出</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-buildInfo-import" onclick="__excel_import_view('buildInfo/importData')">导入</button>
                 </div>
             </div>
 
@@ -50,7 +55,7 @@
 
     function actFormat_buildInfo(cellvalue, options, rowObject){
         var id = rowObject.id;
-        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_buildInfo_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_buildInfo_read(\'' + id + '\');">查看</button> ';
         return cellvalue;
     }
 

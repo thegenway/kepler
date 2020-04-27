@@ -1,5 +1,6 @@
 package com.hanqian.kepler.core.service.sys.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.dict.DictTypeVo;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
@@ -69,4 +70,32 @@ public class DictServiceImpl extends BaseServiceImpl<Dict, String> implements Di
         return findAll(SpecificationFactory.where(rules), sort);
     }
 
+    @Override
+    public Dict getDictByName(DictEnum dictEnum, String name) {
+        if(ObjectUtil.hasEmpty(dictEnum,name)){
+            return null;
+        }
+        List<Rule> rules = new ArrayList<>();
+        rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+        rules.add(Rule.eq("dictType", dictEnum));
+        rules.add(Rule.eq("name", name));
+        return getFirstOne(SpecificationFactory.where(rules));
+    }
+
+    @Override
+    public Dict getDictByNameIfNullJustCreate(DictEnum dictEnum, String name) {
+        if(ObjectUtil.hasEmpty(dictEnum,name)){
+            return null;
+        }
+        Dict dict = this.getDictByName(dictEnum, name);
+        if(dict!=null){
+            return dict;
+        }else{
+            Dict newDict = new Dict();
+            newDict.setDictType(dictEnum);
+            newDict.setName(name);
+            newDict.setSortNo(999);
+            return save(newDict);
+        }
+    }
 }

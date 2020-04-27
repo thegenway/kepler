@@ -121,9 +121,9 @@ public class UserPrincipal implements UserDetails {
 	 */
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public static UserPrincipal create(User user) {
+	public static UserPrincipal create(User user, String authorities) {
 
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("admin");
+		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 
 		return new UserPrincipal(user.getId(),user.getName(),user.getState(),user.getCreateTime(),
 				user.getModifyTime(),user.getUsername(),user.getPhone(),user.getEmail(),user.getPassword(),

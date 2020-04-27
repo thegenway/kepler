@@ -30,7 +30,7 @@ public class WeixinCodeAuthenticationProvider implements AuthenticationProvider 
 		if(user == null){
 			throw new InternalAuthenticationServiceException(StrUtil.format("此微信还未绑定"));
 		}
-		UserDetails userDetails = UserPrincipal.create(user);
+		UserDetails userDetails = UserPrincipal.create(user, user.getAccountType()!=null ? user.getAccountType().name() : "");
 		WeixinCodeAuthenticationToken authenticationResult = new WeixinCodeAuthenticationToken(userDetails, userDetails.getAuthorities());
 		authenticationResult.setDetails(token.getDetails());
 		return authenticationResult;

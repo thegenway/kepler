@@ -1,33 +1,41 @@
 package com.hanqian.kepler.web.controller.education;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import com.hanqian.kepler.common.bean.NameValueVo;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.enums.DictEnum;
 import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.common.utils.ExcelUtils;
 import com.hanqian.kepler.core.entity.primary.education.BuildInfo;
 import com.hanqian.kepler.core.service.education.BuildInfoService;
 import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.flow.enums.FlowEnum;
 import com.hanqian.kepler.flow.vo.ProcessLogVo;
 import com.hanqian.kepler.security.annotation.CurrentUser;
 import com.hanqian.kepler.web.annotation.RequestJsonParam;
 import com.hanqian.kepler.web.controller.BaseController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -38,6 +46,7 @@ import java.util.*;
  * createDate:  2020/4/2 。
  * ============================================================================
  */
+@Slf4j
 @Controller
 @RequestMapping("/buildInfo")
 public class BuildInfoController extends BaseController {
@@ -250,6 +259,89 @@ public class BuildInfoController extends BaseController {
 	public AjaxResult withdraw(@CurrentUser User user, ProcessLogVo processLogVo){
 		BuildInfo buildInfo = buildInfoService.get(processLogVo.getKeyId());
 		return buildInfoService.withdraw(buildInfo, processLogVo);
+	}
+
+	/**
+	 * 数据导出
+	 */
+	@GetMapping("export")
+	@ResponseBody
+	public void export() throws IOException {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
+		rules.add(Rule.in("processState", FlowEnum.FLOW_DATA_LIST_ENUMS));
+		List<BuildInfo> buildInfoList = buildInfoService.findAll(SpecificationFactory.where(rules));
+
+		List<Map<String, String>> dataMapList = new ArrayList<>();
+		List<NameValueVo> nameValueVos = new ArrayList<>();
+		buildInfoList.forEach(entity -> {
+			Map<String, String> map = new HashMap<>();
+			map.put("name", Convert.toStr(entity.getName()));
+			map.put("buildNo", Convert.toStr(entity.getBuildNo()));
+			map.put("buildMeasure", Convert.toStr(entity.getBuildMeasure()));
+			dataMapList.add(map);
+
+			nameValueVos.add(new NameValueVo("楼域名", "name"));
+			nameValueVos.add(new NameValueVo("楼编号", "buildNo"));
+			nameValueVos.add(new NameValueVo("建筑面积", "buildMeasure"));
+		});
+		List<Map<String, String>> rows = CollUtil.newArrayList(dataMapList);
+		ExcelUtils.export(response, "楼宇基建信息", rows, nameValueVos);
+	}
+
+	/**
+	 * 导入
+	 */
+	@PostMapping("importData")
+	@ResponseBody
+	public AjaxResult importData(@RequestParam("file") MultipartFile multipartFile) {
+		if(multipartFile == null) return AjaxResult.error("multipartFile is null");
+		int globalIndex = 0;
+
+		try{
+			ExcelReader excelReader = ExcelUtil.getReader(multipartFile.getInputStream(), 0);
+			int rowCount = excelReader.getRowCount();
+			log.info("开始执行导入数据【BuildInfo】，共有行数【"+rowCount+"】");
+			List<BuildInfo> importBuildInfoList = new ArrayList<>();
+			for(int i=0;i<rowCount;i++){
+				if(i==0) continue;
+				globalIndex = i;
+				String buildNo = Convert.toStr(excelReader.readCellValue(0,i));
+				String name = Convert.toStr(excelReader.readCellValue(1,i));
+				String onceName = Convert.toStr(excelReader.readCellValue(2,i));
+				String location = Convert.toStr(excelReader.readCellValue(3,i));
+				String buildMeasure = Convert.toStr(excelReader.readCellValue(4,i));
+
+				if(StrUtil.isNotBlank(buildMeasure) && !NumberUtil.isNumber(buildMeasure)){
+					return AjaxResult.error(StrUtil.format("第{}行的建筑面积不是数字", i+1));
+				}
+
+				BuildInfo buildInfo = new BuildInfo();
+				buildInfo.setBuildNo(buildNo);
+				buildInfo.setName(name);
+				buildInfo.setOnceName(onceName);
+				buildInfo.setLocation(location);
+				buildInfo.setBuildMeasure(Convert.toBigDecimal(buildMeasure));
+				importBuildInfoList.add(buildInfo);
+			}
+
+			int createCount = 0,updateCount = 0;
+			for(int i=0;i<importBuildInfoList.size();i++){
+				globalIndex = i;
+				BuildInfo buildInfo = importBuildInfoList.get(i);
+				if(StrUtil.isBlank(buildInfo.getId())){
+					buildInfoService.commit(buildInfo, new ProcessLogVo());
+					createCount++;
+				}else{
+					buildInfoService.save(buildInfo);
+					updateCount++;
+				}
+			}
+			return AjaxResult.success(StrUtil.format("导入成功，本次导入：新建【{}】个，更新【{}】个", createCount, updateCount));
+
+		}catch (Exception e){
+			return AjaxResult.error(StrUtil.format("出错行数【{}】。\n message【{}】。\n trace{}", globalIndex+1, e.getMessage(), e.getStackTrace()));
+		}
 	}
 
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="classes-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">excel附件导入</h3>
+    </div>
+    <div class="panel-body">
+        <form id="'form_excel_import" class="form-horizontal" autocomplete="off">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">开始导入</label>
+                <div class="col-md-8">
+                    <input type="button" class="btn btn-primary" id="excelImportFile" name="excelImportFile" value="选择文件"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">输出信息</label>
+                <div class="col-md-8">
+
+                    <div class="panel panel-bordered panel-primary" id="excel-import-panel" style="border-bottom : 1px solid darkcyan">
+                        <div class="panel-heading" style="height: 40px;min-height: 40px"><h3 class="panel-title" id="excel-import-title" style="line-height: 40px">...</h3></div>
+                        <div class="panel-body" id="excel-import-msg">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var importUrl = readCookie("excelImportUrl");
+
+    $(function(){
+        if(importUrl){
+            init_file_button();
+            deleteCookie("excelImportUrl");
+        }else{
+            __toastr_error("没有获取到需要导入的url");
+        }
+    });
+
+    function init_file_button(){
+        $("#excelImportFile").dropzone({
+            url : ctx+importUrl,
+            method : "post",
+            maxFiles : 1,
+            parallelUploads : 1,
+            uploadMultiple : false,
+            maxFilesize : 100,
+            acceptedFiles : ".xls,.xlsx",
+            init : function(){
+                var myDropzone = this;
+
+                //上传成功后
+                myDropzone.on('success', function(file, data) {
+                    if (data && data.state === 1) {
+                        import_success(data.msg);
+                    }else{
+                        import_error(data.msg);
+                    }
+                });
+
+                //正在导入中
+                myDropzone.on('sending', function(file) {
+                    import_sending(file);
+                });
+
+                //后台错误
+                myDropzone.on('error', function(file, error){
+                    import_error(JSON.stringify(error));
+                });
+
+            }
+        });
+    }
+
+    function import_success(msg){
+        $("#excel-import-title").text("成功");
+        $("#excel-import-msg").html(msg);
+        $("#excel-import-panel").removeClass("panel-primary");
+        $("#excel-import-panel").removeClass("panel-danger");
+        $("#excel-import-panel").addClass("panel-success");
+    }
+
+    function import_error(msg){
+        $("#excel-import-title").text("失败");
+        $("#excel-import-msg").html(msg);
+        $("#excel-import-panel").removeClass("panel-primary");
+        $("#excel-import-panel").removeClass("panel-success");
+        $("#excel-import-panel").addClass("panel-danger");
+    }
+
+    function import_sending(file){
+        $("#excel-import-title").html("<i class=\"fa fa-refresh fa-spin\"></i> &nbsp;&nbsp;&nbsp;导入中...");
+        $("#excel-import-panel").removeClass("panel-danger");
+        $("#excel-import-panel").removeClass("panel-success");
+        $("#excel-import-panel").addClass("panel-primary");
+        $("#excel-import-msg").text(JSON.stringify(file));
+    }
+
+</script>
+
+</html>

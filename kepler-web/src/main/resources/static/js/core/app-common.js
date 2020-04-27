@@ -626,6 +626,17 @@ function __department_dialog_select(dialogId, deptIds, callback){
     });
 }
 
+/**
+ * excel文件导入页面
+ */
+function __excel_import_view(importUrl, name){
+    setCookie("excelImportUrl", importUrl);
+    __layX_html_read("excel-import-dialog", name ? name : "excel导入", ctx+"main/file/excelImportView",{
+        width : "50%",
+        shadable : false,
+        minMenu : true
+    })
+}
 
 /* validate 封装 */
 /*======================================*/
