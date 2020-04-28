@@ -330,7 +330,7 @@ public class BuildInfoController extends BaseController {
 				globalIndex = i;
 				BuildInfo buildInfo = importBuildInfoList.get(i);
 				if(StrUtil.isBlank(buildInfo.getId())){
-					buildInfoService.commit(buildInfo, new ProcessLogVo());
+					buildInfoService.commit(buildInfo, null);
 					createCount++;
 				}else{
 					buildInfoService.save(buildInfo);

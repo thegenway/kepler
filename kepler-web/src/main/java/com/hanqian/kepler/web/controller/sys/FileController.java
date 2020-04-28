@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.hanqian.kepler.common.bean.other.ImportProgress;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.core.entity.primary.sys.FileManage;
 import com.hanqian.kepler.core.service.sys.FileManageService;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -181,6 +183,21 @@ public class FileController extends BaseController {
         writer.flush(out, true);
         writer.close();
         IoUtil.close(out);
+    }
+
+    /**
+     * 获取导入时进度信息
+     */
+    @RequestMapping("getImportProgressInfo")
+    @ResponseBody
+    public AjaxResult getImportProgressInfo(String name){
+        if(StrUtil.isBlank(name)) return AjaxResult.error("name is empty");
+        HttpSession session = request.getSession();
+        ImportProgress importProgress = (ImportProgress) session.getAttribute(name);
+        if(importProgress == null){
+            return AjaxResult.error("暂无进度信息【"+name+"】");
+        }
+        return AjaxResult.success("获取成功", importProgress);
     }
 
 }

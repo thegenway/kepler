@@ -111,6 +111,9 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
         if(FlowEnum.ProcessState.Deny.equals(entity.getProcessState())){
             return AjaxResult.error("流程已经被否决，无法提交");
         }
+        if(processLogVo == null){
+            processLogVo = new ProcessLogVo();
+        }
 
         String path = ClassUtil.getClassName(entity, false);
         ProcessBrief processBrief = processBriefService.getProcessBriefByPath(path);

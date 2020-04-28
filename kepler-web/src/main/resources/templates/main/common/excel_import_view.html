@@ -16,9 +16,10 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-2 control-label">输出信息</label>
+                <label class="col-md-2 control-label"> </label>
                 <div class="col-md-8">
 
+                    <div class="progress progress-striped"><div id="excel-import-bar" style="width: 0.01%;" class="progress-bar progress-bar-primary"></div></div>
                     <div class="panel panel-bordered panel-primary" id="excel-import-panel" style="border-bottom : 1px solid darkcyan">
                         <div class="panel-heading" style="height: 40px;min-height: 40px"><h3 class="panel-title" id="excel-import-title" style="line-height: 40px">...</h3></div>
                         <div class="panel-body" id="excel-import-msg">
@@ -36,6 +37,8 @@
 <script th:inline="javascript">
 
     var importUrl = readCookie("excelImportUrl");
+    var importProgressTime;
+    var importIng = false;
 
     $(function(){
         if(importUrl){
@@ -55,6 +58,7 @@
             uploadMultiple : false,
             maxFilesize : 100,
             acceptedFiles : ".xls,.xlsx",
+            timeout : -1,
             init : function(){
                 var myDropzone = this;
 
@@ -82,27 +86,55 @@
     }
 
     function import_success(msg){
+        importIng = false;
         $("#excel-import-title").text("成功");
         $("#excel-import-msg").html(msg);
         $("#excel-import-panel").removeClass("panel-primary");
         $("#excel-import-panel").removeClass("panel-danger");
         $("#excel-import-panel").addClass("panel-success");
+        clearInterval(importProgressTime);
+        $("#excel-import-bar").css("width", "100%");
+        $("#excel-import-bar").removeClass("active");
     }
 
     function import_error(msg){
+        importIng = false;
         $("#excel-import-title").text("失败");
         $("#excel-import-msg").html(msg);
         $("#excel-import-panel").removeClass("panel-primary");
         $("#excel-import-panel").removeClass("panel-success");
         $("#excel-import-panel").addClass("panel-danger");
+        clearInterval(importProgressTime);
+        $("#excel-import-bar").css("width", "0.01%");
+        $("#excel-import-bar").removeClass("active");
     }
 
     function import_sending(file){
+        importIng = true;
         $("#excel-import-title").html("<i class=\"fa fa-refresh fa-spin\"></i> &nbsp;&nbsp;&nbsp;导入中...");
         $("#excel-import-panel").removeClass("panel-danger");
         $("#excel-import-panel").removeClass("panel-success");
         $("#excel-import-panel").addClass("panel-primary");
-        $("#excel-import-msg").text(JSON.stringify(file));
+
+        $("#excel-import-bar").addClass("active");
+        setTimeout(function(){
+            importProgressTime = setInterval(function(){
+                import_progress()
+            }, 1000);
+        }, 500)
+    }
+
+    //获取导入进度信息
+    function import_progress(){
+        if(importIng ){
+            __ajax_get(ctx+"main/file/getImportProgressInfo", {name : importUrl}, function(data){
+                if(data && data.state === 1){
+                    var pro = data.data;
+                    $("#excel-import-msg").html("共有：【"+pro.totalCount+"】<br/> 当前：【"+pro.currentCount+"】<br/>  信息：【"+pro.msg+"】<br/>  进度：【"+pro.percentageStr+"】");
+                    $("#excel-import-bar").css("width", pro.percentageStr);
+                }
+            })
+        }
     }
 
 </script>

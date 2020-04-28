@@ -13,6 +13,7 @@ import com.hanqian.kepler.common.bean.jqgrid.JqGridContent;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridFilter;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
+import com.hanqian.kepler.common.bean.other.ImportProgress;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.enums.DictEnum;
@@ -35,6 +36,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -229,14 +231,21 @@ public class EnergyBillController extends BaseController {
         if(multipartFile == null) return AjaxResult.error("multipartFile is null");
         int globalIndex = 0;
 
+        HttpSession session = request.getSession();
+        String progressSessionName = "energyBill/importData";
+
         try{
             ExcelReader excelReader = ExcelUtil.getReader(multipartFile.getInputStream(), 0);
             int rowCount = excelReader.getRowCount();
             log.info("开始执行导入数据【EnergyBill】，共有行数【"+rowCount+"】");
             List<EnergyBill> importList = new ArrayList<>();
+
+
             for(int i=0;i<rowCount;i++){
                 if(i==0) continue;
                 globalIndex = i;
+                session.setAttribute(progressSessionName, ImportProgress.build(globalIndex,rowCount-1,"正在分析"));
+
                 String energyTypeDict = Convert.toStr(excelReader.readCellValue(0,i));
                 String billDate = Convert.toStr(excelReader.readCellValue(1,i));
                 String price = Convert.toStr(excelReader.readCellValue(2,i));
@@ -260,18 +269,26 @@ public class EnergyBillController extends BaseController {
             int createCount = 0,updateCount = 0;
             for(int i=0;i<importList.size();i++){
                 globalIndex = i;
+                session.setAttribute(progressSessionName, ImportProgress.build(globalIndex,rowCount-1,"正在导入"));
+
                 EnergyBill energyBill = importList.get(i);
-                if(StrUtil.isBlank(energyBill.getId())){
-                    energyBillService.commit(energyBill, new ProcessLogVo());
+                System.out.println("==========");
+                System.out.println(energyBill.getBillDate());
+                System.out.println(energyBill.getPrice());
+                System.out.println(energyBill.getBarcode());
+//                if(StrUtil.isBlank(energyBill.getId())){
+//                    energyBillService.commit(energyBill, null);
                     createCount++;
-                }else{
-                    energyBillService.save(energyBill);
-                    updateCount++;
-                }
+//                }else{
+//                    energyBillService.save(energyBill);
+//                    updateCount++;
+//                }
             }
+            session.removeAttribute(progressSessionName);
             return AjaxResult.success(StrUtil.format("导入成功，本次导入：新建【{}】个，更新【{}】个", createCount, updateCount));
 
         }catch (Exception e){
+            session.removeAttribute(progressSessionName);
             return AjaxResult.error(StrUtil.format("出错行数【{}】。\n message【{}】。\n trace{}", globalIndex+1, e.getMessage(), e.getStackTrace()));
         }
     }

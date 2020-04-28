@@ -633,8 +633,8 @@ function __excel_import_view(importUrl, name){
     setCookie("excelImportUrl", importUrl);
     __layX_html_read("excel-import-dialog", name ? name : "excel导入", ctx+"main/file/excelImportView",{
         width : "50%",
-        shadable : false,
-        minMenu : true
+        shadable : 0.6,
+        minMenu : false
     })
 }
 

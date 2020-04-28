@@ -35,6 +35,9 @@ Mongodb
 - ~~【已完成】个人中心我创建的文档、我参与过的文档~~
 - ~~【已完成】流程中增加撤回功能~~
 - ~~【已完成】代码生成增加数据导入导出功能~~
+- ~~【已完成】excel导入前台增加进度信息~~
+- 【未完成】流程审批增加附件上传
+- 【未完成】微信端页面排版
 - 【未完成】编写Kepler项目完整开发文档
 
 ### 后台使用到的框架或插件
@@ -63,6 +66,7 @@ Mongodb
 | laydate | 时间选择器 | https://www.layui.com/doc/modules/laydate.html |
 | jquery-tmpl | 模板引擎 | https://blog.csdn.net/u010142437/article/details/84399222 |
 | layX | 弹窗插件 | https://gitee.com/monksoul/LayX |
+| mui | 手机端前台框架 | https://dev.dcloud.net.cn/mui/ui/ |
 
 ### 本项目的搭建参考了以下开源项目
 |  name | page |
