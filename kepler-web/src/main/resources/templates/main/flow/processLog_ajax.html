@@ -43,6 +43,10 @@
                                         <span class="text-bold text-muted" th:text="${log?.operateType?.value()}"></span>
                                     </div>
                                     <blockquote th:if="${log?.comment!=null}" class="mar-no" th:utext="${log?.comment}"></blockquote>
+                                    <th:block th:if="!${#strings.isEmpty(log?.flowFileIds)}">
+                                        <p><i class="fa fa-cloud-download"></i> 审批附件:</p>
+                                        <div th:each="fileId : ${#strings.arraySplit(log?.flowFileIds, ',')}" data-title="flowFile" th:data-content-id="${fileId}" style='width: 50%'>[[${fileId}]]</div>
+                                    </th:block>
                                 </div>
                             </div>
 
@@ -84,5 +88,41 @@
 
     </div>
 </div>
+
+<script th:inline="javascript">
+    $(function(){
+        var ids = "";
+        $("div[data-title='flowFile']").each(function(){
+            ids += $(this).attr("data-content-id")+",";
+        });
+
+        if(ids){
+            __ajax_get(ctx+"main/file/fileList", {keyId : ids}, function(data){
+                for(var i=0;i<data.data.length;i++){
+                    var file = data.data[i];
+
+                    var viewUrl = "";
+                    if (isNotNull(file.type) && file.type.match(/image.*/)) {
+                        viewUrl = ctx+"main/file/imgView?fileId="+file.id;
+                    }else{
+                        viewUrl = file.fileViewUrl;
+                    }
+
+                    $("div[data-content-id='"+file.id+"']").html("<div class=\"btn-group\" style='width: 100%'>\n" +
+                        "<a target=\"_blank\" href=\""+file.filePath+"\" class=\"btn btn-default btn-sm text-overflow\" style='width: 80%;'><i class=\"fa fa-paperclip\"></i>  "+file.name+"</a>\n" +
+                        "<button class=\"btn btn-default btn-sm dropdown-toggle dropdown-toggle-icon\" data-toggle=\"dropdown\" type=\"button\" aria-expanded=\"false\">\n" +
+                        "<i class=\"dropdown-caret\"></i>\n" +
+                        "</button>\n" +
+                        "<ul class=\"dropdown-menu dropdown-menu-right\">\n" +
+                        "<li><a target='_blank' href=\""+file.filePath+"\">下载</a></li>\n" +
+                        "<li><a target='_blank' href=\""+viewUrl+"\">预览</a></li>\n" +
+                        "</ul>\n" +
+                        "</div>");
+                }
+            })
+        }
+
+    });
+</script>
 
 </html>

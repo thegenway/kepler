@@ -17,6 +17,8 @@ public class ProcessLogVo {
 
     private String flowComment;
 
+    private String flowFileIds;
+
     public ProcessLogVo(String keyId) {
         this.keyId = keyId;
     }

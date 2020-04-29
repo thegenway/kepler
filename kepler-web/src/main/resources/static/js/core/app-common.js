@@ -1386,25 +1386,23 @@ function __summernote($ele, opt){
     if($ele){
         var defaults = {
             placeholder : "请输入内容",
-            lang: 'zh-CN',
-            height: 150,
+            lang : 'zh-CN',
+            height : 150,
             dialogsInBody : false,
-            dialogsFade : false,
-            shortcuts:false,
-            disableDragAndDrop : true,
-            tabsize: 2,
+            tooltip : true,
+            // dialogsFade : false,
+            // shortcuts : false,
+            // disableDragAndDrop : true,
             toolbar : [
                 ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['fontname', ['fontname']],
+                ['font', ['fontname','fontsize','bold','italic', 'underline', 'clear']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview']]
+                ['insert', ['hr', 'flowfile']]
             ],
             callbacks : {
-                onDialogShown : function(){ //bootstrap的遮罩层和layx的遮罩层冲突，这里需要隐藏掉
+                onDialogShown : function(){ //bootstrap的遮罩层和layx的遮罩层冲突，这里给隐藏掉
                     $("body").find(".modal-backdrop:last").hide();
                 }
             }
@@ -1526,8 +1524,8 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit, withdr
             return false;
         }
 
-        //设置审批意见框
         if(data.processState == "Running" && data.flowButtonList.length>0){
+            //设置审批意见框
             var textarea = '<hr/><div class="form-group">' +
                 '<label class="col-md-2 control-label">审批意见</label>' +
                 '<div class="col-md-8">' +
@@ -1535,7 +1533,33 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit, withdr
                 '</div>' +
                 '</div>';
             $("#"+entityData.formId).append(textarea);
-            __summernote($("#"+entityData.formId).find("#flowComment"));
+
+            //设置流程审批附件按钮
+            var flowFileBtn = '<div class="form-group">' +
+                '<div class="col-md-8 col-md-offset-2">' +
+                '<input id="flowFileIds_'+entityData.keyId+'" name="flowFileIds" style="display: none" value="">' +
+                '</div>' +
+                '</div>';
+            $("#"+entityData.formId).append(flowFileBtn);
+            __init_dropzone_edit("flowFileIds_"+entityData.keyId);
+            $("#flowFileIds_"+entityData.keyId+"-dz-upload").hide();
+
+            //初始化编辑器，并指定自定义附件上传按钮
+            __summernote($("#"+entityData.formId).find("#flowComment"), {
+                buttons : {
+                    flowfile : function(context){
+                        var button = $.summernote.ui.button({
+                            contents: '<i class="fa fa-cloud-upload"/> ',
+                            tooltip: '附件上传',
+                            click: function () {
+                                $("#flowFileIds_"+entityData.keyId+"-dz-upload").trigger("click");
+                            }
+                        });
+                        return button.render();
+                    }
+                }
+            });
+
         };
 
         //设置按钮组

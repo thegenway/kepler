@@ -485,5 +485,8 @@ select:-webkit-autofill {
 }
 
 .select2-container{
+    z-index: 9999999998;
+}
+.tooltip[role='tooltip']{
     z-index: 9999999999;
 }

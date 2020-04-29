@@ -42,6 +42,12 @@ public class ProcessLog extends BaseEntity {
     private String comment;
 
     /**
+     * 审批意见附件
+     */
+    @Column(length = 1000)
+    private String flowFileIds;
+
+    /**
      * 操作类型
      */
     @Enumerated(EnumType.STRING)

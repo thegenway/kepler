@@ -45,6 +45,7 @@ public class ProcessLogServiceImpl extends BaseServiceImpl<ProcessLog, String> i
         processLog.setCreator(user);
         processLog.setKeyId(processLogVo.getKeyId());
         processLog.setComment(processLogVo.getFlowComment());
+        processLog.setFlowFileIds(processLogVo.getFlowFileIds());
         processLog.setDutyId(processLogVo.getFlowDutyId());
         processLog.setDutyName(processLogVo.getFlowDutyName());
         processLog.setOperateType(operate);
