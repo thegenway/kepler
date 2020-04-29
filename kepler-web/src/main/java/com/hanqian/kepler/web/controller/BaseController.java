@@ -1,6 +1,8 @@
 package com.hanqian.kepler.web.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.hanqian.kepler.common.bean.NameValueVo;
 import com.hanqian.kepler.common.bean.jqgrid.*;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
@@ -242,6 +244,13 @@ public class BaseController implements Serializable {
 	protected boolean isWeiXin(){
 		String userAgent = request.getHeader("user-agent").toLowerCase();
 		return StrUtil.containsAny(userAgent, "micromessenger");
+	}
+
+	/**
+	 * 判断当前是否为移动端
+	 */
+	protected boolean isMobile(){
+		return UserAgentUtil.parse(request.getHeader("user-agent")).isMobile();
 	}
 
 }

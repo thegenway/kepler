@@ -36,6 +36,8 @@ public class LoginController extends BaseController {
 	public String loginView(){
 		if(isWeiXin()){
 			return "redirect:../mp/wxLogin";
+		}else if(isMobile()){
+			return "mp/mobileLogin";
 		}
 		return "login";
 	}
@@ -43,7 +45,7 @@ public class LoginController extends BaseController {
 	@RequestMapping("index")
 	public String index(@CurrentUser User user,  Model model){
 		model.addAttribute("menuTree",menuService.getMenuTreeByUser(user));
-		if(isWeiXin()){
+		if(isWeiXin() || isMobile()){
 			return "redirect:../mp/index";
 		}
 		return "index";

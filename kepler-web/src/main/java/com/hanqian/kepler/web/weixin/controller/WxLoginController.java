@@ -96,19 +96,16 @@ public class WxLoginController extends BaseController {
 
 		//如果本身就是已登录状态，自动跳转手机首页
 		if (SecurityUtil.checkIfLogin()) {
-			System.out.println("=============== 本身就是已登录状态");
 			return "redirect:/mp/index";
 		}
 
 		//通过openId登录（绑定账号后会传过来openId）
 		if(StrUtil.isNotBlank(openId)){
-			System.out.println("=============== 通过openId登录");
 			return "redirect:/mp/login?openId="+openId;
 		}
 
 		//同过code获取当前用户信息，并执行自动登录
 		if(StrUtil.isNotBlank(code)){
-			System.out.println("=============== 同过code获取当前用户信息");
 			try {
 				WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
 				openId = wxMpOAuth2AccessToken.getOpenId();
@@ -118,13 +115,12 @@ public class WxLoginController extends BaseController {
 				model.addAttribute("wxError", e.getMessage());
 				e.printStackTrace();
 			}
-			return "mp/login";
+			return "mp/wxLogin";
 		}
 
 		//去微信执行OAuth2网页授权，重新进入此方法并带有code参数
 		String contextPath = request.getScheme() +"://" + request.getServerName()  + "/mp/wxLogin";
 		String authPath = wxService.oauth2buildAuthorizationUrl(contextPath, WxConsts.OAuth2Scope.SNSAPI_BASE, null);
-		System.out.println("=============== 执行OAuth2网页授权");
 		return "redirect:"+authPath;
 	}
 

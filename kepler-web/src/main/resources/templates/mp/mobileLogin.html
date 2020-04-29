@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('KEPLER 登录')" />
+</head>
+<body>
+
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">登录</h1>
+</header>
+<div class="mui-content">
+    <form id='mobile-login-form' class="mui-input-group">
+        <div class="mui-input-row">
+            <label>账号</label>
+            <input id='username' name="username" type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+        </div>
+        <div class="mui-input-row">
+            <label>密码</label>
+            <input id='password' name="password" type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+        </div>
+    </form>
+
+    <div class="mui-content-padded">
+        <button type="button" id='doLogin' data-loading-text="登录中" class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+    </div>
+</div>
+
+</body>
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+
+    $("#doLogin").on("click", function(){
+        if($("#mobile-login-form #username").val()){
+            __mui_toast_long("账号为空");
+            return false;
+        }
+        if($("#mobile-login-form #password").val()){
+            __mui_toast_long("密码为空");
+            return false;
+        }
+        __mui_button_loading($("#doLogin"));
+        __form_save("mobile-login-form", ctx + "authentication/form", function(data){
+            __mui_button_reset($("#doLogin"));
+            __mui_toast_long(data.msg);
+            if(data && data.state === 1){
+                location.href = "/mp/index";
+            }
+        })
+    });
+
+</script>
+</html>
