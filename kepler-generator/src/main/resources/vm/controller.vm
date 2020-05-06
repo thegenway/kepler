@@ -73,8 +73,12 @@ public class ${classNameU}Controller extends BaseController {
         jqGridContent.getList().forEach(entity -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", entity.getId());
-            map.put("name", StrUtil.nullToDefault(entity.getName(), ""));
-            // TODO 补充list表格字段
+            map.put("name", StrUtil.nullToEmpty(entity.getName()));
+            // TODO 修改list表格字段
+#foreach($item in $entityFields)#if(${velocityCount}<5)#if($item.ifManyToOne == "1")            map.put("${item.originalName}.name", entity.get${item.originalNameU}()!=null ? entity.get${item.originalNameU}().getName() : ""); //${item.description}
+#elseif($item.type == "Date")            map.put("${item.originalName}", entity.get${item.originalNameU}()!=null ? DateUtil.format(entity.get${item.originalNameU}(), "yyyy-MM-dd") : ""); //${item.description}
+#else            map.put("${item.originalName}", StrUtil.nullToEmpty(Convert.toStr(entity.get${item.originalNameU}()))); //${item.description}
+#end#end#end
             map.put("processState", entity.getProcessState()!=null ? entity.getProcessState().value() : "");
             dataRows.add(map);
         });
@@ -106,14 +110,24 @@ public class ${classNameU}Controller extends BaseController {
     /**
      * 赋值
      */
-    private ${classNameU} setData(User user, String keyId#foreach($item in $entityFields),String ${item.name}#end){
+    private ${classNameU} setData(User user, String keyId, String name#foreach($item in $entityFields),String ${item.name}#end){
         ${classNameU} ${classNameL} = ${classNameL}Service.get(keyId);
         if(${classNameL} == null){
             ${classNameL} = new ${classNameU}();
             ${classNameL}.setCreator(user);
         }
+        ${classNameL}.setCreator(user);
+#foreach($item in $entityFields)
+#if($item.type == "Dict")        ${classNameL}.set${item.originalNameU}(dictService.get(${item.name})); //${item.description}
+#elseif($item.ifManyToOne == "1")        ${classNameL}.set${item.originalNameU}(KEPLEREDITSERVICE.get(${item.name})); //TODO 请手动补充service类 //${item.description}
+#elseif($item.type == "Date")        ${classNameL}.set${item.originalNameU}(DateUtil.parse(${item.name})); //${item.description}
+#elseif($item.type == "BigDecimal")        ${classNameL}.set${item.originalNameU}(Convert.toBigDecimal(${item.name})); //${item.description}
+#elseif($item.type == "Integer")        ${classNameL}.set${item.originalNameU}(Convert.toInt(${item.name})); //${item.description}
+#else        ${classNameL}.set${item.originalNameU}(${item.name}); //${item.description}
+#end
+#end
 
-         return ${classNameL};
+        return ${classNameL};
      }
 
     /**
@@ -121,8 +135,8 @@ public class ${classNameU}Controller extends BaseController {
      */
     @PostMapping("save")
     @ResponseBody
-    public AjaxResult save(@CurrentUser User user, ProcessLogVo processLogVo#foreach($item in $entityFields),String ${item.name}#end){
-        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId()#foreach($item in $entityFields),${item.name}#end);
+    public AjaxResult save(@CurrentUser User user, ProcessLogVo processLogVo, String name#foreach($item in $entityFields),String ${item.name}#end){
+        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId(),name#foreach($item in $entityFields),${item.name}#end);
 
         if(StrUtil.isBlank(${classNameL}.getId())){
             return ${classNameL}Service.draft(${classNameL});
@@ -137,8 +151,8 @@ public class ${classNameU}Controller extends BaseController {
      */
     @PostMapping("commit")
     @ResponseBody
-    public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo#foreach($item in $entityFields),String ${item.name}#end){
-        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId()#foreach($item in $entityFields),${item.name}#end);
+    public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo, String name#foreach($item in $entityFields),String ${item.name}#end){
+        ${classNameU} ${classNameL} = setData(user,processLogVo.getKeyId(),name#foreach($item in $entityFields),${item.name}#end);
         return ${classNameL}Service.commit(${classNameL}, processLogVo);
     }
 
@@ -199,7 +213,19 @@ public class ${classNameU}Controller extends BaseController {
             Map<String, String> map = new HashMap<>();
             map.put("name", Convert.toStr(entity.getName()));
             nameValueVos.add(new NameValueVo("名称", "name"));
-            //TODO 补充字段
+
+#foreach($item in $entityFields)
+#if($item.ifManyToOne == "1")            map.put("${item.originalName}", Convert.toStr(entity.get${item.originalNameU}()!=null ? entity.get${item.originalNameU}().getName() : ""));
+            nameValueVos.add(new NameValueVo("${item.description}", "${item.originalName}"));
+
+#elseif($item.type == "Date")            map.put("${item.originalName}", entity.get${item.originalNameU}()!=null ? DateUtil.format(entity.get${item.originalNameU}(), "yyyy-MM-dd") : "");
+            nameValueVos.add(new NameValueVo("${item.description}", "${item.originalName}"));
+
+#else            map.put("${item.originalName}", Convert.toStr(entity.get${item.originalNameU}()));
+            nameValueVos.add(new NameValueVo("${item.description}", "${item.originalName}"));
+
+#end
+#end
 
             dataMapList.add(map);
         });
@@ -230,11 +256,20 @@ public class ${classNameU}Controller extends BaseController {
                 session.setAttribute(progressSessionName, ImportProgress.build(globalIndex,rowCount-1,"正在分析"));
 
                 String name = Convert.toStr(excelReader.readCellValue(0,i));
-                //TODO 取值
+#foreach($item in $entityFields)                String $item.originalName = Convert.toStr(excelReader.readCellValue(${velocityCount},i)); //${item.description}
+#end
 
                 ${classNameU} ${classNameL} = new ${classNameU}();
                 ${classNameL}.setName(name);
-                //TODO 赋值
+#foreach($item in $entityFields)
+#if($item.type == "Dict")                ${classNameL}.set${item.originalNameU}(dictService.getDictByNameIfNullJustCreate(KEPLEREDITNUEM, ${item.originalName})); //TODO 修改系统字典类别
+#elseif($item.ifManyToOne == "1")                ${classNameL}.set${item.originalNameU}(KEPLEREDITSERVICE.get(${item.originalName})); //TODO 多对一情况请手动处理
+#elseif($item.type == "Date")                ${classNameL}.set${item.originalNameU}(DateUtil.parse(${item.originalName}));
+#elseif($item.type == "BigDecimal")                ${classNameL}.set${item.originalNameU}(Convert.toBigDecimal(${item.originalName}));
+#elseif($item.type == "Integer")                ${classNameL}.set${item.originalNameU}(Convert.toInt(${item.originalName}));
+#else                ${classNameL}.set${item.originalNameU}(${item.originalName});
+#end
+#end
 
                 importList.add(${classNameL});
             }

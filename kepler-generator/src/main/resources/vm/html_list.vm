@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-sm-6 table-toolbar-right">
-                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=${classNameU}&headArr=名称,第二个名称', '_blank')">下载导入模板</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=${classNameU}&headArr=名称#foreach($item in $entityFields),$item.description#end', '_blank')">下载导入模板</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-export" onclick="window.open(ctx+'${classNameL}/export', '_blank')">导出</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm hidden" id="btn-${classNameL}-import" onclick="__excel_import_view('${classNameL}/importData')">导入</button>
                 </div>
@@ -38,10 +38,13 @@
     });
 
     function init_grid_${classNameL}(){
-        __init_jqgrid('${classNameL}_table', '${classNameL}_page', '/${classNameL}/list',
-                ["名称","状态","操作","id"],
+        __init_jqgrid('${classNameL}_table', '${classNameL}_page', ctx+'${classNameL}/list',
+                ["名称"#foreach($item in $entityFields)#if(${velocityCount}<5),"$item.description"#end#end,"状态","操作","id"],
                 [
-                    {name: 'name', index: 'name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+#foreach($item in $entityFields)#if(${velocityCount}<5)#if($item.ifManyToOne == "1")                    {name: '${item.originalName}.name', index: '${item.originalName}.name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+#else                    {name: '${item.originalName}', index: '${item.originalName}', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+#end#end#end
                     {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
                     {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_${classNameL}},
                     {name: 'id', index: 'id', width: 100, key: true, hidden: true}
@@ -57,12 +60,12 @@
 
     //input
     $("#btn-${classNameL}-add").on("click", function(){
-        __layX_html_read("create", "${description}", "/${classNameL}/input");
+        __layX_html_read("create", "${description}", ctx+"${classNameL}/input");
     });
 
     //read
     function fn_${classNameL}_read(id){
-        __layX_html_read(id, "${description}", "/${classNameL}/read?keyId="+id);
+        __layX_html_read(id, "${description}", ctx+"${classNameL}/read?keyId="+id);
     }
 
 </script>

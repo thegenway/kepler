@@ -1,7 +1,8 @@
 package com.hanqian.kepler.core.entity.primary.education;
 
+import com.hanqian.kepler.common.annotation.Desc;
 import com.hanqian.kepler.core.entity.primary.sys.Dict;
-import com.hanqian.kepler.flow.annotation.Flow;
+import com.hanqian.kepler.common.annotation.Flow;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,26 +29,29 @@ import java.util.Date;
 public class EnergyBill extends FlowEntity {
 	private static final long serialVersionUID = 3179489202897745918L;
 
-	//账单类型
+	@Desc("账单类型")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Dict energyTypeDict;
 
-	//账单月份
+	@Desc("账单月份")
 	private Date billDate;
 
-	//单价
+	@Desc("单价")
 	private BigDecimal price;
 
-	//使用量
+	@Desc("使用量")
 	private BigDecimal useCount;
 
-	//总金额
+	@Desc("总金额")
 	private BigDecimal totalAmount;
 
-	//条形码
+	@Desc("条形码")
 	private String barcode;
 
-	//备注
+	@Desc("备注")
 	private String remark;
+
+	@Desc(value = "系统管理员审批域名", ignore = true)
+	private String dutyManagerApprove;
 
 }

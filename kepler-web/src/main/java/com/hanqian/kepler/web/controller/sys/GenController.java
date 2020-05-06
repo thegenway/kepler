@@ -5,10 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
-import com.hanqian.kepler.common.bean.result.AjaxResult;
-import com.hanqian.kepler.flow.annotation.Flow;
-import com.hanqian.kepler.flow.utils.FlowUtil;
-import com.hanqian.kepler.flow.vo.FlowTaskEntity;
+import com.hanqian.kepler.common.annotation.Desc;
+import com.hanqian.kepler.common.annotation.Flow;
 import com.hanqian.kepler.generator.domain.EntityField;
 import com.hanqian.kepler.generator.domain.EntityInfo;
 import com.hanqian.kepler.generator.service.GenService;
@@ -92,8 +90,8 @@ public class GenController implements Serializable {
 		entityInfo.setPath(path);
 		entityInfo.setModuleName(StrUtil.sub(packageName, StrUtil.lastIndexOfIgnoreCase(packageName, ".")+1, packageName.length()));
 
-		String desc = AnnotationUtil.getAnnotationValue(entity, Flow.class);
-		entityInfo.setDescription(desc);
+		String classDesc = AnnotationUtil.getAnnotationValue(entity, Flow.class);
+		entityInfo.setDescription(classDesc);
 		entityInfo.setAuthor(SystemUtil.getUserInfo().getName());
 
 		//attr
@@ -101,9 +99,12 @@ public class GenController implements Serializable {
 		Field[] fields = ClassUtil.getDeclaredFields(entity);
 		Arrays.stream(fields).
 				filter(field -> !StrUtil.equals("serialVersionUID", field.getName())).
+				filter(field -> field.isAnnotationPresent(Desc.class) && !field.getAnnotation(Desc.class).ignore()).
 				forEach(field -> {
 					EntityField entityField = new EntityField();
 					entityField.setOriginalName(field.getName());
+					entityField.setOriginalNameU(StrUtil.upperFirst(field.getName()));
+					entityField.setDescription(field.getAnnotation(Desc.class).value());
 					entityField.setType(ClassUtil.getClassName(field.getType(), true));
 					entityField.setIfManyToOne(field.isAnnotationPresent(ManyToOne.class) ? "1" : "0");
 					if(StrUtil.equals(entityField.getIfManyToOne(), "1")){

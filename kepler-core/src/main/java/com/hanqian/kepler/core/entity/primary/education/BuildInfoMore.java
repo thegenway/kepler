@@ -1,6 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.education;
 
-import com.hanqian.kepler.flow.annotation.Flow;
+import com.hanqian.kepler.common.annotation.Flow;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import com.hanqian.kepler.flow.entity.User;
 import lombok.Getter;

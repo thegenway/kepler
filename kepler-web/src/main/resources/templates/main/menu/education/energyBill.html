@@ -16,9 +16,9 @@
                 </div>
 
                 <div class="col-sm-6 table-toolbar-right">
-                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=EnergyBill&headArr=账单类型,账单月份,单价,使用量,总金额,条形码,备注', '_blank')">下载导入模板</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=EnergyBill&headArr=名称,账单类型,账单月份,单价,使用量,总金额,条形码,备注', '_blank')">下载导入模板</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-export" onclick="window.open(ctx+'energyBill/export', '_blank')">导出</button>
-                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-import" onclick="__excel_import_view('energyBill/importData','能源账单')">导入</button>
+                    <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-import" onclick="__excel_import_view('energyBill/importData')">导入</button>
                 </div>
             </div>
 
@@ -38,14 +38,18 @@
     });
 
     function init_grid_energyBill(){
-        __init_jqgrid('energyBill_table', 'energyBill_page', '/energyBill/list',
-            ["名称","状态","操作","id"],
-            [
-                {name: 'name', index: 'name', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
-                {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_energyBill},
-                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
-            ]
+        __init_jqgrid('energyBill_table', 'energyBill_page', ctx+'energyBill/list',
+                ["名称","账单类型","账单月份","单价","使用量","状态","操作","id"],
+                [
+                    {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                    {name: 'energyTypeDict.name', index: 'energyTypeDict.name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                    {name: 'billDate', index: 'billDate', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                    {name: 'price', index: 'price', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                    {name: 'useCount', index: 'useCount', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                    {name: 'processState', index: 'processState', width: 100, sortable: false, stype: 'text', searchoptions: {sopt: ['cn']}},
+                    {name: 'act', index: 'act', width: 150, sortable: false, search: false, formatter: actFormat_energyBill},
+                    {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+                ]
         );
     }
 
@@ -57,12 +61,12 @@
 
     //input
     $("#btn-energyBill-add").on("click", function(){
-        __layX_html_read("create", "基本信息-能源账单", "/energyBill/input");
+        __layX_html_read("create", "基本信息-能源账单", ctx+"energyBill/input");
     });
 
     //read
     function fn_energyBill_read(id){
-        __layX_html_read(id, "基本信息-能源账单", "/energyBill/read?keyId="+id);
+        __layX_html_read(id, "基本信息-能源账单", ctx+"energyBill/read?keyId="+id);
     }
 
 </script>

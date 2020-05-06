@@ -19,56 +19,56 @@
                 </div>
             </div>
 
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">energyTypeDict<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="energyTypeDictId" id="energyTypeDictId" th:value="${energyBill?.energyTypeDict}" class="form-control" placeholder="energyTypeDict">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">billDate<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="billDate" id="billDate" th:value="${#dates.format(energyBill?.billDate, 'yyyy-MM-dd')}" class="form-control" placeholder="billDate">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">price<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="price" id="price" th:value="${energyBill?.price}" class="form-control" placeholder="price">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">useCount<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="useCount" id="useCount" th:value="${energyBill?.useCount}" class="form-control" placeholder="useCount">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">totalAmount<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="totalAmount" id="totalAmount" th:value="${energyBill?.totalAmount}" class="form-control" placeholder="totalAmount">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">barcode<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="barcode" id="barcode" th:value="${energyBill?.barcode}" class="form-control" placeholder="barcode">
-                        </div>
-                </div>
-            
-                <div class="form-group">
-                    <label class="col-md-2 control-label">remark<i class="fa fa-asterisk txt-color-red"></i></label>
-                    <div class="col-md-8">
-                        <input type="text" name="remark" id="remark" th:value="${energyBill?.remark}" class="form-control" placeholder="remark">
-                        </div>
-                </div>
-                        
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">账单类型<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="energyTypeDictId" id="energyTypeDictId" th:value="${energyBill?.energyTypeDict.name}" class="form-control" placeholder="energyTypeDict">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">账单月份<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="billDate" id="billDate" th:value="${#dates.format(energyBill?.billDate, 'yyyy-MM-dd')}" class="form-control" placeholder="billDate">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">单价<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="price" id="price" th:value="${energyBill?.price}" class="form-control" placeholder="price">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">使用量<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="useCount" id="useCount" th:value="${energyBill?.useCount}" class="form-control" placeholder="useCount">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">总金额<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="totalAmount" id="totalAmount" th:value="${energyBill?.totalAmount}" class="form-control" placeholder="totalAmount">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">条形码<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="barcode" id="barcode" th:value="${energyBill?.barcode}" class="form-control" placeholder="barcode">
+                    </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="col-md-2 control-label">备注<i class="fa fa-asterisk txt-color-red"></i></label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="remark" id="remark" th:value="${energyBill?.remark}" class="form-control" placeholder="remark">
+                    </div>
+            </div>
+                    
         </form>
     </div>
 </div>
@@ -88,7 +88,7 @@
 
 
         __flow_duty_handle(flowData_energyBill);
-        __flow_button_read_handle(flowData_energyBill, fn_energyBill_approve, fn_energyBill_back, fn_energyBill_deny, fn_energyBill_edit);
+        __flow_button_read_handle(flowData_energyBill, fn_energyBill_approve, fn_energyBill_back, fn_energyBill_deny, fn_energyBill_edit, fn_energyBill_withdraw);
     });
 
     function fn_energyBill_approve(){
@@ -127,6 +127,17 @@
     function fn_energyBill_edit(){
         __flow_close_layx(flowData_energyBill);
         __layX_html_read(flowData.keyId, "基本信息-能源账单", "/energyBill/input?keyId="+flowData_energyBill.keyId);
+    }
+
+    function fn_energyBill_withdraw(){
+        __confirm_dialog("", "确定撤回吗？", function(dialogRef){
+            __form_save(flowData_energyBill.formId, "/energyBill/withdraw", function(data){
+                if(data && data.state === 1){
+                    dialogRef.close();
+                    __flow_close_layx(flowData_energyBill);
+                }
+            })
+        });
     }
 
 </script>

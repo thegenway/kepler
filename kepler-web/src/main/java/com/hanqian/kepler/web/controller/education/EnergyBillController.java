@@ -45,7 +45,7 @@ import java.util.*;
  * 基本信息-能源账单 controller with generator
  * ============================================================================
  * author : DongZhengWei
- * createDate:  2020-04-27 14:48:53  。
+ * createDate:  2020-05-06 15:30:31  。
  * ============================================================================
  */
 @Slf4j
@@ -70,8 +70,12 @@ public class EnergyBillController extends BaseController {
         jqGridContent.getList().forEach(entity -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", entity.getId());
-            map.put("name", StrUtil.nullToDefault(entity.getName(), ""));
-            // TODO 补充list表格字段
+            map.put("name", StrUtil.nullToEmpty(entity.getName()));
+            // TODO 修改list表格字段
+            map.put("energyTypeDict.name", entity.getEnergyTypeDict()!=null ? entity.getEnergyTypeDict().getName() : ""); //账单类型
+            map.put("billDate", entity.getBillDate()!=null ? DateUtil.format(entity.getBillDate(), "yyyy-MM-dd") : ""); //账单月份
+            map.put("price", StrUtil.nullToEmpty(Convert.toStr(entity.getPrice()))); //单价
+            map.put("useCount", StrUtil.nullToEmpty(Convert.toStr(entity.getUseCount()))); //使用量
             map.put("processState", entity.getProcessState()!=null ? entity.getProcessState().value() : "");
             dataRows.add(map);
         });
@@ -89,37 +93,45 @@ public class EnergyBillController extends BaseController {
         return "main/education/energyBill_read";
     }
 
-    /**
-     * input页面
-     */
-    @GetMapping("input")
-    public String input(String keyId, Model model){
+     /**
+        * input页面
+        */
+     @GetMapping("input")
+     public String input(String keyId, Model model){
         EnergyBill energyBill = energyBillService.get(keyId);
         model.addAttribute("energyBill", energyBill);
 
         return "main/education/energyBill_input";
-    }
+     }
 
     /**
      * 赋值
      */
-    private EnergyBill setData(User user, String keyId,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
+    private EnergyBill setData(User user, String keyId, String name,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
         EnergyBill energyBill = energyBillService.get(keyId);
         if(energyBill == null){
             energyBill = new EnergyBill();
             energyBill.setCreator(user);
         }
+        energyBill.setCreator(user);
+        energyBill.setEnergyTypeDict(dictService.get(energyTypeDictId)); //账单类型
+        energyBill.setBillDate(DateUtil.parse(billDate)); //账单月份
+        energyBill.setPrice(Convert.toBigDecimal(price)); //单价
+        energyBill.setUseCount(Convert.toBigDecimal(useCount)); //使用量
+        energyBill.setTotalAmount(Convert.toBigDecimal(totalAmount)); //总金额
+        energyBill.setBarcode(barcode); //条形码
+        energyBill.setRemark(remark); //备注
 
         return energyBill;
-    }
+     }
 
     /**
      * 保存
      */
     @PostMapping("save")
     @ResponseBody
-    public AjaxResult save(@CurrentUser User user, ProcessLogVo processLogVo,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
-        EnergyBill energyBill = setData(user,processLogVo.getKeyId(),energyTypeDictId,billDate,price,useCount,totalAmount,barcode,remark);
+    public AjaxResult save(@CurrentUser User user, ProcessLogVo processLogVo, String name,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
+        EnergyBill energyBill = setData(user,processLogVo.getKeyId(),name,energyTypeDictId,billDate,price,useCount,totalAmount,barcode,remark);
 
         if(StrUtil.isBlank(energyBill.getId())){
             return energyBillService.draft(energyBill);
@@ -134,8 +146,8 @@ public class EnergyBillController extends BaseController {
      */
     @PostMapping("commit")
     @ResponseBody
-    public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
-        EnergyBill energyBill = setData(user,processLogVo.getKeyId(),energyTypeDictId,billDate,price,useCount,totalAmount,barcode,remark);
+    public AjaxResult commit(@CurrentUser User user, ProcessLogVo processLogVo, String name,String energyTypeDictId,String billDate,String price,String useCount,String totalAmount,String barcode,String remark){
+        EnergyBill energyBill = setData(user,processLogVo.getKeyId(),name,energyTypeDictId,billDate,price,useCount,totalAmount,barcode,remark);
         return energyBillService.commit(energyBill, processLogVo);
     }
 
@@ -185,7 +197,7 @@ public class EnergyBillController extends BaseController {
     @GetMapping("export")
     @ResponseBody
     public void export() throws IOException {
-        List<Rule> rules = new ArrayList<>();
+    List<Rule> rules = new ArrayList<>();
         rules.add(Rule.eq("state", BaseEnumManager.StateEnum.Enable));
         rules.add(Rule.in("processState", FlowEnum.FLOW_DATA_LIST_ENUMS));
         List<EnergyBill> energyBillList = energyBillService.findAll(SpecificationFactory.where(rules));
@@ -194,10 +206,13 @@ public class EnergyBillController extends BaseController {
         List<NameValueVo> nameValueVos = new ArrayList<>();
         energyBillList.forEach(entity -> {
             Map<String, String> map = new HashMap<>();
-            map.put("energyTypeDict", entity.getEnergyTypeDict()!=null ? entity.getEnergyTypeDict().getName() : "");
+            map.put("name", Convert.toStr(entity.getName()));
+            nameValueVos.add(new NameValueVo("名称", "name"));
+
+            map.put("energyTypeDict", Convert.toStr(entity.getEnergyTypeDict()!=null ? entity.getEnergyTypeDict().getName() : ""));
             nameValueVos.add(new NameValueVo("账单类型", "energyTypeDict"));
 
-            map.put("billDate", entity.getBillDate()!=null ? DateUtil.format(entity.getBillDate(),"yyyy-MM" ) : "");
+            map.put("billDate", entity.getBillDate()!=null ? DateUtil.format(entity.getBillDate(), "yyyy-MM-dd") : "");
             nameValueVos.add(new NameValueVo("账单月份", "billDate"));
 
             map.put("price", Convert.toStr(entity.getPrice()));
@@ -239,24 +254,24 @@ public class EnergyBillController extends BaseController {
             int rowCount = excelReader.getRowCount();
             log.info("开始执行导入数据【EnergyBill】，共有行数【"+rowCount+"】");
             List<EnergyBill> importList = new ArrayList<>();
-
-
             for(int i=0;i<rowCount;i++){
                 if(i==0) continue;
                 globalIndex = i;
                 session.setAttribute(progressSessionName, ImportProgress.build(globalIndex,rowCount-1,"正在分析"));
 
-                String energyTypeDict = Convert.toStr(excelReader.readCellValue(0,i));
-                String billDate = Convert.toStr(excelReader.readCellValue(1,i));
-                String price = Convert.toStr(excelReader.readCellValue(2,i));
-                String useCount = Convert.toStr(excelReader.readCellValue(3,i));
-                String totalAmount = Convert.toStr(excelReader.readCellValue(4,i));
-                String barcode = Convert.toStr(excelReader.readCellValue(5,i));
-                String remark = Convert.toStr(excelReader.readCellValue(6,i));
+                String name = Convert.toStr(excelReader.readCellValue(0,i));
+                String energyTypeDict = Convert.toStr(excelReader.readCellValue(1,i)); //账单类型
+                String billDate = Convert.toStr(excelReader.readCellValue(2,i)); //账单月份
+                String price = Convert.toStr(excelReader.readCellValue(3,i)); //单价
+                String useCount = Convert.toStr(excelReader.readCellValue(4,i)); //使用量
+                String totalAmount = Convert.toStr(excelReader.readCellValue(5,i)); //总金额
+                String barcode = Convert.toStr(excelReader.readCellValue(6,i)); //条形码
+                String remark = Convert.toStr(excelReader.readCellValue(7,i)); //备注
 
                 EnergyBill energyBill = new EnergyBill();
+                energyBill.setName(name);
                 energyBill.setEnergyTypeDict(dictService.getDictByNameIfNullJustCreate(DictEnum.energy_energyType, energyTypeDict));
-                energyBill.setBillDate(StrUtil.isNotBlank(billDate) ? DateUtil.parse(billDate, "yyyy-MM") : null);
+                energyBill.setBillDate(DateUtil.parse(billDate));
                 energyBill.setPrice(Convert.toBigDecimal(price));
                 energyBill.setUseCount(Convert.toBigDecimal(useCount));
                 energyBill.setTotalAmount(Convert.toBigDecimal(totalAmount));
@@ -272,17 +287,13 @@ public class EnergyBillController extends BaseController {
                 session.setAttribute(progressSessionName, ImportProgress.build(globalIndex,rowCount-1,"正在导入"));
 
                 EnergyBill energyBill = importList.get(i);
-                System.out.println("==========");
-                System.out.println(energyBill.getBillDate());
-                System.out.println(energyBill.getPrice());
-                System.out.println(energyBill.getBarcode());
-//                if(StrUtil.isBlank(energyBill.getId())){
-//                    energyBillService.commit(energyBill, null);
+                if(StrUtil.isBlank(energyBill.getId())){
+                energyBillService.commit(energyBill, new ProcessLogVo());
                     createCount++;
-//                }else{
-//                    energyBillService.save(energyBill);
-//                    updateCount++;
-//                }
+                }else{
+                    energyBillService.save(energyBill);
+                    updateCount++;
+                }
             }
             session.removeAttribute(progressSessionName);
             return AjaxResult.success(StrUtil.format("导入成功，本次导入：新建【{}】个，更新【{}】个", createCount, updateCount));

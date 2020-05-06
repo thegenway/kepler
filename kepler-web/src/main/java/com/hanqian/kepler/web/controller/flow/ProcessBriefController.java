@@ -11,7 +11,7 @@ import com.hanqian.kepler.common.bean.jqgrid.JqGridPager;
 import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.jpa.specification.Rule;
-import com.hanqian.kepler.flow.annotation.Flow;
+import com.hanqian.kepler.common.annotation.Flow;
 import com.hanqian.kepler.flow.entity.ProcessBrief;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.User;

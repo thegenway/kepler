@@ -1,7 +1,6 @@
 package com.hanqian.kepler.core.entity.primary.sys;
 
-import com.hanqian.kepler.common.base.entity.BaseEntity;
-import com.hanqian.kepler.flow.annotation.Flow;
+import com.hanqian.kepler.common.annotation.Flow;
 import com.hanqian.kepler.flow.base.FlowEntity;
 import lombok.Getter;
 import lombok.Setter;
