@@ -1478,7 +1478,7 @@ function __flow_button_input_handle(entityData, save, commit){
         }
 
         var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
-        var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
+        var btn_close = '<button class="btn btn-default mar-lft" title="关闭" id="'+flag+'-button-close">关闭</button>';
         var btn_save = '<button class="btn btn-success" title="保存" id="'+flag+'-button-save">保存</button>';
         var btn_submit = '<button class="btn btn-primary" title="提交" id="'+flag+'-button-submit">提交</button>';
         var btn_reSubmit = '<button class="btn btn-primary" title="再提交" id="'+flag+'-button-submit">再提交</button>';
@@ -1564,7 +1564,7 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit, withdr
 
         //设置按钮组
         var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
-        var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
+        var btn_close = '<button class="btn btn-default mar-lft" title="关闭" id="'+flag+'-button-close">关闭</button>';
         var btn_approve = '<button class="btn btn-primary" title="通过" id="'+flag+'-button-approve">通过</button>';
         var btn_back = '<button class="btn btn-warning" title="退回" id="'+flag+'-button-back">退回</button>';
         var btn_deny = '<button class="btn btn-danger" title="否决" id="'+flag+'-button-deny">否决</button>';
@@ -1623,7 +1623,7 @@ function __flow_button_clean_handle(entityData){
     if(!entityData.keyId){entityData.keyId = ""};
 
     var flag = $("#layx-"+entityData.keyId).size()==0 && isNotNull(entityData.parentId) ? "layx-"+entityData.parentId : "layx-"+entityData.keyId;
-    var btn_close = '<button class="btn btn-default" title="关闭" id="'+flag+'-button-close">关闭</button>';
+    var btn_close = '<button class="btn btn-default mar-lft" title="关闭" id="'+flag+'-button-close">关闭</button>';
 
     $("#"+flag).find("div.layx-buttons").empty();
     $("#"+flag).find("div.layx-buttons").prepend(btn_close);

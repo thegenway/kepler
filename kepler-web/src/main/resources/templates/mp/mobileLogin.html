@@ -9,7 +9,7 @@
     <h1 class="mui-title">登录</h1>
 </header>
 <div class="mui-content">
-    <form id='mobile-login-form' class="mui-input-group">
+    <form id='mobile-login-form' class="mui-input-group" autocomplete="off">
         <div class="mui-input-row">
             <label>账号</label>
             <input id='username' name="username" type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
@@ -31,11 +31,11 @@
 <script th:inline="javascript">
 
     $("#doLogin").on("click", function(){
-        if($("#mobile-login-form #username").val()){
+        if(!$("#mobile-login-form #username").val()){
             __mui_toast_long("账号为空");
             return false;
         }
-        if($("#mobile-login-form #password").val()){
+        if(!$("#mobile-login-form #password").val()){
             __mui_toast_long("密码为空");
             return false;
         }

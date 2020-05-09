@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('能源账单')" />
+</head>
+<body class="mui-fullscreen">
+
+<div id="energyBill-container" class="mui-views">
+    <div class="mui-view">
+        <div class="mui-navbar"></div>
+        <div class="mui-pages"></div>
+    </div>
+</div>
+
+<!--视图页面-->
+<div id="energyBill-main" class="mui-page">
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">能源账单</h1>
+    </div>
+    <div class="mui-page-content">
+        <div id="energyBill-scroll-wrapper" class="mui-content mui-scroll-wrapper">
+            <div class="mui-scroll">
+
+                <div class="mui-card">
+                    <ul id="energyBill-ul" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="energyBill-form" class="mui-page">
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>列表
+        </button>
+        <h1 class="mui-center mui-title">能源账单</h1>
+    </div>
+    <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+
+                123
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+
+    var data_energyBill = {
+        ulContainerId : "energyBill-ul" ,
+        mainPageId : "energyBill-container",
+        childPageId : "energyBill-main"
+    };
+
+    var view = __init_view(data_energyBill.mainPageId, data_energyBill.childPageId);
+
+    //监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+    //第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+    view.addEventListener('pageBeforeShow', function(e) {
+        console.log(e.detail.page.id + ' beforeShow123');
+    });
+    view.addEventListener('pageShow', function(e) {
+        console.log(e.detail.page.id + ' show');
+    });
+    view.addEventListener('pageBeforeBack', function(e) {
+        console.log(e.detail.page.id + ' beforeBack');
+    });
+    view.addEventListener('pageBack', function(e) {
+        console.log(e.detail.page.id + ' back');
+    });
+
+
+    $(function(){
+
+        var page = 1;
+        var rows = 10;
+        mui_load_data(page, rows);
+
+    });
+
+    function mui_load_data(page, rows){
+        var ifPage = page>0&&rows>0;
+        __ajax_get(ctx+"energyBill/list", {ifPage : ifPage, page : page, rows : rows}, function(data){
+            console.log(data);
+            var list = data.dataRows;
+            var titleArr = ["名称","账单类型","单价","日期"];
+            var valueArr = ["name","energyTypeDict.name","price","billDate"];
+            if(titleArr.length!==valueArr.length){
+                __mui_alert("标题和值数组的长度不相等");
+                return false;
+            }
+            for(var i=0;i<list.length;i++){
+                var h5Arr = '';
+                for(var j=0;j<titleArr.length;j++){
+                    h5Arr += '<h5 class="mui-ellipsis"><span data-type="title">'+titleArr[j]+'：</span><span data-type="value">'+list[i][valueArr[j]]+'</span></h5>';
+                }
+                var newLi = '<li id="'+list[i]['id']+'" class="mui-table-view-cell">\n' +
+                    '<a href="#energyBill-form">\n' +
+                    '<div class="mui-table">\n' +
+                    '<div class="mui-table-cell mui-col-xs-10">\n' +
+                    h5Arr+
+                    '</div>\n' +
+                    '<div class="mui-table-cell mui-col-xs-2 mui-text-right">\n' +
+                    '<span class="mui-h5">'+list[i]['processState']+'</span>\n' +
+                    '</div>\n' +
+                    '</div>\n' +
+                    '</a>\n' +
+                    '</li>';
+                $("#"+data_energyBill.ulContainerId).append(newLi);
+            }
+        })
+    }
+
+</script>
+
+</html>

@@ -24,9 +24,9 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">${item.description}<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-8">
-                    #if($item.type == "Date")<input type="text" name="${item.name}" id="${item.name}" th:value="${#dates.format(${classNameL}?.${item.originalName}, 'yyyy-MM-dd')}" class="form-control" placeholder="${item.originalName}">
-                    #elseif($item.name.indexOf("FileId")!=-1)<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}" style="display: none">
-                    #else<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}">
+                    #if($item.type == "Date")<input type="text" name="${item.name}" id="${item.name}" th:value="${#dates.format(${classNameL}?.${item.originalName}, 'yyyy-MM-dd')}" class="form-control" placeholder="${item.description}">
+                    #elseif($item.name.indexOf("FileId")!=-1)<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.description}" style="display: none">
+                    #else<input type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.description}">
                 #end</div>
             </div>
         #end

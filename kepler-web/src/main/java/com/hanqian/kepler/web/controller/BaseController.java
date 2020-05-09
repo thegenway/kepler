@@ -255,4 +255,17 @@ public class BaseController implements Serializable {
 		return UserAgentUtil.parse(request.getHeader("user-agent")).isMobile();
 	}
 
+	/**
+	 * read input页面跳转
+	 */
+	protected String getPrefixUrl(String path){
+		if(StrUtil.isBlank(path)){
+			throw new RuntimeException("path is empty");
+		}
+		if(StrUtil.startWith(path, "/")){
+			path = StrUtil.sub(path, 1, path.length());
+		}
+		return (isMobile() ? "mp/" : "main/") + path;
+	}
+
 }

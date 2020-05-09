@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header_mp('能源账单')" />
+</head>
+<body>
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">能源账单</h1>
+</header>
+
+<div id="energyBill-scroll" class="mui-content mui-scroll-wrapper">
+    <div class="mui-scroll">
+        <div class="mui-card">
+            <ul id="energyBill-ul" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<th:block th:include="include :: footer_mp" />
+<script th:inline="javascript">
+
+    // mui('#energyBill-scroll').pullRefresh().scrollTo(0, -1000, 500);
+
+    var titleArr = ["名称","账单类型","单价","日期"];
+    var valueArr = ["name","energyTypeDict.name","price","billDate"];
+    __mui_list_init("energyBill", ctx+"energyBill/list", titleArr, valueArr, function(id){
+            window.location.href = ctx + "energyBill/read?keyId="+id;
+        }
+    );
+
+</script>
+
+</html>

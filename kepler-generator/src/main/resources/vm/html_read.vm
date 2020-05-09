@@ -24,9 +24,9 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">${item.description}<i class="fa fa-asterisk txt-color-red"></i></label>
                 <div class="col-md-8">
-                    #if($item.type == "Date")<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${#dates.format(${classNameL}?.${item.originalName}, 'yyyy-MM-dd')}" class="form-control" placeholder="${item.originalName}">
-                    #elseif($item.name.indexOf("FileId")!=-1)<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}" style="display: none">
-                    #else<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.originalName}">
+                    #if($item.type == "Date")<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${#dates.format(${classNameL}?.${item.originalName}, 'yyyy-MM-dd')}" class="form-control" placeholder="${item.description}">
+                    #elseif($item.name.indexOf("FileId")!=-1)<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.description}" style="display: none">
+                    #else<input disabled type="text" name="${item.name}" id="${item.name}" th:value="${${classNameL}?.${item.originalName}}" class="form-control" placeholder="${item.description}">
                     #end</div>
             </div>
         #end
@@ -58,7 +58,7 @@
 
     function fn_${classNameL}_approve(){
         __confirm_dialog("", "确定通过审批吗？", function(dialogRef){
-            __form_save(flowData_${classNameL}.formId, "/${classNameL}/approve", function(data){
+            __form_save(flowData_${classNameL}.formId, ctx+"${classNameL}/approve", function(data){
                 if(data && data.state === 1){
                     dialogRef.close();
                     __flow_close_layx(flowData_${classNameL});
@@ -69,7 +69,7 @@
 
     function fn_${classNameL}_back(){
         __confirm_dialog("", "确定退回吗？", function(dialogRef){
-            __form_save(flowData_${classNameL}.formId, "/${classNameL}/back", function(data){
+            __form_save(flowData_${classNameL}.formId, ctx+"${classNameL}/back", function(data){
                 if(data && data.state === 1){
                     dialogRef.close();
                     __flow_close_layx(flowData_${classNameL});
@@ -80,7 +80,7 @@
 
     function fn_${classNameL}_deny(){
         __confirm_dialog("", "确定否决吗？", function(dialogRef){
-            __form_save(flowData_${classNameL}.formId, "/${classNameL}/deny", function(data){
+            __form_save(flowData_${classNameL}.formId, ctx+"${classNameL}/deny", function(data){
                 if(data && data.state === 1){
                     dialogRef.close();
                     __flow_close_layx(flowData_${classNameL});

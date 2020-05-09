@@ -54,7 +54,7 @@ public class MenuController extends BaseController {
 	public String menu(Model model, @PathVariable String menu, String type, String parentId) {
 		model.addAttribute("type",type);
 		model.addAttribute("parentId",parentId);
-		return isWeiXin() ? "mp/menu/"+menu : "/main/menu/"+menu;
+		return isMobile() ? "mp/menu/"+menu : "/main/menu/"+menu;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class MenuController extends BaseController {
 		String path = StrUtil.format("com.hanqian.kepler.core.entity.primary.{}.{}", menu1, StrUtil.upperFirst(menu2));
 		model.addAttribute("isCreator", processBriefService.checkCreatorAuth(user, path));
 
-		return isWeiXin() ? "mp/menu/"+menu1+"/"+menu2 : "/main/menu/"+menu1+"/"+menu2;
+		return isMobile() ? "mp/menu/"+menu1+"/"+menu2 : "/main/menu/"+menu1+"/"+menu2;
 	}
 
 	// ========================================================================================================================

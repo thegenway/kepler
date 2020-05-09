@@ -154,7 +154,7 @@
     <!--app core-->
     <script th:src="@{/static/js/core/app-core.js?v=0.1.3}"></script>
     <script th:src="@{/static/js/core/app-config.js}"></script>
-    <script th:src="@{/static/js/core/app-common.js?v=2.3.5}"></script>
+    <script th:src="@{/static/js/core/app-common.js?v=2.3.6}"></script>
 
     <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
 </div>
@@ -170,14 +170,19 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
+    <link th:href="@{/static/css/core/mp-core.css?v=0.0.4}" rel="stylesheet">
     <link th:href="@{/static/plugins/mui/css/mui.min.css}" rel="stylesheet">
     <link th:href="@{/static/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/static/plugins/micron/css/micron.min.css}" rel="stylesheet">
 </head>
 
 <!-- ============================================== 手机端通用JS ============================================== -->
 <div th:fragment="footer_mp">
     <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/mui/js/mui.min.js}"></script>
-    <script type="text/javascript" charset="utf-8" th:src="@{/static/js/core/app-common-wx.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/mui/js/mui.view.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/js/core/app-common-wx.js?v=0.1.9}"></script>
     <script type="text/javascript" th:src="@{/static/js/jquery-2.2.4.min.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/jquery-tmpl/jquery.tmpl.js}"></script>
+    <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/micron/script/micron.min.js}"></script>
     <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
 </div>

@@ -54,7 +54,7 @@
 
     function actFormat_${classNameL}(cellvalue, options, rowObject){
         var id = rowObject.id;
-        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_${classNameL}_read(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 查看</button> ';
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="fn_${classNameL}_read(\'' + id + '\');">查看</button> ';
         return cellvalue;
     }
 

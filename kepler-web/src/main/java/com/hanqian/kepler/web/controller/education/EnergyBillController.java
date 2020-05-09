@@ -71,7 +71,6 @@ public class EnergyBillController extends BaseController {
             Map<String, Object> map = new HashMap<>();
             map.put("id", entity.getId());
             map.put("name", StrUtil.nullToEmpty(entity.getName()));
-            // TODO 修改list表格字段
             map.put("energyTypeDict.name", entity.getEnergyTypeDict()!=null ? entity.getEnergyTypeDict().getName() : ""); //账单类型
             map.put("billDate", entity.getBillDate()!=null ? DateUtil.format(entity.getBillDate(), "yyyy-MM-dd") : ""); //账单月份
             map.put("price", StrUtil.nullToEmpty(Convert.toStr(entity.getPrice()))); //单价
@@ -90,7 +89,7 @@ public class EnergyBillController extends BaseController {
         EnergyBill energyBill = energyBillService.get(keyId);
         model.addAttribute("energyBill", energyBill);
 
-        return "main/education/energyBill_read";
+        return getPrefixUrl("education/energyBill_read");
     }
 
      /**

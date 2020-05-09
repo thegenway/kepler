@@ -1,5 +1,66 @@
 /* ajax 封装 */
 /*======================================*/
+
+/***
+ *读取指定的Cookie值 readCookie("id");
+ *@param {string} cookieName Cookie名称
+ */
+function readCookie(cookieName) {
+    var theCookie = "" + document.cookie;
+    var ind = theCookie.indexOf(cookieName);
+    if(ind==-1 || cookieName=="") return "";
+    var ind1 = theCookie.indexOf(';',ind);
+    if(ind1==-1) ind1 = theCookie.length;
+    /*读取Cookie值*/
+    return unescape(theCookie.substring(ind+cookieName.length+1,ind1));
+}
+
+/***
+ * 设置Cookie值 setCookie("id",1);
+ * @param {string} cookieName Cookie名称
+ * @param {string} cookieValue Cookie值
+ * @param {number} nDays Cookie过期天数
+ */
+function setCookie(cookieName, cookieValue) {
+    /*当前日期*/
+    var today = new Date();
+    /*Cookie过期时间*/
+    var expire = new Date();
+    /*如果未设置nDays参数或者nDays为0，取默认值1*/
+    //if(nDays == null || nDays == 0) nDays = 1;
+    /*计算Cookie过期时间【 3600000 * 24  为一天】*/
+    expire.setTime(today.getTime() + 400000); //5分钟
+    document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" +      expire.toGMTString();
+}
+
+/***
+ * 删除cookie中指定变量函数
+ * @param {string} $name Cookie名称
+ */
+function deleteCookie($name){
+    var myDate=new Date();
+    myDate.setTime(-1000);//设置时间
+    document.cookie=$name+"=''; expires="+myDate.toGMTString();
+}
+
+/***
+ * 删除cookie中所有定变量函数
+ * @param {string} cookieName Cookie名称
+ * @param {string} cookieValue Cookie值
+ * @param {number} nDays Cookie过期天数
+ */
+function clearCookie(){
+    var myDate=new Date();
+    myDate.setTime(-1000);//设置时间
+    var data=document.cookie;
+    var dataArray=data.split("; ");
+    for(var i=0;i<dataArray.length;i++){
+        var varName=dataArray[i].split("=");
+        document.cookie=varName[0]+"=''; expires="+myDate.toGMTString();
+    }
+}
+
+
 // 异步 load content 页面
 function loadURL(url, ajax_container) {
     $.ajax({
@@ -198,4 +259,159 @@ function getFileSize(fileByte) {
     else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776) fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
     else fileSizeMsg = "超过1TB";
     return fileSizeMsg;
+}
+
+//初始化view
+function __init_view(containerId, defaultId){
+    var viewApi = mui('#'+containerId).view({
+        defaultPage: '#'+defaultId
+    });
+    var view = viewApi.view;
+    mui('.mui-scroll-wrapper').scroll();
+
+    (function($) { //处理view的后退与webview后退
+        var oldBack = $.back;
+        $.back = function() {
+            if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+                viewApi.back();
+            } else { //执行webview后退
+                oldBack();
+            }
+        };
+    })(mui);
+
+    return view;
+}
+
+//list加载
+function __mui_list_init(keyName, url, titleArr, valueArr, liClickFun, opt){
+    var page = readCookie(keyName+"-mui-page");
+    var rows = readCookie(keyName+"-mui-rows");
+    if(!rows) rows = 10;
+    if(!page && page!==1){
+        page = 1;
+    }else{
+        rows = rows*page;
+    }
+
+
+    var defaults = {
+        keyName : keyName,
+        ulId : keyName + "-ul",
+        url : url,
+        titleArr : titleArr,
+        valueArr : valueArr,
+        ifPage : true,
+        page : page,
+        rows : rows,
+        scrollId : keyName + "-scroll",
+        autoFocus : true
+    };
+
+    var options = $.extend({}, defaults, opt);
+    if(!options.titleArr || !options.valueArr){
+        __mui_alert("titleArr或valueArr为空");
+        return false;
+    }
+    if(options.titleArr.length!==options.valueArr.length){
+        __mui_alert("标题和值数组的长度不相等");
+        return false;
+    }
+
+    mui.init({
+        pullRefresh: {
+            container: '#'+options.scrollId,
+            down: {
+                style:'circle',
+                callback: function(){
+                    options.page = 1; options.rows = 10;
+                    __mui_list_load("down", options, options.page, options.rows, liClickFun);
+                }
+            },
+            up: {
+                auto:false,
+                contentrefresh: '正在加载...',
+                callback: function(){
+                    options.page++;
+                    // options.rows = 10;
+                    __mui_list_load("up", options, options.page, 10, liClickFun);
+                }
+            }
+        }
+    });
+
+    __mui_list_load("init", options, 1, options.rows, liClickFun);
+
+}
+
+function __mui_list_load(type, options, page, rows, liClickFun){
+    __ajax_get(options.url, {ifPage : options.ifPage, page : page, rows : rows}, function(data){
+
+        if("init" != type){
+            setCookie(options.keyName + "-mui-page", page);
+            setCookie(options.keyName + "-mui-rows", rows);
+        }
+
+        //上拉加载 下拉刷新
+        if(page === 1){
+            setTimeout(function(){
+                mui('#'+options.scrollId).pullRefresh().endPulldownToRefresh();
+                mui('#'+options.scrollId).pullRefresh().refresh(true);
+            }, 500);
+            $("#"+options.ulId).empty();
+            if(page>=data.total) mui('#'+options.scrollId).pullRefresh().endPullupToRefresh((true));
+        }else{
+            mui('#'+options.scrollId).pullRefresh().endPullupToRefresh((page>=data.total));
+        }
+
+        //每个li的点击事件
+        $("#"+options.ulId).on("tap", "li", function(){
+            var id = $(this).attr("id");
+            setCookie(options.keyName + "-mui-last-id", id);
+            liClickFun(id);
+        });
+
+        //加载DOM
+        var list = data.dataRows;
+        for(var i=0;i<list.length;i++){
+            var h5Arr = '';
+            for(var j=0;j<options.titleArr.length;j++){
+                h5Arr += '<h5 class="mui-ellipsis"><span data-type="title">'+options.titleArr[j]+'：</span><span data-type="value">'+list[i][options.valueArr[j]]+'</span></h5>';
+            }
+            var newLi = '<li id="'+list[i]['id']+'" class="mui-table-view-cell" >\n' +
+                '<div class="mui-table">\n' +
+                '<div class="mui-table-cell mui-col-xs-1 mui-text-center" style="vertical-align: middle">\n' +
+                '<span class="mui-h5 li-index">'+(i+1)+'.</span>\n' +
+                '</div>\n' +
+                '<div class="mui-table-cell mui-col-xs-9">\n' +
+                h5Arr+
+                '</div>\n' +
+                '<div class="mui-table-cell mui-col-xs-2 mui-text-right">\n' +
+                '<span class="mui-h5">'+list[i]['processState']+'</span>\n' +
+                '</div>\n' +
+                '</div>\n' +
+                '</li>';
+            $("#"+options.ulId).append(newLi);
+        }
+
+        $("#"+options.ulId).find("li").each(function(i){
+            $(this).find(".li-index").text(++i);
+        });
+
+        if("init"==type && options.autoFocus){
+            var lastId = readCookie(options.keyName + "-mui-last-id");
+            console.log(lastId);
+            setTimeout(function(){
+                if(lastId && $("#"+lastId).size()>0){
+                    var top = $("#"+lastId).offset().top;
+                    mui('#'+options.scrollId).pullRefresh().scrollTo(0, 0-top+120, 500);
+                    setTimeout(function(){
+                        micron.getEle("li[id='"+lastId+"']").interaction("shake").duration(".40").timing("ease-out");
+                    }, 480)
+
+                }
+            }, 400);
+        }
+
+    });
 }
