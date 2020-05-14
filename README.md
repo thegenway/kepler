@@ -20,6 +20,7 @@ Mongodb
 1. 项目使用的是hibernate自动建表，所以业务类的表不需要手动创建。
 1. 找到主启动类keper-web/src/main/java/com/hanqian/kepler/KeplerApplication.JAVA启动
 1. 启动成功后会再数据库中自动创建响应业务表，第一次启动会创建一个系统管理员【admin/password】
+1. 【开发】如果要使用流程控制和代码生成工具，实体类中需要添加@Flow注解，具体可参照项目中已经存在的业务例子
 
 ### 目录
 
