@@ -20,6 +20,8 @@ public interface BaseFlowService<T extends FlowEntity> extends BaseService<T, St
      */
     AjaxResult draft(T entity);
     AjaxResult draft(T entity, User user);
+    AjaxResult draftOrSave(T entity);
+    AjaxResult draftOrSave(T entity, User user);
 
     /**
      * 提交文档

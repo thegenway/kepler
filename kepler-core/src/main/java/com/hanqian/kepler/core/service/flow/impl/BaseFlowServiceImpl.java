@@ -95,6 +95,22 @@ public abstract class BaseFlowServiceImpl<T extends FlowEntity> extends BaseServ
     }
 
     @Override
+    public AjaxResult draftOrSave(T entity) {
+        User currentUser = FlowUtil.getCurrentUser();
+        return draftOrSave(entity, currentUser);
+    }
+
+    @Override
+    public AjaxResult draftOrSave(T entity, User user) {
+        if(StrUtil.isNotBlank(entity.getId())){
+            save(entity);
+            return AjaxResult.success("保存成功");
+        }else{
+            return draft(entity, user);
+        }
+    }
+
+    @Override
     public AjaxResult commit(T entity, ProcessLogVo processLogVo) {
         User currentUser = FlowUtil.getCurrentUser();
         return commit(entity, processLogVo, currentUser);

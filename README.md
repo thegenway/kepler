@@ -20,7 +20,22 @@ Mongodb
 1. 项目使用的是hibernate自动建表，所以业务类的表不需要手动创建。
 1. 找到主启动类keper-web/src/main/java/com/hanqian/kepler/KeplerApplication.JAVA启动
 1. 启动成功后会再数据库中自动创建响应业务表，第一次启动会创建一个系统管理员【admin/password】
-1. 【开发】如果要使用流程控制和代码生成工具，实体类中需要添加@Flow注解，具体可参照项目中已经存在的业务例子
+
+### 内置功能
+1. 用户管理：对用户进行职权配置以及账号锁定操作
+1. 部门管理：使用树结构进行部门的上下级创建修改
+1. 岗位管理：职务的配置
+1. 职责管理：【部门】+【岗位】=【职责】
+1. 职权管理：【职责】+【用户】=【职权】，实现一个用户可拥有多种职责
+1. 群组管理：配置多名用户成为一个小组，可配合后续业务或流程实现功能
+1. 系统字典：对系统内一些业务的常见选择数据进行维护
+1. 菜单管理：系统内菜单栏的配置以及查看权限
+1. 定时任务：可配置定时任务
+1. 代码生成：通过实体类自动生成基本功能业务代码
+1. 流程管理：配合@Flow注解通过表单构建的方式配置业务审批流程，和文档权限控制
+1. 文档管理：可删除或恢复所有通过流程创建的表单
+1. 微信管理：查看当前微信公众号信息以及配置公众号菜单栏
+1. 个人中心：用户修改自己的个人资料、头像、密码，和查看自己相关的文档
 
 ### 目录
 
@@ -39,7 +54,7 @@ Mongodb
 | SpringBoot JPA | orm |  |
 | Spring Security  |  安全框架 |  |
 | Quartz | 定时任务 |  |
-| hutool | 封装各种工具类 | https://www.hutool.club/docs/#/ |
+| hutool | 封装各种工具类 | https://hutool.cn/
 | justauth | 第三方登陆 | https://docs.justauth.whnb.wang/#/ |
 | WxJava | 微信 | https://gitee.com/binary/weixin-java-tools |
 | velocity | 代码生成模板 | https://blog.csdn.net/tttzzztttzzz/article/details/90720877 |
@@ -94,5 +109,7 @@ Mongodb
 - ~~【已完成】excel导入前台增加进度信息~~
 - ~~【已完成】流程中增加撤回功能~~
 - ~~【已完成】流程审批增加附件上传~~
+- 【未完成】流程步骤 手动增加待办人
 - 【未完成】微信端页面排版
+- 【未完成】手机端UI框架更换为MDUI https://gitee.com/zdhxiong/mdui
 - 【未完成】Kepler项目完整开发文档
