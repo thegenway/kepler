@@ -1,21 +1,22 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div class="row" id="member-duty-div">
+<div class="panel">
+    <div class="panel-body">
+        <div class="row" id="member-duty-div">
 
-    <div class="col-md-6" style="max-height: 500px;overflow: auto">
-        <ul id="tree_department" class="ztree"></ul>
-    </div>
+            <div class="col-md-6" style="max-height: 500px;overflow: auto">
+                <ul id="tree_department" class="ztree"></ul>
+            </div>
 
-    <div class="col-md-6" style="max-height: 500px;overflow: auto">
-        <div id="power-group" class="list-group">
-<!--            <a class="list-group-item" href="javascript:void(0)">-->
-<!--                <input type="checkbox" class="magic-checkbox" id="powerid"/>-->
-<!--                <label for="powerid" style="width: 100%; height: 100%">Cras justo odio</label>-->
-<!--            </a>-->
+            <div class="col-md-6" style="max-height: 500px;overflow: auto">
+                <div id="power-group" class="list-group">
+
+                </div>
+            </div>
+
         </div>
     </div>
-
 </div>
 
 <div id="all-duty-temp" class="hidden">
@@ -35,8 +36,13 @@
 
 <script th:inline="javascript">
     $(function(){
+        //树数据
         init_tree_department();
         __panelOverlay("member-duty-div");
+
+        //增加查看已有职责按钮
+        var allDutyBtn = '<button id="all-user-duty" type="button" class="btn btn-default">查看已拥有职责</button>';
+        $("#layx-member_duty_dialog_id").find("div.layx-buttons").prepend(allDutyBtn);
     });
 
     function init_tree_department() {

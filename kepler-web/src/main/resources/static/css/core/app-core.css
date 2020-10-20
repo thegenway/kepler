@@ -39,6 +39,29 @@
 .ui-jqgrid .ui-jqgrid-pager .ui-pg-selbox{
     border: 1px solid #e9e9e9;
 }
+
+/* 表格里td的横向滚动条 */
+.ui-jqgrid td{
+    overflow-x: overlay !important;
+}
+
+.ui-jqgrid td::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 5px;
+}
+
+.ui-jqgrid td::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #535353;
+}
+
+.ui-jqgrid td::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #EDEDED;
+}
+
 /*表格×隐藏*/
 .ui-jqgrid .ui-search-clear{
     display: none;

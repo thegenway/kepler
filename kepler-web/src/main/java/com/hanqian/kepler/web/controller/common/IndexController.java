@@ -33,7 +33,7 @@ public class IndexController extends BaseController {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	private final static String baseWeatherUrl = "http://t.weather.sojson.com/api/weather/city/";
+	private final static String baseWeatherUrl = "http://t.weather.itboy.net/api/weather/city/";
 
 	/**
 	 * 获取天气数据
