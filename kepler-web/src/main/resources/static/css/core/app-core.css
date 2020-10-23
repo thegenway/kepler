@@ -62,7 +62,15 @@
     background: #EDEDED;
 }
 
-/*表格×隐藏*/
+/*dialog中的jqGrid下方分页信息的位置优化*/
+.layx-html #dialog_common_selects_page_right{
+    overflow-x: hidden !important;
+}
+.ui-jqgrid .subgrid-cell{
+    overflow-x: hidden !important;
+}
+
+    /*表格×隐藏*/
 .ui-jqgrid .ui-search-clear{
     display: none;
 }
