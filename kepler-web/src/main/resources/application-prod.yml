@@ -1,0 +1,95 @@
+server:
+  port: 8065
+  servlet:
+    context-path: /
+    session:
+      timeout: 3600s
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 800
+    min-spare-threads: 30
+
+spring:
+  datasource:
+    primary:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/kepler_d?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: root
+
+  jpa:
+    primary:
+      show-sql: true
+      generate-ddl: true
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      database: mysql
+      open-in-view: true
+      properties:
+        hibernate:
+          enable_lazy_load_no_trans: true
+
+  redis:
+    host: 127.0.0.1
+    timeout: 10000ms
+  cache:
+    type: redis
+
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/kepler
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  mvc:
+    static-path-pattern: classpath:/templates/,/static/**
+
+  devtools:
+    restart:
+      poll-interval: 3000ms
+      quiet-period: 2999ms
+
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+logging:
+  path: /kepler/log
+
+kepler:
+  formAuthUrl: /authentication/form
+  smsAuthUrl: /authentication/mobile
+  mailAuthUrl: /authentication/mail
+  weixinAuthUrl: /mp/login
+
+justauth:
+  enabled: true
+  type:
+    qq:
+      client-id: 101844927
+      client-secret: 379aa29a4dd45272b6519cd61bead521
+      redirect-uri: http://bamboo.free.idcfengye.com/security/oauth/qq/callback
+
+wx:
+  mp:
+    configs:
+      - appId: wx9e2ca8be6d7e98e3
+        secret: 8625917c65dfccb572934da4aaededc2
+        token: jingtianhuaWX
+        aesKey:
+
+#配置mysql、mongodb的安装目录和备份文件目录
+backups:
+  mysql:
+    installDir: C:\Program Files\MySQL\MySQL Server 5.5\bin
+    exportDir: D:\kepler_d\backups\mysql
+  mongodb:
+    installDir: D:\Program Files\mongodb\bin
+    exportDir: D:\kepler_d\backups\mongodb

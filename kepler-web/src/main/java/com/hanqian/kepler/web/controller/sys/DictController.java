@@ -1,5 +1,10 @@
 package com.hanqian.kepler.web.controller.sys;
 
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.bean.dict.DictTypeVo;
 import com.hanqian.kepler.common.bean.dict.DictVo;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +106,40 @@ public class DictController extends BaseController {
         dict.setState(stateEnum);
         dictService.save(dict);
         return AjaxResult.success();
+    }
+
+    /**
+     * 初始化字典项数据
+     */
+    @PostMapping("initData")
+    @ResponseBody
+    public AjaxResult initData(String dictType){
+        DictEnum dictEnum = dictService.getDictEnum(dictType);
+        if(dictEnum == null){
+            return AjaxResult.error("获取字典枚举异常");
+        }
+
+        List<Dict> dictList = dictService.findAllDictList(dictEnum);
+        if(dictList.size() > 0){
+            return AjaxResult.error("当前已经存在有字典项，无法初始化数据");
+        }
+
+        String path = "/json/init_dict_data.json";
+        File file = new File(this.getClass().getResource(path).getPath());
+        JSONArray dictNameJsonArray = JSONUtil.readJSONArray(file, CharsetUtil.charset("UTF-8"));
+        for(int i=0;i<dictNameJsonArray.size();i++){
+            JSONObject jsonObject = dictNameJsonArray.getJSONObject(i);
+            if(StrUtil.equals(dictType, jsonObject.getStr("name"))){
+                JSONArray itemsJsonArray = jsonObject.getJSONArray("items");
+                for(int j=0;j<itemsJsonArray.size();j++){
+                    String name = itemsJsonArray.getStr(j);
+                    dictService.createDict(dictEnum, name, null, null, j*10);
+                }
+                return AjaxResult.success();
+            }
+        }
+
+        return AjaxResult.error("未从配置文件中获取到此字典");
     }
 
 }

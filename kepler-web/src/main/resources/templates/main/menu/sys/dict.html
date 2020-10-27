@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <div id="page-content">
     <div class="fixed-fluid">
         <div class="fixed-sm-200 fixed-md-250 pull-sm-left">
@@ -20,7 +20,8 @@
                     <div class="form-inline">
                         <div class="row">
                             <div class="col-sm-12 table-toolbar-left">
-                                <button id="btn_add_dict" class="btn btn-default"><i class="fa fa-edit fa-lg"></i> 添加字典项</button>
+                                <button sec:authorize="hasAuthority('SystemManager')" id="btn_add_dict" class="btn btn-default"><i class="fa fa-edit fa-lg"></i> 添加字典项</button>
+                                <button sec:authorize="hasAuthority('SystemManager')" id="btn_init_dict" class="btn btn-default" title="当前可用字典项为空时才能初始化"><i class="fa fa-edit fa-lg"></i> 初始化预设字典项</button>
                             </div>
                         </div>
                     </div>
@@ -148,7 +149,22 @@
                 })
             })
         }
-    })
+    });
+
+    //初始化字典项
+    $("#btn_init_dict").on("click", function(){
+        var dictType = $("#title_dict_selected").attr("data-type");
+        if(!dictType){
+            __toastr_error("未获取到当前字典类型");
+            return false;
+        }
+        __ajax_post(ctx + "main/dict/initData", {dictType : dictType}, function(data){
+            __toastr(data);
+            if(data.state === 1){
+                loadDictTable();
+            }
+        })
+    });
 
 </script>
 

@@ -36,4 +36,9 @@ public interface DictService extends BaseService<Dict, String> {
     Dict getDictByName(DictEnum dictEnum, String name);
     Dict getDictByNameIfNullJustCreate(DictEnum dictEnum, String name);
 
+    /**
+     * 根据value字符串获取枚举类型
+     */
+    DictEnum getDictEnum(String value);
+
 }

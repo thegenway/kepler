@@ -1526,39 +1526,43 @@ function __flow_button_read_handle(entityData, approve, back, deny, edit, withdr
 
         if(data.processState == "Running" && data.flowButtonList.length>0){
             //设置审批意见框
-            var textarea = '<hr/><div class="form-group">' +
-                '<label class="col-md-2 control-label">审批意见</label>' +
-                '<div class="col-md-8">' +
-                '<textarea id="flowComment" name="flowComment"></textarea>'+
-                '</div>' +
-                '</div>';
-            $("#"+entityData.formId).append(textarea);
+            if($("#"+entityData.formId+" #flowComment").size()==0){
+                var textarea = '<hr/><div class="form-group">' +
+                    '<label class="col-md-2 control-label">审批意见</label>' +
+                    '<div class="col-md-8">' +
+                    '<textarea id="flowComment" name="flowComment"></textarea>'+
+                    '</div>' +
+                    '</div>';
+                $("#"+entityData.formId).append(textarea);
+            }
 
             //设置流程审批附件按钮
-            var flowFileBtn = '<div class="form-group">' +
-                '<div class="col-md-8 col-md-offset-2">' +
-                '<input id="flowFileIds_'+entityData.keyId+'" name="flowFileIds" style="display: none" value="">' +
-                '</div>' +
-                '</div>';
-            $("#"+entityData.formId).append(flowFileBtn);
-            __init_dropzone_edit("flowFileIds_"+entityData.keyId);
-            $("#flowFileIds_"+entityData.keyId+"-dz-upload").hide();
+            if($("#"+entityData.formId+" #flowFileIds_"+entityData.keyId).size()==0){
+                var flowFileBtn = '<div class="form-group">' +
+                    '<div class="col-md-8 col-md-offset-2">' +
+                    '<input id="flowFileIds_'+entityData.keyId+'" name="flowFileIds" style="display: none" value="">' +
+                    '</div>' +
+                    '</div>';
+                $("#"+entityData.formId).append(flowFileBtn);
+                __init_dropzone_edit("flowFileIds_"+entityData.keyId);
+                $("#flowFileIds_"+entityData.keyId+"-dz-upload").hide();
 
-            //初始化编辑器，并指定自定义附件上传按钮
-            __summernote($("#"+entityData.formId).find("#flowComment"), {
-                buttons : {
-                    flowfile : function(context){
-                        var button = $.summernote.ui.button({
-                            contents: '<i class="fa fa-cloud-upload"/> ',
-                            tooltip: '附件上传',
-                            click: function () {
-                                $("#flowFileIds_"+entityData.keyId+"-dz-upload").trigger("click");
-                            }
-                        });
-                        return button.render();
+                //初始化编辑器，并指定自定义附件上传按钮
+                __summernote($("#"+entityData.formId).find("#flowComment"), {
+                    buttons : {
+                        flowfile : function(context){
+                            var button = $.summernote.ui.button({
+                                contents: '<i class="fa fa-cloud-upload"/> ',
+                                tooltip: '附件上传',
+                                click: function () {
+                                    $("#flowFileIds_"+entityData.keyId+"-dz-upload").trigger("click");
+                                }
+                            });
+                            return button.render();
+                        }
                     }
-                }
-            });
+                });
+            }
 
         };
 

@@ -98,4 +98,19 @@ public class DictServiceImpl extends BaseServiceImpl<Dict, String> implements Di
             return save(newDict);
         }
     }
+
+    @Override
+    public DictEnum getDictEnum(String value) {
+        DictEnum dictEnum = null;
+        if(StrUtil.isBlank(value)){
+            return null;
+        }
+
+        try{
+            dictEnum = DictEnum.valueOf(value);
+        }catch (Exception e){
+            return null;
+        }
+        return dictEnum;
+    }
 }
