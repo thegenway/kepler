@@ -38,6 +38,11 @@ spring:
   data:
     mongodb:
       uri: mongodb://127.0.0.1:27017/kepler
+      repositories:
+        type: none
+    redis:
+      repositories:
+        enabled: false
 
   thymeleaf:
     mode: HTML

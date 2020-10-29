@@ -3,6 +3,10 @@ package com.hanqian.kepler.web.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
+import com.hanqian.kepler.common.enums.BaseEnumManager;
+import com.hanqian.kepler.common.jpa.specification.SpecificationFactory;
+import com.hanqian.kepler.core.entity.primary.sys.SystemConfig;
+import com.hanqian.kepler.core.service.sys.SystemConfigService;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.core.service.sys.MenuService;
 import com.hanqian.kepler.security.annotation.CurrentUser;
@@ -31,20 +35,25 @@ public class LoginController extends BaseController {
 
 	@Autowired
 	private MenuService menuService;
+	@Autowired
+	private SystemConfigService systemConfigService;
 
 	@RequestMapping("login-view")
-	public String loginView(){
+	public String loginView(Model model){
 		if(isWeiXin()){
 			return "redirect:../mp/wxLogin";
 		}else if(isMobile()){
 			return "mp/mobileLogin";
 		}
+		SystemConfig systemConfig = systemConfigService.getFirstOne(SpecificationFactory.eq("state", BaseEnumManager.StateEnum.Enable));
+		model.addAttribute("loginType", systemConfig!=null ? StrUtil.nullToEmpty(systemConfig.getLoginType()) : "");
 		return "login";
 	}
 
 	@RequestMapping("index")
 	public String index(@CurrentUser User user,  Model model){
-		model.addAttribute("menuTree",menuService.getMenuTreeByUser(user));
+		model.addAttribute("menuTree", menuService.getMenuTreeByUser(user));
+		model.addAttribute("systemConfig", systemConfigService.getFirstOne(SpecificationFactory.eq("state", BaseEnumManager.StateEnum.Enable)));
 		if(isWeiXin() || isMobile()){
 			return "redirect:../mp/index";
 		}

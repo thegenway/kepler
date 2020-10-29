@@ -16,9 +16,10 @@
             <!--================================-->
             <div class="navbar-header">
                 <a href="index.html" class="navbar-brand">
-                    <img src="../static/img/logo.png" alt="Kepler Logo" class="brand-icon">
+                    <img th:if="${#strings.isEmpty(systemConfig?.logoImgId)}" src="../static/img/logo.png" alt="Kepler Logo" class="brand-icon">
+                    <img th:if="${!#strings.isEmpty(systemConfig?.logoImgId)}" th:src="'../main/file/' + ${systemConfig.logoImgId}" alt="Kepler Logo" class="brand-icon">
                     <div class="brand-title">
-                        <span class="brand-text">Kepler</span>
+                        <span class="brand-text" th:text="${#objects.nullSafe(systemConfig?.name, 'Kepler')}"></span>
                     </div>
                 </a>
             </div>
@@ -128,7 +129,7 @@
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End user dropdown-->
 
-                    <li>
+                    <li th:if="${#strings.equals('1', systemConfig?.ifSidebarRight)}">
                         <a href="#" class="aside-toggle navbar-aside-icon">
                             <i class="pci-ver-dots"></i>
                         </a>
@@ -411,7 +412,7 @@
         </div>
 
         <div class="hide-fixed pull-right pad-rgt">14GB of <strong>512GB</strong> Free.</div>
-        <p class="pad-lft">&#0169; 2020 Your Company</p>
+        <p class="pad-lft" th:text="${#objects.nullSafe(systemConfig?.copyrightMark, '&#0169; 2020 Your Company')}"></p>
     </footer>
     <!--===================================================-->
     <!-- END FOOTER -->

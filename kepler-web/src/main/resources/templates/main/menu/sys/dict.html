@@ -16,7 +16,7 @@
             <div class="panel">
                 <div class="panel-body">
 
-                    <h1 id="title_dict_selected" class="page-header text-overflow pad-btm">正在加载...</h1>
+                    <h1 id="title_dict_selected" data-type="" class="page-header text-overflow pad-btm">正在加载...</h1>
                     <div class="form-inline">
                         <div class="row">
                             <div class="col-sm-12 table-toolbar-left">
@@ -102,6 +102,7 @@
         dictType.name = $dictType.attr("data-type");
         dictType.value = $dictType.text();
         $("#title_dict_selected").text(dictType.value);
+        $("#title_dict_selected").attr("data-type", dictType.name);
         loadDictTable();
     });
 

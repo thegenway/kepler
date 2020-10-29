@@ -50,11 +50,11 @@
                         </form>
                     </div>
 
-                    <div class="pad-all">
+                    <div th:if="${#strings.contains(loginType, 'qq') || #strings.contains(loginType, 'wx')}" class="pad-all">
                         <div class="media pad-top bord-top">
                             <div class="pull-right">
-                                <a href="/security/oauth/login/qq" class="pad-rgt"><i class="fa fa-qq fa-lg" style="color: #42a5f5"></i></a>
-                                <a href="/security/oauth/login/weixin" class="pad-rgt"><i class="fa fa-weixin fa-lg" style="color: #00B83F"></i></a>
+                                <a th:if="${#strings.contains(loginType, 'qq')}" href="/security/oauth/login/qq" class="pad-rgt"><i class="fa fa-qq fa-lg" style="color: #42a5f5"></i></a>
+                                <a th:if="${#strings.contains(loginType, 'wx')}" href="/security/oauth/login/weixin" class="pad-rgt"><i class="fa fa-weixin fa-lg" style="color: #00B83F"></i></a>
                             </div>
                             <div class="media-body text-left">社交登录</div>
                         </div>
@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <div class="panel">
+            <div th:if="${#strings.contains(loginType, 'phone')}" class="panel">
                 <div class="panel-heading" style="min-height: auto">
                     <h4 class="panel-title">
                         <a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo">手机验证码登录</a>
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="panel">
+            <div th:if="${#strings.contains(loginType, 'mail')}" class="panel">
                 <div class="panel-heading" style="min-height: auto">
                     <h4 class="panel-title">
                         <a data-parent="#accordion" data-toggle="collapse" href="#collapseThree">邮箱登录</a>

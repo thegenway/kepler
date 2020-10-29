@@ -263,6 +263,14 @@ function __toastr(data){
 
 /*======================================*/
 
+/*loading按钮*/
+function __button_loading(buttonId){
+    $("#"+buttonId).button("loading");
+}
+function __button_reset(buttonId){
+    $("#"+buttonId).button("reset");
+}
+
 
 /* dialog 封装 */
 /*======================================*/
@@ -674,6 +682,12 @@ function returnToHashUrl() {
     var urlHash = window.location.hash;
     var url = urlHash.substring(1,urlHash.length);
     loadURL(url,$('#page-content'));
+}
+
+/*Switchery开关样式*/
+/*======================================*/
+function __switchery(element_id, opt){
+    new Switchery(document.getElementById(element_id), opt);
 }
 
 

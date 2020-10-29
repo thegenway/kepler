@@ -78,6 +78,7 @@ public class BaseController implements Serializable {
 	@Autowired
 	protected ProcessBriefService processBriefService;
 
+	protected final static String SWITCH_ON_VALUE = "on";
 
 	/**
 	 * 获取当前登录人

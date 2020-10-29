@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">系统全局设置</h3>
+        </div>
+        <div class="panel-body">
+            <form id="form_systemConfig_input" class="form-horizontal" autocomplete="off">
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">企业名称</label>
+                    <div class="col-md-7">
+                        <input type="text" name="name" id="name" th:value="${systemConfig?.name}" class="form-control" placeholder="企业名称">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">登录类型</label>
+                    <div class="col-md-7">
+                        <div class="checkbox">
+                            <input type="checkbox" name="loginType" id="loginType1"  value="qq" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(systemConfig?.loginType, ''),'qq')}" >
+                            <label for="loginType1">qq</label>
+                            <input type="checkbox" name="loginType" id="loginType2"  value="wx" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(systemConfig?.loginType, ''),'wx')}" >
+                            <label for="loginType2">微信</label>
+                            <input type="checkbox" name="loginType" id="loginType3"  value="phone" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(systemConfig?.loginType, ''),'phone')}" >
+                            <label for="loginType3">手机</label>
+                            <input type="checkbox" name="loginType" id="loginType4"  value="mail" class="magic-checkbox" th:checked="${#strings.contains(#objects.nullSafe(systemConfig?.loginType, ''),'mail')}" >
+                            <label for="loginType4">邮箱</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">版权标记文字</label>
+                    <div class="col-md-7">
+                        <input type="text" name="copyrightMark" id="copyrightMark" th:value="${systemConfig?.copyrightMark}" class="form-control" placeholder="版权标记文字">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">是否显示右侧边栏</label>
+                    <div class="col-md-7">
+                        <input id="switch-ifSidebarRight" type="checkbox" name="ifSidebarRight" th:checked="${systemConfig?.ifSidebarRight=='1'}" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">logo</label>
+                    <div class="col-md-7">
+                        <input id="logoImgId" name="logoImgId" style="display: none" th:value="${systemConfig?.logoImgId}">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="panel-footer text-right">
+            <button id="save-systemConfig" class="btn btn-success" type="button">保存</button>
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function () {
+        __init_dropzone_edit("logoImgId", null, {
+            maxFiles : 1,
+            maxFilesize : 1,
+            acceptedFiles : ".jpg,.jpeg,.png"
+        });
+        __switchery("switch-ifSidebarRight");
+    });
+
+    $("#save-systemConfig").on("click", function(){
+        __panelOverlay_show("form_systemConfig_input");
+        __button_loading("save-systemConfig");
+        __form_save("form_systemConfig_input", ctx + "systemConfig/save", function(data){
+            __panelOverlay_hide("form_systemConfig_input");
+            __button_reset("save-systemConfig");
+        })
+    });
+
+</script>
+
+</html>
