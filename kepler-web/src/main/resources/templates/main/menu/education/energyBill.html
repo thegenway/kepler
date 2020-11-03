@@ -16,6 +16,7 @@
                 </div>
 
                 <div class="col-sm-6 table-toolbar-right">
+                    <button type="button" id="energy_delete" class="btn btn-danger btn-sm">删除</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-importTemp" onclick="window.open(ctx+'main/file/importTemp?name=EnergyBill&headArr=名称,账单类型,账单月份,单价,使用量,总金额,条形码,备注', '_blank')">下载导入模板</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-export" onclick="window.open(ctx+'energyBill/export', '_blank')">导出</button>
                     <button sec:authorize="hasAuthority('SystemManager')" type="button" class="btn btn-info btn-sm" id="btn-energyBill-import" onclick="__excel_import_view('energyBill/importData')">导入</button>
@@ -33,9 +34,13 @@
 </div>
 
 <script th:inline="javascript">
+
     $(function(){
         init_grid_energyBill();
+        __button_auth("energy_delete");
     });
+
+
 
     function init_grid_energyBill(){
         __init_jqgrid('energyBill_table', 'energyBill_page', ctx+'energyBill/list',

@@ -8,9 +8,10 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#processBrief-tab-1" data-toggle="tab">基本信息</a></li>
                 <li><a href="#processBrief-tab-2" data-toggle="tab">流程步骤</a></li>
+                <li><a href="#processBrief-tab-3" data-toggle="tab">业务按钮</a></li>
             </ul>
         </div>
-        <h3 class="panel-title">流程简要</h3>
+        <h3 class="panel-title" th:text="${processBrief?.name}">流程简要</h3>
     </div>
 
     <!--Panel body-->
@@ -205,6 +206,7 @@
 
                 </form>
             </div>
+
             <div class="tab-pane fade" id="processBrief-tab-2">
                 <div class="row">
                     <div class="col-sm-12 table-toolbar-left">
@@ -216,13 +218,26 @@
                     <div id="processStep_page"></div>
                 </div>
             </div>
+
+            <div class="tab-pane fade" id="processBrief-tab-3">
+                <div class="row">
+                    <div class="col-sm-12 table-toolbar-left">
+                        <button id="btn_add_specialButton" class="btn btn-primary btn-sm" onclick="specialButton_add()">新增按钮</button>
+                    </div>
+                </div>
+                <div class="jqGrid_wrapper">
+                    <table id="specialButton_table"></table>
+                    <div id="specialButton_page"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script th:inline="javascript">
 
-    var data = {
+    var data_processBrief = {
         id : [[${processBrief.id}]],
         path : [[${processBrief.path}]]
     };
@@ -230,6 +245,7 @@
     $(function(){
         // __layX_adapt_height(data.id);
         init_grid_processStep();
+        init_grid_specialButton();
     });
 
     function fn_processBrief_save(callback){
@@ -243,7 +259,7 @@
     }
 
     function init_grid_processStep(){
-        __init_jqgrid('processStep_table', null, '/flow/processStep/list?path='+data.path,
+        __init_jqgrid('processStep_table', null, '/flow/processStep/list?path='+data_processBrief.path,
             ['名称', '步骤号', "下一步", '操作', 'id'],
             [
                 {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
@@ -255,7 +271,7 @@
                 autowidth : false,
                 loadComplete : function(){
                     setTimeout(function(){
-                        __jqGrid_width("processStep_table", $("#processBrief-heading").width()-40);
+                        __jqGrid_width("processStep_table", $("#processBrief-heading").width()-20);
                     },300);
                 }
             }
@@ -269,7 +285,7 @@
     }
 
     function processStep_add(keyId){
-        __layX_html_save(data.id+"-input", "", "/flow/processStep/input?path="+data.path+"&keyId="+keyId, function(id, button, event){
+        __layX_html_save(data_processBrief.id+"-input", "", "/flow/processStep/input?path="+data_processBrief.path+"&keyId="+keyId, function(id, button, event){
             var callback = function(data){
                 if(data && data.state === 1){
                     __layX_close(id);
@@ -277,6 +293,47 @@
                 }
             };
             fn_processStep_save(callback);
+        },{
+            shadable : 0.6
+        })
+    }
+
+    // =========================== 业务按钮 ================================
+
+    function init_grid_specialButton(){
+        __init_jqgrid('specialButton_table', "specialButton_page", ctx + 'flow/specialButtonAuth/list?processBriefId='+data_processBrief.id,
+            ['名称', '关键字', '操作', 'id'],
+            [
+                {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'buttonKey', index: 'buttonKey', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 60, sortable: false, search: false, formatter: actSpecialButtonFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ],false, {
+                autowidth : false,
+                loadComplete : function(){
+                    setTimeout(function(){
+                        __jqGrid_width("specialButton_table", $("#processBrief-heading").width()-40);
+                    },300);
+                }
+            }
+        );
+    }
+
+    function actSpecialButtonFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-default btn-xs" onclick="specialButton_add(\'' + id + '\');"><i class="fa fa-pencil-square-o"> </i> 编辑</button> ';
+        return cellvalue;
+    }
+
+    function specialButton_add(keyId){
+        __layX_html_save(data_processBrief.id+"-input", "", "/flow/specialButtonAuth/input?processBriefId="+data_processBrief.id+"&keyId="+keyId, function(id, button, event){
+            var callback = function(data){
+                if(data && data.state === 1){
+                    __layX_close(id);
+                    __reflash_jqgrid("specialButton_table");
+                }
+            };
+            fn_specialButtonAuth_save(callback);
         },{
             shadable : 0.6
         })

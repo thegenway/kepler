@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <div class="fluid">
+        <div class="fluid" id="dict-table-panel">
             <div class="panel">
                 <div class="panel-body">
 
@@ -81,14 +81,14 @@
         loadDictTypeList();
     });
 
-    __panelOverlay("loadDictTypeList");
+    __panelOverlay("dict-type-list");
     __panelOverlay("dict-table");
 
     //加载左侧字典类列表
     function loadDictTypeList(){
-        __panelOverlay_show("loadDictTypeList");
+        __panelOverlay_show("dict-type-list");
         __ajax_get("/main/dict/findDictTypeList", {}, function(data){
-            __panelOverlay_hide("loadDictTypeList");
+            __panelOverlay_hide("dict-type-list");
             $("#dict-type-list-temp").tmpl(data).appendTo("#dict-type-list");
             $("#dict-type-list a:first").trigger("click");
         })
@@ -108,9 +108,9 @@
 
     //加载字典项表格
     function loadDictTable(){
-        __panelOverlay_show("dict-table");
+        __panelOverlay_show("dict-table-panel");
         __ajax_get("/main/dict/findDictListByType", {dictType : dictType.name}, function(data){
-            __panelOverlay_hide("dict-table");
+            __panelOverlay_hide("dict-table-panel");
             $("#dict-table").empty();
             $("#dict-table-temp").tmpl(data).appendTo("#dict-table");
         })

@@ -5,6 +5,7 @@ import com.hanqian.kepler.common.base.service.BaseService;
 import com.hanqian.kepler.flow.entity.ProcessStep;
 import com.hanqian.kepler.flow.entity.TaskEntity;
 import com.hanqian.kepler.flow.entity.User;
+import com.hanqian.kepler.flow.vo.FlowParticipantInputVo;
 
 import java.util.List;
 import java.util.Set;
@@ -93,6 +94,7 @@ public interface UserService extends BaseService<User, String> {
 	 * 根据配置获取所有用户
 	 */
 	List<User> getUserListByFlowConfig(String[] departmentIds, String[] postIds, String[] powerIds, String[] groupIds, String[] userIds);
+	List<User> getUserListByFlowConfig(FlowParticipantInputVo flowParticipantInputVo);
 
 	/**
 	 * 查询当前用户的岗位/部门/职权/群组 所有id一起显示

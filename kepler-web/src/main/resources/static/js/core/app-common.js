@@ -901,6 +901,24 @@ function __city_picker(elem, province, city, district, opt){
     elem.citypicker(option);
 }
 
+/*按钮权限显示隐藏 */
+/*======================================*/
+function __button_auth(keys){
+    __ajax_get("../flow/specialButtonAuth/check", {keys : keys}, function(data){
+        if(data.state === 1){
+            var authObj = data.data;
+            var btnArr = keys.split(",");
+            for(var i=0;i<btnArr.length;i++){
+                var key = btnArr[i];
+                if(authObj[key]){
+                    $("button[id='"+key+"']").show();
+                }else{
+                    $("button[id='"+key+"']").hide();
+                }
+            }
+        };
+    })
+}
 
 /* jqGrid 封装 */
 /*======================================*/

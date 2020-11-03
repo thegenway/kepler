@@ -275,6 +275,17 @@ public class UserServiceImpl extends BaseServiceImpl<User, String> implements Us
 	}
 
 	@Override
+	public List<User> getUserListByFlowConfig(FlowParticipantInputVo vo) {
+		return this.getUserListByFlowConfig(
+				StrUtil.split(vo.getDepartmentIds(), ","),
+				StrUtil.split(vo.getPostIds(), ","),
+				StrUtil.split(vo.getPowerIds(), ","),
+				StrUtil.split(vo.getGroupIds(), ","),
+				StrUtil.split(vo.getUserIds(), ",")
+		);
+	}
+
+	@Override
 	public List<String> findPostDeptPowerGroupAllIds(User user) {
 		return user!=null ? userDao.findPostDeptPowerGroupAllIds(user.getId(), "%"+user.getId()+"%") : new ArrayList<>();
 	}
