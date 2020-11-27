@@ -109,7 +109,7 @@
     //加载字典项表格
     function loadDictTable(){
         __panelOverlay_show("dict-table-panel");
-        __ajax_get("/main/dict/findDictListByType", {dictType : dictType.name}, function(data){
+        __ajax_get("/main/dict/findDictListByType", {dictType : dictType.name, ifAll : "1"}, function(data){
             __panelOverlay_hide("dict-table-panel");
             $("#dict-table").empty();
             $("#dict-table-temp").tmpl(data).appendTo("#dict-table");

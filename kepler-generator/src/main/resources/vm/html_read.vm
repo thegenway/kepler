@@ -91,7 +91,7 @@
 
     function fn_${classNameL}_edit(){
         __flow_close_layx(flowData_${classNameL});
-        __layX_html_read(flowData.keyId, "${description}", "/${classNameL}/input?keyId="+flowData_${classNameL}.keyId);
+        __layX_html_read(flowData_${classNameL}.keyId, "${description}", "/${classNameL}/input?keyId="+flowData_${classNameL}.keyId);
     }
 
     function fn_${classNameL}_withdraw(){

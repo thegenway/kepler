@@ -246,15 +246,22 @@ public class MenuController extends BaseController {
 		for(int i=0; i<childrenList.size(); i++){
 			JSONObject menuObject = childrenList.getJSONObject(i);
 			Menu menu = new Menu();
+
+			String url = menuObject.getStr("url");
 			menu.setName(menuObject.getStr("name"));
-			menu.setMenuType(menuObject.getStr("menuType"));
+			menu.setUrl(url);
+			menu.setMenuType(StrUtil.isBlank(url) ? "目录" : "菜单");
 			menu.setIconCode(menuObject.getStr("iconCode"));
-			menu.setOrderNum(Convert.toInt(menuObject.getStr("orderNum")));
-			menu.setUrl(menuObject.getStr("url"));
-			menu.setTarget(menuObject.getStr("target"));
+			menu.setOrderNum(i*10);
 			menu.setLevel(parent!=null ? parent.getLevel() + 1 : 1);
-			menu.setIsManageMenu(Convert.toInt(menuObject.getStr("isManageMenu")));
 			menu.setIfAllRead(1);
+
+			String target = menuObject.getStr("target");
+			menu.setTarget(StrUtil.nullToDefault(target, "_self"));
+
+			String isManageMenu = menuObject.getStr("isManageMenu");
+			menu.setIsManageMenu(StrUtil.isNotBlank(isManageMenu) ? Convert.toInt(isManageMenu) : 0);
+
 			if(parent != null){
 				menu.setParent(parent);
 			}

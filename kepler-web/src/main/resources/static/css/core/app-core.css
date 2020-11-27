@@ -62,6 +62,16 @@
     background: #EDEDED;
 }
 
+/*静态表格里的文字居中*/
+.table-center td,.table-center th{
+    text-align: center;
+    vertical-align: middle !important;
+}
+.table-center td input{
+    text-align: center;
+    vertical-align: middle !important;
+}
+
 /*dialog中的jqGrid下方分页信息的位置优化*/
 .layx-html #dialog_common_selects_page_right{
     overflow-x: hidden !important;
@@ -70,7 +80,7 @@
     overflow-x: hidden !important;
 }
 
-    /*表格×隐藏*/
+/*表格×隐藏*/
 .ui-jqgrid .ui-search-clear{
     display: none;
 }
@@ -124,7 +134,7 @@ em.error{
 
 /* floating noty */
 #floating-top-right {
-    z-index: 10000232;
+    z-index: 10001305;
 }
 #floating-top-right .alert-wrap {
     min-width: 300px;
@@ -520,4 +530,13 @@ select:-webkit-autofill {
 }
 .tooltip[role='tooltip']{
     z-index: 9999999999;
+}
+
+/*去掉input number类型中的上下箭头*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
 }

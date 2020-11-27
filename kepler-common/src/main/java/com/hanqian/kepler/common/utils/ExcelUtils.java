@@ -1,5 +1,6 @@
 package com.hanqian.kepler.common.utils;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -82,7 +83,7 @@ public class ExcelUtils {
         }
 
         //读取数据
-        ExcelUtil.read07BySax(file.getInputStream(), 0, createRowHandler());
+        ExcelUtil.readBySax(file.getInputStream(), 0, createRowHandler());
         //去除excel中的第一行数据
         lineList.remove(0);
 
@@ -108,14 +109,10 @@ public class ExcelUtils {
      */
     private static RowHandler createRowHandler() {
         //清空一下集合中的数据
-        lineList.removeAll(lineList);
-        return new RowHandler() {
-            @Override
-            public void handle(int sheetIndex, int rowIndex, List rowlist) {
-                //将读取到的每一行数据放入到list集合中
-                JSONArray jsonObject = new JSONArray(rowlist);
-                lineList.add(jsonObject.toList(Object.class));
-            }
+        CollUtil.clear(lineList);
+        return (sheetIndex, rowIndex, rowList) -> {
+            JSONArray jsonObject = new JSONArray(rowList);
+            lineList.add(jsonObject.toList(Object.class));
         };
     }
 

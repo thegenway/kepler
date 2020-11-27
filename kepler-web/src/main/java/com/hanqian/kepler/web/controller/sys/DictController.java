@@ -7,9 +7,12 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.hanqian.kepler.common.bean.dict.DictTypeVo;
 import com.hanqian.kepler.common.bean.dict.DictVo;
+import com.hanqian.kepler.common.bean.jqgrid.JqGridReturn;
 import com.hanqian.kepler.common.bean.result.AjaxResult;
 import com.hanqian.kepler.common.enums.BaseEnumManager;
 import com.hanqian.kepler.common.enums.DictEnum;
+import com.hanqian.kepler.common.jpa.specification.Rule;
+import com.hanqian.kepler.common.utils.StringUtils;
 import com.hanqian.kepler.core.entity.primary.sys.Dict;
 import com.hanqian.kepler.flow.entity.User;
 import com.hanqian.kepler.security.annotation.CurrentUser;
@@ -40,14 +43,21 @@ public class DictController extends BaseController {
      */
     @GetMapping("findDictListByType")
     @ResponseBody
-    public List<DictVo> findDictListByType(String dictType){
-        List<Dict> dictList = dictService.findAllDictList(DictEnum.valueOf(dictType));
+    public List<DictVo> findDictListByType(String dictType, String ifAll){
+        List<Dict> dictList = StrUtil.equals("1", ifAll) ? dictService.findAllDictList(DictEnum.valueOf(dictType)) : dictService.findDictList(DictEnum.valueOf(dictType));
         List<DictVo> dictVoList = new ArrayList<>();
         dictList.forEach(dict->{
             DictVo dictVo = new DictVo(dict.getId(),dict.getState(),dict.getCreateTime(),dict.getName(),dict.getDictType(),dict.getValue(),dict.getDescription(),dict.getSortNo());
             dictVoList.add(dictVo);
         });
         return dictVoList;
+    }
+
+    /**
+     * jqGrid list
+     */
+    public JqGridReturn list(){
+        return null;
     }
 
     /**

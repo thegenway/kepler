@@ -74,6 +74,7 @@ Mongodb
 | laydate | 时间选择器 | https://www.layui.com/doc/modules/laydate.html |
 | jquery-tmpl | 模板引擎 | https://blog.csdn.net/u010142437/article/details/84399222 |
 | layX | 弹窗插件 | https://gitee.com/monksoul/LayX |
+| lodash | JS工具类 | https://www.lodashjs.com/ |
 | mui | 手机端前台框架 | https://dev.dcloud.net.cn/mui/ui/ |
 
 ### 本项目的搭建参考了以下开源项目

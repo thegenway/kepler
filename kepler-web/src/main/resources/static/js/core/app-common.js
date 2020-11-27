@@ -211,7 +211,7 @@ function __toastr_success(message){
     $.niftyNoty({
         type: 'success',
         container : "floating",
-       // title : '成功',
+        // title : '成功',
         message : message,
         closeBtn : true,
         timer : 3000
@@ -332,7 +332,7 @@ function __open_dialog(size, title, url, buttons, opt) {
 
     var dialog = BootstrapDialog.show(options);
 
-     return new Admin_Package_BootstrapDialog(dialog);
+    return new Admin_Package_BootstrapDialog(dialog);
 }
 
 // 提示框
@@ -550,6 +550,34 @@ function __common_dialog_selects(id, title, dataUrl, colNames, colModel, selectI
 }
 
 /**
+ * 选择系统字典单选
+ */
+function __dict_dialog_select(dictKey, dialogId, selectedId, selectedName, callback, opt){
+    setCookie("jqGrid_common_page", false);
+    var dataUrl = "/main/dict/findDictListByType?dictType=" + dictKey;
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_select(dialogId, "系统字典", dataUrl, colNames, colModel, selectedId, selectedName, callback, opt);
+}
+
+/**
+ * 选择系统字典多选
+ */
+function __dicts_dialog_select(dictKey, dialogId, selectedIds, selectedNames, callback, opt){
+    setCookie("jqGrid_common_page", false);
+    var dataUrl = "/main/dict/findDictListByType?dictType=" + dictKey;
+    var colNames = ["名称","id"];
+    var colModel = [
+        {name: 'name', index: 'name', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+        {name: 'id', index: 'id', key: true, hidden: true}
+    ];
+    __common_dialog_selects(dialogId, "系统字典", dataUrl, colNames, colModel, selectedIds, selectedNames, callback, opt);
+}
+
+/**
  * 选择成员多选
  */
 function __users_dialog_select(dialogId, selectedIds, selectedNames, callback, opt){
@@ -648,6 +676,22 @@ function __excel_import_view(importUrl, name){
 
 /* validate 封装 */
 /*======================================*/
+
+$.validator.addMethod("phone", function(value, element, params){
+    var checkPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+    return this.optional(element) || (checkPhone.test(value));
+},"请输入正确的手机号");
+
+$.validator.addMethod("cardId", function(value, element, params){
+    var checkCardID = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
+    return this.optional(element) || (checkCardID.test(value));
+}, "请输入正确的身份证号");
+
+$.validator.addMethod("mail", function(value, element, params){
+    var checkMail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    return this.optional(element) || (checkMail.test(value));
+}, "请输入正确的邮箱地址");
+
 //digits:true整数
 function __init_validate(form_id, opt ,wx) {
     var defaults = {

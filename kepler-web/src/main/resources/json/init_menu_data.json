@@ -1,235 +1,118 @@
 [
+
   {
     "name": "组织结构",
-    "menuType": "目录",
     "iconCode": "fa fa-group",
-    "orderNum": "1",
-    "url": "",
-    "target": "_self",
     "isManageMenu": "1",
     "children": [
       {
         "name": "成员管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "1",
-        "url": "menu/sys/member",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/member"
       },
       {
         "name": "部门管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "2",
-        "url": "menu/sys/department",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/department"
       },
       {
         "name": "岗位管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "3",
-        "url": "menu/sys/post",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/post"
       },
       {
         "name": "职权管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "4",
-        "url": "menu/sys/power",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/power"
       },
       {
         "name": "群组管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "5",
-        "url": "menu/sys/group",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/group"
       }
     ]
   },
+
   {
     "name": "系统管理",
-    "menuType": "目录",
     "iconCode": "fa fa-gears",
-    "orderNum": "2",
-    "url": "",
-    "target": "_self",
     "isManageMenu": "1",
     "children": [
       {
         "name": "系统设置",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "10",
         "url": "/systemConfig/input",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "菜单管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "20",
         "url": "menu/sys/menu",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "系统字典",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "30",
         "url": "menu/sys/dict",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "流程管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "40",
         "url": "menu/flow/processBrief",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "文档管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "50",
         "url": "menu/flow/taskEntity",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "公告通知",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "60",
-        "url": "menu/sys/notice",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/notice"
       },
       {
         "name": "消息提醒",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "70",
-        "url": "menu/sys/remind",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
+        "url": "menu/sys/remind"
       },
       {
         "name": "定时任务",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "80",
         "url": "menu/sys/job",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "代码生成",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "90",
         "url": "menu/sys/gen",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "服务器信息",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "100",
         "url": "/common/index/server",
-        "target": "_self",
-        "isManageMenu": "1",
-        "children": []
+        "isManageMenu": "1"
       },
       {
         "name": "微信管理",
-        "menuType": "目录",
         "iconCode": "fa fa-weixin",
-        "orderNum": "110",
-        "url": "",
-        "target": "",
         "isManageMenu": "1",
         "children": [
           {
             "name": "菜单栏管理",
-            "menuType": "菜单",
-            "iconCode": "",
-            "orderNum": "1",
             "url": "../wx/manage/menu",
-            "target": "_self",
-            "isManageMenu": "1",
-            "children": []
+            "isManageMenu": "1"
           },
           {
             "name": "公众号信息",
-            "menuType": "菜单",
-            "iconCode": "",
-            "orderNum": "2",
             "url": "../wx/manage/info",
-            "target": "_self",
-            "isManageMenu": "1",
-            "children": []
-          },
+            "isManageMenu": "1"
+          }
         ]
       }
     ]
   },
+
   {
     "name": "天天向上",
-    "menuType": "目录",
     "iconCode": "fa fa-mortar-board",
-    "orderNum": "3",
-    "url": "",
-    "target": "_self",
-    "isManageMenu": "0",
     "children": [
       {
         "name": "班级管理",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "1",
         "url": "menu/education/classes",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
       },{
         "name": "楼宇基建信息",
-        "menuType": "菜单",
-        "iconCode": "",
-        "orderNum": "2",
         "url": "menu/education/buildInfo",
-        "target": "_self",
-        "isManageMenu": "0",
-        "children": []
       }
     ]
   }
+
 ]
