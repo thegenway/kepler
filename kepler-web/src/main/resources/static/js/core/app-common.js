@@ -52,7 +52,7 @@ function loadURL(url, ajax_container) {
                 '</div>'+
                 '</div>'+
                 '</div>';
-            ajax_container.html(loadPage);
+            ajax_container.eq(0).html(loadPage);
 
             // only draw breadcrumb if it is content material
             // TODO: check if document title injection refreshes in IE...

@@ -20,7 +20,7 @@
 </div>
 
 <div id="all-duty-temp" class="hidden">
-    <div class="list-group">
+    <div class="list-group" style="margin-bottom: 0">
         <a th:each="duty : ${userDutyList}" th:id="${duty.id}" class="list-group-item" href="javascript:void(0)" th:text="${duty?.power?.department?.name} + '-' + ${duty?.power?.post?.name}">获取失败</a>
     </div>
 </div>
@@ -122,15 +122,9 @@
 
     //查看用户拥有的所有职权
     $("#all-user-duty").on("click", function(){
-        var dialogRef = __alert_dialog(BootstrapDialog.TYPE_INFO, BootstrapDialog.SIZE_NORMAL, [[${user.name}]], $("#all-duty-temp").html(),
-            [{
-                icon: 'ti-close',
-                label: '关闭',
-                cssClass: 'btn-default',
-                action: function () {
-                    dialogRef.close();
-                }
-            }])
+        __layX("allDutyTempDialog", [[${user.name}]], "html", $("#all-duty-temp").html(), [], function(ayxWindow, winform){
+
+        }, {width : "20%", height : "200"})
     });
 
 </script>

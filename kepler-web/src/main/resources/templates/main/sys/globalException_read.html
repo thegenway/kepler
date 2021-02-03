@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="panel">
+    <div id="globalException-heading" class="panel-heading bg-gray-light">
+        <h3 class="panel-title">异常记录<span id="title-duty-name-globalException" class="text-muted"> | </span></h3>
+    </div>
+
+    <div class="panel-body">
+        <form th:id="'form_globalException_input'+${globalException?.id}" class="form-horizontal bord-btm">
+
+            <input type="hidden" name="keyId" th:value="${globalException?.id}">
+            <input type="hidden" name="flowDutyId">
+            <input type="hidden" name="flowDutyName">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">e.toString()</label>
+                <div class="col-md-8">
+                    <input disabled type="text" name="name" id="name" th:value="${globalException?.title}" class="form-control" placeholder="e.toString()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">详细</label>
+                <div class="col-md-8">
+                    <div class="well" th:utext="${#strings.replace(globalException?.content, 'ontroller', '<span class=text-danger>ontroller</span>')}"></div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+
+    var keyId = [[${globalException?.id}]];
+
+    $(function(){
+
+    });
+
+
+</script>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="page-content">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">异常记录</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-inline">
+                <div class="row">
+                    <div class="col-sm-6 table-toolbar-left">
+
+                    </div>
+                    <div class="col-sm-6 table-toolbar-right">
+                        <button type="button" class="btn btn-default btn-sm" onclick="fn_exception_delete('all')">清空</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="exception_table"></table>
+                <div id="exception_page"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $(function(){
+        init_grid_exception();
+    });
+
+    function init_grid_exception(){
+        __init_jqgrid('exception_table', 'exception_page', ctx + 'main/globalException/list',
+            ['创建时间','e.toString()','创建者','操作','id'],
+            [
+                {name: 'createTime', index: 'createTime', width: 50, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'title', index: 'title', width: 100, sortable: false, searchoptions: {sopt: ['cn']}},
+                {name: 'creatorName', index: 'creatorName', width: 50, sortable: false, search: true, searchoptions: {sopt: ['cn']}},
+                {name: 'act', index: 'act', width: 50, sortable: false, search: false, formatter: actFormat},
+                {name: 'id', index: 'id', width: 100, key: true, hidden: true}
+            ],true,{
+                rowNum : 20
+            }
+        );
+    }
+
+    function actFormat(cellvalue, options, rowObject) {
+        var id = rowObject.id;
+        cellvalue = '<button class="btn btn-danger btn-xs" onclick="fn_exception_delete(\'' + id + '\');">删除</button>';
+        cellvalue += '<button class="btn btn-primary btn-xs" onclick="fn_exception_read(\'' + id + '\');">查看</button>';
+        return cellvalue;
+    }
+
+    //删除
+    function fn_exception_delete(id){
+        __confirm_dialog("","删除后不可恢复，确认要继续删除吗？", function(){
+            __ajax_post(ctx + "main/globalException/delete/"+id, {}, function(data){
+                __toastr(data);
+                __reflash_jqgrid("exception_table");
+            })
+        })
+    }
+
+    //查看
+    function fn_exception_read(id){
+        __layX_html_read(id, "异常记录", ctx + "main/globalException/read?keyId="+id, {
+            width : "100%",
+            height : "100%"
+        });
+    }
+
+</script>
+
+</html>

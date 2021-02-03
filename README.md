@@ -1,6 +1,6 @@
 > 使用springBoot + SpringData JPA搭建的企业级OA脚手架
 
-本项目为单应用版本，项目采用springboot2 + SpringData JPA搭建的企业OA脚手架，springSecurity做安全认证，内置基本组织结构、菜单管理、系统字典、流程控制、全局文档管理。使用Quartz实现定时任务（包括静态定时任务和可配置定时任务）。使用velocity模板实现代码生成工具，减少重复代码开发量。
+本项目为单应用版本，项目采用springboot2 + SpringData JPA搭建的企业OA脚手架，springSecurity做安全认证，内置基本组织结构、菜单管理、系统字典、流程控制、全局文档管理、全局异常记录。使用Quartz实现定时任务（包括静态定时任务和可配置定时任务）。使用velocity模板实现代码生成工具，减少重复代码开发量。
 前台使用Thymeleaf模板引擎，jquery+bootstrap
 
 ###  代码说明以及部署环境
@@ -19,7 +19,7 @@ Mongodb
 1. 一些特殊表需要手动创建，导入sql文件夹下的文件（springSecurity记住我、定时任务）。
 1. 项目使用的是hibernate自动建表，所以业务类的表不需要手动创建。
 1. 找到主启动类keper-web/src/main/java/com/hanqian/kepler/KeplerApplication.JAVA启动
-1. 启动成功后会再数据库中自动创建响应业务表，第一次启动会创建一个系统管理员【admin/password】
+1. 启动成功后会再数据库中自动创建相应业务表，第一次启动会创建一个系统管理员【admin/password】
 
 ### 内置功能
 1. 用户管理：对用户进行职权配置以及账号锁定操作
@@ -75,6 +75,7 @@ Mongodb
 | jquery-tmpl | 模板引擎 | https://blog.csdn.net/u010142437/article/details/84399222 |
 | layX | 弹窗插件 | https://gitee.com/monksoul/LayX |
 | lodash | JS工具类 | https://www.lodashjs.com/ |
+| echarts | 统计图模型 | https://echarts.apache.org/examples/zh/index.html |
 | mui | 手机端前台框架 | https://dev.dcloud.net.cn/mui/ui/ |
 
 ### 本项目的搭建参考了以下开源项目
@@ -113,6 +114,8 @@ Mongodb
 - 【未完成】流程步骤 程序中的手动增加待办人、待办信息（为了处理非通过流程引擎走的流程）
 - 【未完成】流程文档全局控制（可以手动修改任何一篇文档的流程审批信息，增加删除审批信息）
 - ~~【已完成】自定义特殊按钮权限（比如合同管理的“合同结算”按钮，它的显示权限）~~
+- ~~【已完成】全局异常记录~~
+- 【未完成】添加websocket在线通知
 - 【未完成】微信端页面排版
 - 【未完成】手机端UI框架更换为MDUI https://gitee.com/zdhxiong/mdui
 - 【未完成】代码生成目前是通过实体类生成，要改为通过页面配置方式生成

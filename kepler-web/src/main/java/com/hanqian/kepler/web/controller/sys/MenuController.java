@@ -277,8 +277,11 @@ public class MenuController extends BaseController {
 	@ResponseBody
 	public AjaxResult myTest(){
 
-		MailUtil.send("641633367@qq.com", "测试", "邮件来自dzw测试", false);
+//		MailUtil.send("641633367@qq.com", "测试", "邮件来自dzw测试", false);
 
+//		Menu menu = null;
+//		System.out.println(menu.getIsManageMenu());
+		int a = 5/0;
 		return AjaxResult.success();
 	}
 
